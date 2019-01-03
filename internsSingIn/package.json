@@ -1,11 +1,11 @@
 {
     "id": "com.ict.interns.report",
     "schemaVersion": 1,
-    "version": "4",
-    "minorVersion": 4,
+    "version": "8",
+    "minorVersion": 3,
     "providerName": "IctAfrica",
     "displayName": "Daily Sign In",
-    "description": "LDaily Sign In Form",
+    "description": "Daily Sign In Form",
     "icon": "icon.png",
     "appModel": "AppModel.json",
     "dials": {

@@ -151,19 +151,42 @@
                         // let option = fieldDescription["options"][selectedOptions[compressedTitle]];
                         questionToAnswerMap[x] = selectedOptions[compressedTitle];
                     }
-                    
                     else if(fieldType == 5){
                         let myDate = document.getElementById(compressedTitle).value;
                         let date = new Date(myDate);
+                        // if(x == 0){
+                        //     questionToAnswerMap[0] = date.getDay()+"/"+date.getMonth()+ 1 +"/"+date.getFullYear();
+                        // }
+                        // else if (x == 1){
+                        //     questionToAnswerMap[1] = date.getHours()+":"+date.getMinutes() +":"+date.getSeconds();
+                        // }
+                        // else if (x == 2){
+                        //     questionToAnswerMap[2] = date.getHours()+":"+date.getMinutes() +":"+date.getSeconds();
+                        // }
                         // questionToAnswerMap[x] = date.getTime();
-                        alert(date.getTime().toString());
-                        questionToAnswerMap[x] = date.getTime().toString();
+                        questionToAnswerMap[x] = date.toString();
                         
                     }
+                    
                     else if(fieldType == 10){
                         let myDate = document.getElementById(compressedTitle).value;
-                        let dates = new Date(myDate);
-                        questionToAnswerMap[x] = dates;
+                        let date = new Date(myDate);
+                        // questionToAnswerMap[x] = date.getTime();
+                        // alert(date.getDay()+"/"+date.getMonth()+ 1 +"/"+date.getFullYear());
+                        // alert(date.getHours()+":"+date.getMinutes()+ 1 +":"+date.getSeconds());
+                        // questionToAnswerMap[x] = date.toString();
+                        questionToAnswerMap[x] = date.getDay()+"/"+date.getMonth()+ 1 +"/"+date.getFullYear();
+                        
+                    }
+                    else if(fieldType == 11){
+                        let myDate = document.getElementById(compressedTitle).value;
+                        let date = new Date(myDate);
+                        // questionToAnswerMap[x] = date.getTime();
+                        // alert(date.getDay()+"/"+date.getMonth()+ 1 +"/"+date.getFullYear());
+                        // alert(date.getHours()+":"+date.getMinutes()+ 1 +":"+date.getSeconds());
+                        // questionToAnswerMap[x] = date.toString();
+                        questionToAnswerMap[x] = date.getHours()+":"+date.getMinutes()+ 1 +":"+date.getSeconds();
+                        
                     }
 
                     // else if(fieldType == 6){
@@ -270,6 +293,7 @@
             AttachmentList = 8,
             PhoneNumber = 9,
             DateOnly = 10
+            Time = 11
 
             ********************************/
 
@@ -301,6 +325,9 @@
                     case 10:
                         fieldInputType = "date";
                         break;
+                    case 11:
+                    fieldInputType = "time";
+                    break;
                     default:
                         fieldInputType = "text";
                 }
