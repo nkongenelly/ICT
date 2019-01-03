@@ -1,0 +1,35 @@
+{
+    "id": "com.ict.internsform.sign",
+    "schemaVersion": 1,
+    "version": "1",
+    "minorVersion": 24,
+    "providerName": "ICTAfricaKaizala",
+    "displayName": "Daily Interns Attendance",
+    "description": "Daily Interns Attendance",
+    "icon": "icon.png",
+    "appModel": "AppModel.json",
+    "dials": {
+        "isLocalised": false,
+        "isPinned": false
+    },
+    "actionScope": "Group",
+    "views": {
+        "CreationView": {
+            "sourceLocation": "Response.html",
+            "showNativeToolbar": false
+        },
+        "ChatCanvasCardView": {
+            "showReceipts": false,
+            "showLikes": false,
+            "showComments": false,
+            "labelResponseSending": "Submitting your details",
+            "labelResponded": "Today's attendance successfully submitted",
+            "labelResponseFailed": "Today's attendance submission failed",
+            "isResponseEditable": false
+        },
+        "ResponseResultsView": {
+            "sourceLocation": "ResponseSummary.html",
+            "showNativeToolbar": false
+        }
+    }
+}
