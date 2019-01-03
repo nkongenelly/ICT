@@ -1,0 +1,35 @@
+{
+    "id": "com.ict.interns.report",
+    "schemaVersion": 1,
+    "version": "4",
+    "minorVersion": 4,
+    "providerName": "IctAfrica",
+    "displayName": "Daily Sign In",
+    "description": "LDaily Sign In Form",
+    "icon": "icon.png",
+    "appModel": "AppModel.json",
+    "dials": {
+        "isLocalised": false,
+        "isPinned": false
+    },
+    "actionScope": "Group",
+    "views": {
+        "CreationView": {
+            "sourceLocation": "Response.html",
+            "showNativeToolbar": false
+        },
+        "ChatCanvasCardView": {
+            "showReceipts": false,
+            "showLikes": false,
+            "showComments": false,
+            "labelResponseSending": "Submitting your details",
+            "labelResponded": "Daily signing in successfully completed",
+            "labelResponseFailed": "Daily signing in submission failed",
+            "isResponseEditable": false
+        },
+        "ResponseResultsView": {
+            "sourceLocation": "ResponseSummary.html",
+            "showNativeToolbar": false
+        }
+    }
+}

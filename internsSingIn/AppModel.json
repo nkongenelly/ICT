@@ -1,0 +1,49 @@
+{
+    "title": "Livestock Alert",
+    "visibility": "All",
+    "expiry": 0,
+    "isAnonymous": false,
+    "isResponseAppended": true,
+    "isLocationRequested": false,
+    "questions": [
+        {
+            "title": "Date",
+            "type": "DateTime",
+            "isOptional": true
+        },
+        {
+            "title": "Time In",
+            "type": "DateTime",
+            "isOptional": true
+        },
+        {
+            "title": "Time Out",
+            "type": "DateTime",
+            "isOptional": true
+        },
+        {
+            "title": "Site",
+            "type": "Text"
+        },
+        {
+            "title": "JobCard",
+            "type": "Texts"
+        },
+        {
+            "title": "Name",
+            "type": "Text"
+        },
+        {
+            "title": "Phone",
+            "type": "Text"
+        },
+        {
+          "title": "Location",
+          "type": "Location"
+        },
+        {
+          "title": "Response Time",
+          "type": "DateTime"
+        }
+    ]
+}
