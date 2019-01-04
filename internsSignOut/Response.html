@@ -122,7 +122,47 @@
             let questions = _form["questions"];
             let totalQuestions = questions.length;
             var count = 0;
-        
+            
+            // if(x == 0){
+            //     let fieldDescription = questions[x];
+            //     let fieldId = fieldDescription["id"];
+            //     let fieldTitle = fieldDescription["title"];
+            //     let fieldType = fieldDescription["type"];
+            //     let fieldInputType = "";
+            //     let compressedTitle = fieldTitle.replace(/\s+/g, '');
+            
+            //     let myDate = document.getElementById(compressedTitle).value;
+            //     let date = new Date(myDate);
+            //     // questionToAnswerMap[x] = date.getTime();
+            //     questionToAnswerMap[0] = date.getDay()+"/"+date.getMonth()+ 1 +"/"+date.getFullYear();
+            // }
+            // else if(x == 1){
+            //     let fieldDescription = questions[x];
+            //     let fieldId = fieldDescription["id"];
+            //     let fieldTitle = fieldDescription["title"];
+            //     let fieldType = fieldDescription["type"];
+            //     let fieldInputType = "";
+            //     let compressedTitle = fieldTitle.replace(/\s+/g, '');
+            
+            //     let myDate = document.getElementById(compressedTitle).value;
+            //     let date = new Date(myDate);
+            //     // questionToAnswerMap[x] = date.getTime();
+            //     questionToAnswerMap[1] = date.getHours()+":"+date.getMinutes() +":"+date.getSeconds();
+            // }
+            // else if(x == 2){
+            //     let fieldDescription = questions[x];
+            //     let fieldId = fieldDescription["id"];
+            //     let fieldTitle = fieldDescription["title"];
+            //     let fieldType = fieldDescription["type"];
+            //     let fieldInputType = "";
+            //     let compressedTitle = fieldTitle.replace(/\s+/g, '');
+            
+            //     let myDate = document.getElementById(compressedTitle).value;
+            //     let date = new Date(myDate);
+            //     // questionToAnswerMap[x] = date.getTime();
+            //     questionToAnswerMap[2] = date.getHours()+":"+date.getMinutes() +":"+date.getSeconds();
+            // }
+            // else{
             
             for(var x = 0; x < totalQuestions; x++){
                 let fieldDescription = questions[x];
@@ -143,6 +183,11 @@
                         let myDate = document.getElementById(compressedTitle).value;
                         let date = new Date(myDate);
                         questionToAnswerMap[x] = date.getTime();
+                        // alert(date.toString());
+                        // questionToAnswerMap[x] = date.getDay()+"/"+date.getMonth()+ 1 +"/"+date.getFullYear() + " " + date.getHours()+":"+date.getMinutes() +":"+date.getSeconds();
+                        // alert(date.getDay()+"/"+date.getMonth()+ 1 +"/"+date.getFullYear() + " " + date.getHours()+":"+date.getMinutes() +":"+date.getSeconds());
+                        // questionToAnswerMap[1] = date.getHours()+":"+date.getMinutes() +":"+date.getSeconds();
+                        // questionToAnswerMap[2] = date.getHours()+":"+date.getMinutes() +":"+date.getSeconds();
                     }
                     // else if(fieldType == 6){
                     //     questionToAnswerMap[x] = document.getElementById(compressedTitle).getAttribute("src");
@@ -164,7 +209,31 @@
                     }
                     count++;
                 }
+                // if(x == 0){
+                //     alert("date");
+                //     let myDate = document.getElementById(compressedTitle).value;
+                //     let date = new Date(myDate);
+                //     questionToAnswerMap[0] = date.getDay()+"/"+date.getMonth()+ 1 +"/"+date.getFullYear();
+                //     alert(questionToAnswerMap[0]);
+                // }
+            //  else if(fieldType == 5){
+            //             let myDate = document.getElementById(compressedTitle).value;
+            //             let date = new Date(myDate);
+            //             // if(x == 0){
+            //             //     questionToAnswerMap[0] = date.getDay()+"/"+date.getMonth()+ 1 +"/"+date.getFullYear();
+            //             // }
+            //             // else if (x == 1){
+            //             //     questionToAnswerMap[1] = date.getHours()+":"+date.getMinutes() +":"+date.getSeconds();
+            //             // }
+            //             // else if (x == 2){
+            //             //     questionToAnswerMap[2] = date.getHours()+":"+date.getMinutes() +":"+date.getSeconds();
+            //             // }
+            //             // questionToAnswerMap[x] = date.getTime();
+            //             questionToAnswerMap[x] = date.toString();
+                        
+            //         }
             }
+            // }
            
             questionToAnswerMap[count] = _name;
             count++;

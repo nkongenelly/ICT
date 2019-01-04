@@ -1,12 +1,12 @@
 {
-    "id": "com.ict.interns.signin",
+    "id": "com.ict.interns.signout",
     "schemaVersion": 1,
     "version": "3",
-    "minorVersion": 2,
+    "minorVersion": 3,
     "providerName": "IctAfrica",
-    "displayName": "ICT Sign In",
+    "displayName": "ICT Sign Out",
     "description": "Daily Sign In Form",
-    "icon": "signin1.png",
+    "icon": "signout1.jpg",
     "appModel": "AppModel.json",
     "dials": {
         "isLocalised": false,
