@@ -6,11 +6,7 @@
     "isResponseAppended": true,
     "isLocationRequested": false,
     "questions": [
-        {
-            "title": "Your Name",
-            "type": "Text",
-            "isOptional": true
-        },
+        
         {
             "title": "Site",
             "type": "SingleSelect",
