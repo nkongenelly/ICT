@@ -105,6 +105,10 @@
           "type": "Location"
         },
         {
+            "title": "Point",
+            "type": "Text"
+          },
+        {
           "title": "Response Time",
           "type": "DateTime"
         }
