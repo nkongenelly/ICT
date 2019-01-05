@@ -13,7 +13,84 @@
         },
         {
             "title": "Site",
-            "type": "Text"
+            "type": "SingleSelect",
+            "options": [{
+                    "title": "ICT AFRICA"
+                },
+                {
+                    "title": "ASL Trading"
+                },
+                {
+                    "title": "ASL Packaging"
+                },
+                {
+                    "title": "ASL Hardware"
+                },
+                {
+                    "title": "ASL Wire & Cable"
+                },
+                {
+                    "title": "ASL TZ"
+                },
+                {
+                    "title": "ASL Steel Division"
+                },
+                {
+                    "title": "ASL Heavy Fabrication"
+                },
+                {
+                    "title": "ASL Credit"
+                },
+                {
+                    "title": "ASTROL"
+                },
+                {
+                    "title": "CROWN"
+                },
+                {
+                    "title": "ECO PALLETS"
+                },
+                {
+                    "title": "FLEXOWORLD"
+                },
+                {
+                    "title": "LINO STATIONERS"
+                },
+                {
+                    "title": "MARKRTPOWER"
+                },
+                {
+                    "title": "OFFICE MART"
+                },
+                {
+                    "title": "OTL"
+                },
+                {
+                    "title": "POLYTHENE INDUSTRIES"
+                },
+                {
+                    "title": "PROSERVE"
+                },
+                {
+                    "title": "PLATINUM PACKAGINGS"
+                },
+                {
+                    "title": "PRINT STORES"
+                },
+                {
+                    "title": "SAI OFFICE"
+                },
+                {
+                    "title": "RAMCO CHEMICALS"
+                },
+                {
+                    "title": "RAMCO HARDWARE"
+                },
+                {
+                    "title": "RAMCO PRINTING"
+                }
+
+            ]
         },
         {
             "title": "Name",
@@ -27,6 +104,10 @@
           "title": "Location",
           "type": "Location"
         },
+        {
+            "title": "Point",
+            "type": "Text"
+          },
         {
           "title": "Response Time",
           "type": "DateTime"

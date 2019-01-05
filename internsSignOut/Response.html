@@ -4,6 +4,7 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title></title>
     <link rel="stylesheet" href="themeKaizala.css" />
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 </head>
 
 <body onload="onPageLoad()">
@@ -45,6 +46,7 @@
         var imagesArray = [];
         var tempImage = "";
         var countImage = 0;
+        var _point = "";
         // constants
         var TOTAL_PAGE = 3;
         var LOCATION_TIMEOUT = 10000;
@@ -122,47 +124,7 @@
             let questions = _form["questions"];
             let totalQuestions = questions.length;
             var count = 0;
-            
-            // if(x == 0){
-            //     let fieldDescription = questions[x];
-            //     let fieldId = fieldDescription["id"];
-            //     let fieldTitle = fieldDescription["title"];
-            //     let fieldType = fieldDescription["type"];
-            //     let fieldInputType = "";
-            //     let compressedTitle = fieldTitle.replace(/\s+/g, '');
-            
-            //     let myDate = document.getElementById(compressedTitle).value;
-            //     let date = new Date(myDate);
-            //     // questionToAnswerMap[x] = date.getTime();
-            //     questionToAnswerMap[0] = date.getDay()+"/"+date.getMonth()+ 1 +"/"+date.getFullYear();
-            // }
-            // else if(x == 1){
-            //     let fieldDescription = questions[x];
-            //     let fieldId = fieldDescription["id"];
-            //     let fieldTitle = fieldDescription["title"];
-            //     let fieldType = fieldDescription["type"];
-            //     let fieldInputType = "";
-            //     let compressedTitle = fieldTitle.replace(/\s+/g, '');
-            
-            //     let myDate = document.getElementById(compressedTitle).value;
-            //     let date = new Date(myDate);
-            //     // questionToAnswerMap[x] = date.getTime();
-            //     questionToAnswerMap[1] = date.getHours()+":"+date.getMinutes() +":"+date.getSeconds();
-            // }
-            // else if(x == 2){
-            //     let fieldDescription = questions[x];
-            //     let fieldId = fieldDescription["id"];
-            //     let fieldTitle = fieldDescription["title"];
-            //     let fieldType = fieldDescription["type"];
-            //     let fieldInputType = "";
-            //     let compressedTitle = fieldTitle.replace(/\s+/g, '');
-            
-            //     let myDate = document.getElementById(compressedTitle).value;
-            //     let date = new Date(myDate);
-            //     // questionToAnswerMap[x] = date.getTime();
-            //     questionToAnswerMap[2] = date.getHours()+":"+date.getMinutes() +":"+date.getSeconds();
-            // }
-            // else{
+        
             
             for(var x = 0; x < totalQuestions; x++){
                 let fieldDescription = questions[x];
@@ -172,7 +134,7 @@
                 let fieldInputType = "";
                 let compressedTitle = fieldTitle.replace(/\s+/g, '');
                 
-                if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Point") && (fieldTitle != "Response Time"))
                 {
                     if(fieldType == 0){
                         // let option = fieldDescription["options"][selectedOptions[compressedTitle]];
@@ -183,11 +145,6 @@
                         let myDate = document.getElementById(compressedTitle).value;
                         let date = new Date(myDate);
                         questionToAnswerMap[x] = date.getTime();
-                        // alert(date.toString());
-                        // questionToAnswerMap[x] = date.getDay()+"/"+date.getMonth()+ 1 +"/"+date.getFullYear() + " " + date.getHours()+":"+date.getMinutes() +":"+date.getSeconds();
-                        // alert(date.getDay()+"/"+date.getMonth()+ 1 +"/"+date.getFullYear() + " " + date.getHours()+":"+date.getMinutes() +":"+date.getSeconds());
-                        // questionToAnswerMap[1] = date.getHours()+":"+date.getMinutes() +":"+date.getSeconds();
-                        // questionToAnswerMap[2] = date.getHours()+":"+date.getMinutes() +":"+date.getSeconds();
                     }
                     // else if(fieldType == 6){
                     //     questionToAnswerMap[x] = document.getElementById(compressedTitle).getAttribute("src");
@@ -209,41 +166,59 @@
                     }
                     count++;
                 }
-                // if(x == 0){
-                //     alert("date");
-                //     let myDate = document.getElementById(compressedTitle).value;
-                //     let date = new Date(myDate);
-                //     questionToAnswerMap[0] = date.getDay()+"/"+date.getMonth()+ 1 +"/"+date.getFullYear();
-                //     alert(questionToAnswerMap[0]);
-                // }
-            //  else if(fieldType == 5){
-            //             let myDate = document.getElementById(compressedTitle).value;
-            //             let date = new Date(myDate);
-            //             // if(x == 0){
-            //             //     questionToAnswerMap[0] = date.getDay()+"/"+date.getMonth()+ 1 +"/"+date.getFullYear();
-            //             // }
-            //             // else if (x == 1){
-            //             //     questionToAnswerMap[1] = date.getHours()+":"+date.getMinutes() +":"+date.getSeconds();
-            //             // }
-            //             // else if (x == 2){
-            //             //     questionToAnswerMap[2] = date.getHours()+":"+date.getMinutes() +":"+date.getSeconds();
-            //             // }
-            //             // questionToAnswerMap[x] = date.getTime();
-            //             questionToAnswerMap[x] = date.toString();
-                        
-            //         }
             }
-            // }
+            var lat = JSON.stringify(_currentLocation["lt"]);
+            var long = JSON.stringify(_currentLocation["lg"]);
+            var n = lat.startsWith("-1.328");
+            var m = long.startsWith("36.878");
+             if(n == true && m == true){
+                _point = "Ramco, Nairobi";
+            }
+            else{
+                _point = JSON.stringify(_currentLocation);
+            }
            
             questionToAnswerMap[count] = _name;
             count++;
+            // alert(count);
+            // alert(questionToAnswerMap[3]);
             questionToAnswerMap[count] = _phoneNumber;
             count++;
+            // alert(count);
+            // alert(questionToAnswerMap[4]);
+            // questionToAnswerMap[count] = _phoneNumber;
             questionToAnswerMap[count] = JSON.stringify(_currentLocation);
             count++;
+            // alert(count);
+            // alert(questionToAnswerMap[5]);
+            questionToAnswerMap[count] = _point;
+            count++;
+            // alert(count);
+            // alert(questionToAnswerMap[6]);
             questionToAnswerMap[count] = (new Date()).getTime();
             // Finally submit the response
+            // getReverseGeocodingData();
             KASClient.Form.sumbitFormResponse(questionToAnswerMap, null, false, true /* showInChatCanvas */);
+
+        // function getReverseGeocodingData() {
+        //     var lat =-1.3281091;
+        //     var lng = 36.8784835;
+        //     var latlng = new google.maps.LatLng(lat, lng);
+        //     // This is making the Geocode request
+        //     var geocoder = new google.maps.Geocoder();
+        //     geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+        //         if (status !== google.maps.GeocoderStatus.OK) {
+        //             alert(status);
+        //         }
+        //         // This is checking to see if the Geoeode Status is OK before proceeding
+        //         if (status == google.maps.GeocoderStatus.OK) {
+        //             console.log(results);
+        //             alert(results);
+        //             var address = (results[0].formatted_address);
+        //         }
+        //     });
+        // }
+
         }
         // handling UI
         function inflateHTML() {
@@ -340,7 +315,7 @@
                         fieldInputType = "text";
                 }
                 //Create the field
-                if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Point") && (fieldTitle != "Response Time"))
                 {
                     if(x == (totalQuestions - 1)){
                         var fieldDiv = KASClient.UI.getElement("div", {
@@ -730,7 +705,7 @@ _currentLocation["lt"] + "," + _currentLocation["lg"] + "&key=AIzaSyAMfrWKiELcjg
                     let fieldInputType = "";
                     var compressedTitle = fieldTitle.replace(/\s+/g, '');
                     
-                    if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                    if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Point") && (fieldTitle != "Response Time"))
                     {						
 						let formValue = "";
                         if(fieldType == 0){
@@ -809,7 +784,7 @@ _currentLocation["lt"] + "," + _currentLocation["lg"] + "&key=AIzaSyAMfrWKiELcjg
                 let fieldInputType = "";
                 let compressedTitle = fieldTitle.replace(/\s+/g, '');
                 
-                if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location")  && (fieldTitle != "Point") && (fieldTitle != "Response Time"))
                 {
                     var fieldDiv = KASClient.UI.getElement("div", divAttributes);
                     var fieldTitleDiv = KASClient.UI.getElement("div", {
