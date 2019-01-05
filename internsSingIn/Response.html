@@ -5,6 +5,8 @@
     <title></title>
     <link rel="stylesheet" href="themeKaizala.css" />
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <!-- <script src="/my.js"></script> -->
 </head>
 
 <body onload="onPageLoad()">
@@ -172,30 +174,42 @@
             questionToAnswerMap[count] = _phoneNumber;
             count++;
             questionToAnswerMap[count] = JSON.stringify(_currentLocation);
+
+            var lat = JSON.stringify(_currentLocation["lt"]);
+            var long = JSON.stringify(_currentLocation["lg"]);
+            alert(lat);
+            alert(long);
+           
+            $.ajax({
+                url: 'https://reverse.geocoder.api.here.com/6.2/reversegeocode.json',
+                type: 'GET',
+                dataType: 'jsonp',
+                jsonp: 'jsoncallback',
+                data: {
+                    prox: '41.8842,-87.6388,250',
+                    mode: 'retrieveAddresses',
+                    maxresults: '1',
+                    gen: '9',
+                    app_id: 'devportal-demo-20180625',
+                    app_code: '9v2BkviRwi9Ot26kp2IysQ'
+                },
+                success: function (data) {
+                    alert(JSON.stringify(data));
+                }
+            });
+
+            alert(JSON.stringify(_currentLocation["n"]));
             count++;
             questionToAnswerMap[count] = (new Date()).getTime();
             // Finally submit the response
             // getReverseGeocodingData();
+            
             KASClient.Form.sumbitFormResponse(questionToAnswerMap, null, false, true /* showInChatCanvas */);
+            
+            
+            // })
 
-        // function getReverseGeocodingData() {
-        //     var lat =-1.3281091;
-        //     var lng = 36.8784835;
-        //     var latlng = new google.maps.LatLng(lat, lng);
-        //     // This is making the Geocode request
-        //     var geocoder = new google.maps.Geocoder();
-        //     geocoder.geocode({ 'latLng': latlng }, function (results, status) {
-        //         if (status !== google.maps.GeocoderStatus.OK) {
-        //             alert(status);
-        //         }
-        //         // This is checking to see if the Geoeode Status is OK before proceeding
-        //         if (status == google.maps.GeocoderStatus.OK) {
-        //             console.log(results);
-        //             alert(results);
-        //             var address = (results[0].formatted_address);
-        //         }
-        //     });
-        // }
+      
 
         }
         // handling UI
