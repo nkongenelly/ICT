@@ -2,7 +2,7 @@
     "id": "com.ict.interns.signout",
     "schemaVersion": 1,
     "version": "5",
-    "minorVersion": 1,
+    "minorVersion": 4,
     "providerName": "IctAfrica",
     "displayName": "ICT Sign Out",
     "description": "Daily Sign In Form",
@@ -24,8 +24,8 @@
             "showComments": false,
             "sourceLocation": "chartCard.json",
             "labelResponseSending": "Submitting your details",
-            "labelResponded": "Daily signing in successfully completed",
-            "labelResponseFailed": "Daily signing in submission failed",
+            "labelResponded": "Daily signing out successfully completed",
+            "labelResponseFailed": "Daily signing out submission failed",
             "isResponseEditable": false
         },
         "ResponseResultsView": {

@@ -171,8 +171,13 @@
             var long = JSON.stringify(_currentLocation["lg"]);
             var n = lat.startsWith("-1.328");
             var m = long.startsWith("36.878");
+            var o = lat.startsWith("-1.2715");
+            var p = long.startsWith("36.8120");
              if(n == true && m == true){
                 _point = "Ramco, Nairobi";
+            }
+            else if(o == true && p == true){
+                _point = "Odyssey, Muthithi Rd";
             }
             else{
                 _point = JSON.stringify(_currentLocation);
