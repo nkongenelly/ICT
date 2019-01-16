@@ -4,6 +4,7 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title></title>
     <link rel="stylesheet" href="themeKaizala.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 </head>
 
 <body onload="onPageLoad()">
@@ -11,7 +12,16 @@
     <div id="header">
     </div>
     <div class="body-container">
-        <div id="page1"></div>
+        <div id="page1">
+            <div class="section" id="userDiv">
+            </div>
+            <br/>
+            <input class="continue" type="submit" name="submit" value="Continue" onclick="showForm()"> 
+            <div id="page"></div>
+            <div id="manage"></div>
+            
+            
+        </div>
         <div id="page2">
             <div class="section" id="detailsViewDiv" style="padding-top : 8px">
             </div>
@@ -31,9 +41,14 @@
     <script type="text/javascript">
         // Type aliases (short names)
         var printf = KASClient.App.printf;
+        //variables to capture the details we get
+        var _customerTypeQuestion = -1;
 
+        //
         var _form; // type: KASForm
 
+        var _userDivQuestion = "";
+        var USER = 0;
         var _currentPage = 1;
         var _isLocationRefreshing = false;
         var _strings = null;
@@ -71,7 +86,9 @@
                         return;
                     }
                     _form = form;
-                    loadPage(_form["questions"]);
+                    inflateUserDiv();
+                    // continueButton();
+                    // loadPage(_form["questions"]);
                     inflateHTML();
 
                     KASClient.App.getCurrentUserIdAsync(function (userId, error) {
@@ -240,11 +257,81 @@
 
             KASClient.UI.addElement(navigationBar.getView(), header);
         }
-        
+      
+        function inflateUserDiv() {
+            var question = _form.questions[USER];
+            var questionDiv = document.getElementById("userDiv");
+            KASClient.UI.clearElement(questionDiv);
+            var questionTitle = KASClient.UI.getElement("div");
+            questionTitle.className = "question-title";
+            questionTitle.innerText = _strings[question.title];
+            KASClient.UI.addElement(questionTitle, questionDiv);
+            var optionDiv = KASClient.UI.getElement("select");
+            optionDiv.className = "option-div";
+            optionDiv.id = "optionDiv";
+            for (var i = 0; i < question.options.length; i++) {
+                var option = question.options[i];
+                var value = _strings[option.title];
+                var options = KASClient.UI.getElement("option");
+                options.className = "options";
+                options.innerText = _strings[option.text];
+                options.value = value;
+                options.onclick = function() {
+                    _customerTypeQuestion = this.value;
+                    alert(_customerTypeQuestion);
+                    document.getElementById("CustomerTypeOption" + _customerTypeQuestion).checked = true;
+                    invalidateFooter();
+                };
+                // var title = KASClient.UI.getElement("label", {
+                //     "width": "85%",
+                //     "padding-left": "6pt"
+                // });
+                // title.innerText = _strings[option.text];
+                var radio = KASClient.UI.getElement("input");
+                radio.type = "radio";
+                radio.name = "question" + question.id;
+                radio.id = "CustomerTypeOption" + option.id;
+                // KASClient.UI.addElement(title, options);
+                KASClient.UI.addElement(radio, options);
+                KASClient.UI.addElement(options, optionDiv);
+            }
+            KASClient.UI.addElement(optionDiv, questionDiv);
+            
+            // prevButton.value = "";
+            // prevButton.disabled = (_currentPage == 1);
+            // if (KASClient.getPlatform() == KASClient.Platform.Android && prevButton.disabled) {
+            //     KASClient.UI.addCSS(prevButton, {
+            //         "border": "1px solid rgba(227, 230, 233, 0.5)"
+            //     });
+            // }
+            // prevButton.addEventListener("click", function() {
+            //     _currentPage -= 1;
+            //     updatePage();
+            //     document.body.scrollTop = 0;
+            // });
+            }
+          
+        function continueButton(){
+              document.getElementById("page").style.display = "none";
+
+            inflateUserDiv();
+                }
+
+        function showForm(){
+              //Show preloader
+            KASClient.App.showProgressBar("Fetching Results");
+            document.getElementById("userDiv").style.display = "none";
+
+            loadPage(_form["questions"]);
+            document.getElementById("page").style.display = "none";
+        }
+
         function loadPage(questions){
+             // Remove preloader
+             KASClient.App.hideProgressBar();
             let totalQuestions = questions.length;
             //Get and clear HTML from page 1
-            var pageOneDiv = document.getElementById("page1");
+            var pageOneDiv = document.getElementById("page");
             KASClient.UI.clearElement(pageOneDiv);
             
             /*******************************
@@ -296,8 +383,9 @@
                     default:
                         fieldInputType = "text";
                 }
+               
                 //Create the field
-                if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                if((fieldTitle != "User") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
                 {
                     if(x == (totalQuestions - 1)){
                         var fieldDiv = KASClient.UI.getElement("div", {
@@ -412,6 +500,7 @@
                 }
             }
         }
+       
 
         function addImage(title, fieldInput) {
             

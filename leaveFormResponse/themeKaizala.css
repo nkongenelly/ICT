@@ -211,6 +211,19 @@ input[type=radio]:checked {
     font-weight: normal;
     color: rgb(50, 72, 95);
 }
+.continue{
+    background-color: #428bca;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    width:100%;
+}
 
 .option-div {
     font-size: 12pt;
