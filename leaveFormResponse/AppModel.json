@@ -1,0 +1,146 @@
+{
+    "title": "Livestock Alert",
+    "visibility": "All",
+    "expiry": 0,
+    "isAnonymous": false,
+    "isResponseAppended": true,
+    "isLocationRequested": false,
+    "questions": [
+        {
+            "title": "User",
+            "type": "SingleSelect",
+            "options": [{
+                    "title": "Applicant"
+                },
+                {
+                    "title": "HR"
+                },
+                {
+                    "title": "Manager"
+                }
+            ]
+        },
+        {
+            "title": "Name",
+            "type": "Text",
+            "isOptional": true
+        },
+        {
+            "title": "Payroll No.",
+            "type": "Numeric",
+            "isOptional": true
+        },
+        {
+            "title": "From",
+            "type": "DateTime",
+            "isOptional": true
+        },
+        {
+            "title": "Department",
+            "type": "Text"
+        },
+        {
+            "title": "No. of Days",
+            "type": "Numeric"
+        },
+        {
+            "title": "Year",
+            "type": "Numeric"
+        },
+        {
+            "title": "Type of leave",
+            "type": "SingleSelect",
+            "options": [{
+                    "title": "Annual"
+                },
+                {
+                    "title": "Unpaid"
+                },
+                {
+                    "title": "Medical"
+                },
+                {
+                    "title": "Compassionate"
+                },
+                {
+                    "title": "Maternity"
+                }
+            ]
+        },
+        {
+            "title": "Reasons",
+            "type": "Text"
+        },
+        {
+            "title": "From (date)",
+            "type": "DateTime"
+        },
+        {
+            "title": "To",
+            "type": "DateTime"
+        },
+        {
+            "title": "Duration (Days/ Hr/ s)",
+            "type": "Text"
+        },
+        {
+            "title": "Resuming Date",
+            "type": "DateTime"
+        },
+        {
+            "title": "Home Address (while on leave)",
+            "type": "Text"
+        },
+        {
+            "title": "Telephone contact",
+            "type": "Text"
+        },
+        {
+            "title": "Alternate contact (while on leave)",
+            "type": "Text"
+        },
+        {
+          "title": "Leave Due",
+          "type": "Numeric"
+        },
+        {
+            "title": "Leave granted from",
+            "type": "DateTime"
+        },
+        {
+            "title": "Leave granted to",
+            "type": "DateTime"
+        },
+        {
+            "title": "Resume Date",
+            "type": "DateTime"
+        },
+        {
+            "title": "HR representative",
+            "type": "Text"
+        },
+        {
+            "title": "Leave days balance",
+            "type": "Text"
+        },
+        {
+            "title": "Approved",
+            "type": "SingleSelect",
+            "options": [{
+                    "title": "YES"
+                },
+                {
+                    "title": "NO"
+                }
+            ]
+        },
+        {
+            "title": "Comments(if any)",
+            "type": "Text"
+        },
+        {
+          "title": "Response Time",
+          "type": "DateTime"
+        }
+    ]
+}

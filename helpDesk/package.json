@@ -1,0 +1,52 @@
+{
+  "id": "com.ict.helpdesk",
+  "schemaVersion": 1,
+  "displayName": "ICT Helpdesk 1",
+  "description": "Have your issue sorted instantly",
+  "icon": "SurveyIcon.png",
+  "version": "7",
+  "minorVersion": "4",
+  "appModel": "CardData.json",
+  "parentTemplateId": "Form",
+  "dials": {
+    "isLocalised": true
+  },
+  "actionScope": "Group",
+  "views": {
+    "ChatCanvasCardView": {
+      "showResponseCount": false,
+      "showExpiry": false,
+      "showHeader": true,
+      "showFooter": true,
+      "showLikes": false,
+      "showComments": false,
+      "showReceipts": false,
+      "sourceLocation": "chartCard.json",
+      "isResponseEditable": false,
+      "labelResponseSending": "Sending response",
+      "labelResponseFailed": "Response could not be sent",
+      "labelResponded": "You responded"
+    },
+    "CreationView": {
+      "sourceLocation": "SurveyResponse.html",
+      "showNativeToolbar": false,
+	  "backDialogVisibility": true
+    },
+    "ResponseResultsView": {
+      "sourceLocation": "SurveySummary.html",
+      "showNativeToolbar": false,
+      "labelPageHeader": "ICT Helpdesk 1",
+      "labelCloseInfo": "LabelCloseInfoPlaceHolder {0}",
+      "labelActionExpired": "LabelActionExpiredPlaceHolder",
+      "labelNotResponded": "LabelNotRespondedPlaceHolder",
+      "labelRespondNow": "LabelRespondNowPlaceHolder",
+      "labelAddResponse": "LabelAddResponsePlaceHolder",
+      "labelQuestions": "LabelQuestionsPlaceHolder",
+      "labelCloseAction": "LabelCloseActionPlaceHolder",
+      "labelShareActionResults": "LabelShareActionResultsPlaceHolder",
+      "labelDuplicateAction": "LabelDuplicateActionPlaceHolder",
+      "labelDuplicateActionSubText": "LabelDuplicateActionSubTextPlaceHolder",
+      "labelCloseActionConfirmation": "LabelCloseActionConfirmationPlaceHolder"
+    }
+  }
+}

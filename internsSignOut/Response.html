@@ -169,18 +169,29 @@
             }
             var lat = JSON.stringify(_currentLocation["lt"]);
             var long = JSON.stringify(_currentLocation["lg"]);
-            var n = lat.startsWith("-1.328");
-            var m = long.startsWith("36.878");
-            var o = lat.startsWith("-1.2715");
-            var p = long.startsWith("36.8120");
+            var k = lat.startsWith("-1.3");
+            var l = long.startsWith("36.8");
+            var n = lat.startsWith("-1.32");
+            var m = long.startsWith("36.87");
+            var o = lat.startsWith("-1.27");
+            var p = long.startsWith("36.81");
+            var q = lat.startsWith("-1.26");
+            var r = long.startsWith("36.80");
              if(n == true && m == true){
                 _point = "Ramco, Nairobi";
             }
             else if(o == true && p == true){
                 _point = "Odyssey, Muthithi Rd";
             }
+            else if(k == true && l == true){
+                _point = "Ramco, Nairobi";
+            }
+            else if(q == true && r == true){
+                _point = "Odyssey, Muthithi Rd";
+            }
             else{
-                _point = JSON.stringify(_currentLocation);
+                _point = "undefined"
+                // _point = JSON.stringify(_currentLocation);
             }
            
             questionToAnswerMap[count] = _name;
