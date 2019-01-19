@@ -5,7 +5,7 @@
   "description": "Ramco Plexus Plant  Housekeeping Inspection Checklist 1",
   "icon": "SurveyIcon.png",
   "version": "1",
-  "minorVersion": "4",
+  "minorVersion": "5",
   "appModel": "CardData.json",
   "parentTemplateId": "Form",
   "dials": {
