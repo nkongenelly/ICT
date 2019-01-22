@@ -4,7 +4,6 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title></title>
     <link rel="stylesheet" href="themeKaizala.css" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 </head>
 
 <body onload="onPageLoad()">
@@ -13,16 +12,21 @@
     </div>
     <div class="body-container">
         <div id="page1">
-            <div class="section" id="userDiv">
-            </div>
-            <br/>
+                <div class="question-title" id="userDiv">
+                    <div>User:</div>
+                    <div>
+                        <select class = "option-div">
+                                <option class="options" value="volvo">Applicant</option>
+                                <option class="options" value="saab">HR</option>
+                                <option class="options" value="mercedes">Manager</option>
+                              </select>
+                    </div>
+                </div>
             <div id="continues">
                 <input class="continue" type="submit" name="submit" value="Continue" onclick="showForm()">
             </div> 
             <div id="page"></div>
-            <div id="manage"></div>
-            
-            
+            <div id="manage"></div> 
         </div>
         <div id="page2">
             <div class="section" id="detailsViewDiv" style="padding-top : 8px">
@@ -41,16 +45,15 @@
     </div>
     <script type="text/javascript" src="KASClient.js"></script>
     <script type="text/javascript">
+        
+        var _userDivQuestion = "";
+        var _customerTypeQuestion = -1;
+        var USER = 0;
         // Type aliases (short names)
         var printf = KASClient.App.printf;
-        //variables to capture the details we get
-        var _customerTypeQuestion = -1;
 
-        //
         var _form; // type: KASForm
 
-        var _userDivQuestion = "";
-        var USER = 0;
         var _currentPage = 1;
         var _isLocationRefreshing = false;
         var _strings = null;
@@ -88,11 +91,11 @@
                         return;
                     }
                     _form = form;
-                    inflateUserDiv();
-                    // continueButton();
-                    // loadPage(_form["questions"]);
+                    // inflateUserDiv();
+                    // inflateUser();
+                    
+                    loadPage(_form["questions"]);
                     inflateHTML();
-
                     KASClient.App.getCurrentUserIdAsync(function (userId, error) {
                         if (error != null) {
                             handleError(error);
@@ -259,264 +262,85 @@
 
             KASClient.UI.addElement(navigationBar.getView(), header);
         }
-      
-        function inflateUserDiv() {
-            var question = _form.questions[USER];
-            var questionDiv = document.getElementById("userDiv");
-            KASClient.UI.clearElement(questionDiv);
-            var questionTitle = KASClient.UI.getElement("div");
-            questionTitle.className = "question-title";
-            questionTitle.innerText = _strings[question.title];
-            KASClient.UI.addElement(questionTitle, questionDiv);
-            var optionDiv = KASClient.UI.getElement("select");
-            optionDiv.className = "option-div";
-            optionDiv.id = "optionDiv";
-            for (var i = 0; i < question.options.length; i++) {
-                var option = question.options[i];
-                var value = _strings[option.title];
-                var options = KASClient.UI.getElement("option");
-                options.className = "options";
-                options.innerText = _strings[option.text];
-                options.value = value;
-                options.onclick = function() {
-                    _customerTypeQuestion = this.value;
-                    alert(_customerTypeQuestion);
-                    document.getElementById("CustomerTypeOption" + _customerTypeQuestion).checked = true;
-                    invalidateFooter();
-                };
-                // var title = KASClient.UI.getElement("label", {
-                //     "width": "85%",
-                //     "padding-left": "6pt"
-                // });
-                // title.innerText = _strings[option.text];
-                var radio = KASClient.UI.getElement("input");
-                radio.type = "radio";
-                radio.name = "question" + question.id;
-                radio.id = "CustomerTypeOption" + option.id;
-                // KASClient.UI.addElement(title, options);
-                KASClient.UI.addElement(radio, options);
-                KASClient.UI.addElement(options, optionDiv);
-            }
-            KASClient.UI.addElement(optionDiv, questionDiv);
-            
-            // prevButton.value = "";
-            // prevButton.disabled = (_currentPage == 1);
-            // if (KASClient.getPlatform() == KASClient.Platform.Android && prevButton.disabled) {
-            //     KASClient.UI.addCSS(prevButton, {
-            //         "border": "1px solid rgba(227, 230, 233, 0.5)"
-            //     });
-            // }
-            // prevButton.addEventListener("click", function() {
-            //     _currentPage -= 1;
-            //     updatePage();
-            //     document.body.scrollTop = 0;
-            // });
-            }
-          
-        // function continueButton(){
-        //       document.getElementById("page").style.display = "none";
+        // function inflateUser(){
+        //     document.getElementById("userDiv").stylr.display = "block";
+        //     document.getElementById("manage").style.display = "none";
+        //     document.getElementById("continues").style.display = "block";
+        //     document.getElementById("page").style.display = "none";
+        // }
 
-        //     inflateUserDiv();
-        //         }
+        // function inflateUserDiv() {
+        //     // alert("1");
+        //     var question = _form.questions[USER];
+        //     var questionDiv = document.getElementById("userDiv");
+        //     KASClient.UI.clearElement(questionDiv);
+        //     var questionTitle = KASClient.UI.getElement("div");
+        //     questionTitle.className = "question-title";
+        //     questionTitle.innerText = _strings[question.title];
+        //     KASClient.UI.addElement(questionTitle, questionDiv);
+        //     var optionDiv = KASClient.UI.getElement("select");
+        //     optionDiv.className = "option-div";
+        //     optionDiv.id = "optionDiv";
+        //     // alert("2");
+        //     for (var i = 0; i < question.options.length; i++) {
+        //             // alert("3");
+        //         var option = question.options[i];
+        //         var value = _strings[option.title];
+        //         var options = KASClient.UI.getElement("option");
+        //         options.className = "options";
+        //         options.innerText = _strings[option.text];
+        //         options.value = value;
+        //         // alert("4");
+        //         options.onclick = function() {
+        //             // alert("5");
+        //             _customerTypeQuestion = this.value;
+        //             // alert("6");
+        //             alert(_customerTypeQuestion);
+        //             document.getElementById("CustomerTypeOption" + _customerTypeQuestion).checked = true;
+        //             // alert("7");
+        //             invalidateFooter();
+        //             // alert("8");
+        //         };
+        //         var title = KASClient.UI.getElement("label", {
+        //             "width": "85%",
+        //             "padding-left": "6pt"
+        //         });
+        //         title.innerText = _strings[option.text];
+        //         // alert("8");
+        //         var radio = KASClient.UI.getElement("input");
+        //         radio.type = "radio";
+        //         radio.name = "question" + question.id;
+        //         radio.id = "CustomerTypeOption" + option.id;
+        //         // alert("9");
+        //         KASClient.UI.addElement(title, options);
+        //         KASClient.UI.addElement(radio, options);
+        //         KASClient.UI.addElement(options, optionDiv);
+        //         // alert("10");
+        //     }
+        //     // alert("11");
+        //     KASClient.UI.addElement(optionDiv, questionDiv);
+        //     // alert("12");
+        //     }
 
-        function showForm(){
-              //Show preloader
-            KASClient.App.showProgressBar("Fetching Results");
-            document.getElementById("userDiv").style.display = "none";
-            document.getElementById("manage").style.display = "none";
-            document.getElementById("continues").style.display = "none";
+        //     function showForm(){
+        //       //Show preloader
+        //     KASClient.App.showProgressBar("Fetching Results");
+        //     document.getElementById("userDiv").style.display = "none";
+        //     document.getElementById("manage").style.display = "none";
+        //     document.getElementById("continues").style.display = "none";
 
-            loadPage(_form["questions"]);
-            document.getElementById("page").style.display = "block";
-        }
-
-        function loadPage(questions){
-             // Remove preloader
-             KASClient.App.hideProgressBar();
-            let totalQuestions = questions.length;
-            //Get and clear HTML from page 1
-            var pageOneDiv = document.getElementById("page");
-            KASClient.UI.clearElement(pageOneDiv);
-            
-            /*******************************
-            KEY
-            ********************************
-
-            SingleSelect = 0,
-            MultiSelect = 1,
-            Text = 2,
-            Numeric = 3,
-            Location = 4,
-            DateTime = 5,
-            Image = 6,
-            SingleSelectExternal = 7,
-            AttachmentList = 8,
-            PhoneNumber = 9,
-            DateOnly = 10
-
-            ********************************/
-
-            // for(var x = 0; x < totalQuestions; x++){
-                for(var x = 0; x < 16; x++){
-                let fieldDescription = questions[x];
-                let fieldId = fieldDescription["id"];
-                let fieldTitle = fieldDescription["title"];
-                let fieldType = fieldDescription["type"];
-                let optional = fieldDescription["isResponseOptional"];
-                let fieldInputType = "";
-                let compressedTitle = fieldTitle.replace(/\s+/g, '');
-                
-                switch(fieldType){
-                    case 0:
-                        fieldInputType = "select";
-                        break;
-                    case 2:
-                        fieldInputType = "text";
-                        break;
-                    case 3:
-                        fieldInputType = "number";
-                        break;
-                    case 5:
-                        fieldInputType = "datetime-local";
-                        break;
-                    case 6:
-                        fieldInputType = "image";
-                        break;
-                    case 10:
-                        fieldInputType = "date";
-                        break;
-                    default:
-                        fieldInputType = "text";
-                }
-               
-                //Create the field
-                if((fieldTitle != "Leave Due") && (fieldTitle != "Leave granted from") && (fieldTitle != "Leave granted to") && (fieldTitle != "Resume Date") && (fieldTitle != "HR representative") && (fieldTitle != "Leave days balance") && (fieldTitle != "Approved") && (fieldTitle != "Comments(if any)") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
-                {
-                    if(x == (totalQuestions - 1)){
-                        var fieldDiv = KASClient.UI.getElement("div", {
-                                "border-bottom": "none"
-                            }
-                        );
-                    }
-                    else{
-                        var fieldDiv = KASClient.UI.getElement("div");
-                    }
-                    
-                    fieldDiv.className = "section";
-
-                    var fieldTitleDiv = KASClient.UI.getElement("div");
-                    fieldTitleDiv.className = "question-title";
-                    fieldTitleDiv.innerText = _strings[fieldTitle];
-                    
-                    if(fieldInputType == "image"){
-                        // compressedTitle =compressedTitle + new Date().getTime();
-                        var fieldInput = KASClient.UI.getElement("div");
-                        KASClient.UI.clearElement(fieldInput);
-                        //put an image tag icon
-                        var img = KASClient.UI.getElement("img", {
-                            "width": "40",
-                            "height": "40",
-                            "padding-left": "15pt",
-                            "padding-top": "0px"
-                        });
-                        
-                        var time = new Date().getTime();
-                        var imgId = compressedTitle;
-                        
-                        img.id = imgId;
-                        imagesId.push(imgId);
-                        
-                        img.setAttribute("src", "AttachmentIcon.png");
-                        //set an event for when the tag is clicked
-                        img.onclick = function () {
-                            KASClient.App.showImagePickerAsync(function (selectedImagePath, error) {
-                                if (error != null) {
-                                    return;
-                                }
-                                img.setAttribute("src", selectedImagePath);
-                                addImage(compressedTitle, fieldInput);
-                            });
-                        };
-                        
-                        //adds image element to the imageDiv
-                        KASClient.UI.addElement(img, fieldInput);
-                    }
-                    
-                    else if(fieldInputType == "select"){
-                        var fieldInput = KASClient.UI.getElement("div");
-                        fieldInput.className = "option-div";
-
-                        for (i = 0; i < fieldDescription["options"].length; i++) {
-                            var option = fieldDescription["options"][i];
-
-                            var options = KASClient.UI.getElement("div");
-                            options.className = "options";
-                            options.value = option.id;
-                            options.onclick = function() {
-                                this.checked = true;
-                                selectedOptions[compressedTitle] = this.value;
-                                invalidateFooter();
-                            };
-                            
-                            var title = KASClient.UI.getElement("label", {
-                                "width": "85%",
-                                "padding-left": "6pt"
-                            });
-                            title.innerText = _strings[option.text];
-
-                            var radio = KASClient.UI.getElement("input");
-                            radio.type = "radio";
-                            // radio.name = option.text + option.id;
-                            radio.name = compressedTitle + fieldId;
-                            radio.id = option.text + option.id;
-
-                            KASClient.UI.addElement(title, options);
-                            KASClient.UI.addElement(radio, options);
-
-                            KASClient.UI.addElement(options, fieldInput);
-                        }
-                    }
-
-                    else{
-                        var fieldInput = KASClient.UI.getElement("input");
-                        fieldInput.type = fieldInputType;
-                        fieldInput.className = "comment-input";
-                        fieldInput.id = compressedTitle;
-
-                        //dependancy for IOS for just adding padding
-                        if (KASClient.getPlatform() == KASClient.Platform.iOS) {
-                            KASClient.UI.addCSS(fieldInput, {
-                                "padding-left": "13pt"
-                            });
-                        }
-                        
-                        fieldInput.placeholder = _strings["strTapToEnter"];
-                        
-                        fieldInput.addEventListener("input", function (event) {
-                            invalidateFooter();
-                        });
-                    }
-
-                    KASClient.UI.addElement(fieldTitleDiv, fieldDiv);
-                    KASClient.UI.addElement(fieldInput, fieldDiv);
-                    
-                    //Add items to page 1
-                    KASClient.UI.addElement(fieldDiv, pageOneDiv);
-                }
-            }
-
-          
-            loadPageManage();
-
-        }
-       
+        //     loadPage(_form["questions"]);
+        //     document.getElementById("page").style.display = "block";
+        //     inflateHTML();
+        //     // invalidateFooter();
+        // }
         
-        function loadPageManage(questions){
-             // Remove preloader
-             KASClient.App.hideProgressBar();
+        function loadPage(questions){
+            // Remove preloader
+            KASClient.App.hideProgressBar();
             let totalQuestions = questions.length;
             //Get and clear HTML from page 1
-            var pageOneDiv = document.getElementById("page");
+            var pageOneDiv = document.getElementById("page1");
             KASClient.UI.clearElement(pageOneDiv);
             
             /*******************************
@@ -537,9 +361,7 @@
 
             ********************************/
 
-            // for(var x = 0; x < totalQuestions; x++){
-
-            for(var x = 16; x < 24; x++){
+            for(var x = 0; x < totalQuestions; x++){
                 let fieldDescription = questions[x];
                 let fieldId = fieldDescription["id"];
                 let fieldTitle = fieldDescription["title"];
@@ -570,9 +392,9 @@
                     default:
                         fieldInputType = "text";
                 }
-               
                 //Create the field
-                if((fieldTitle != "User") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                // (fieldTitle != "User") && 
+                if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
                 {
                     if(x == (totalQuestions - 1)){
                         var fieldDiv = KASClient.UI.getElement("div", {
@@ -686,7 +508,6 @@
                     KASClient.UI.addElement(fieldDiv, pageOneDiv);
                 }
             }
-
         }
 
         function addImage(title, fieldInput) {
@@ -1026,7 +847,10 @@ _currentLocation["lt"] + "," + _currentLocation["lg"] + "&key=AIzaSyAMfrWKiELcjg
                     let fieldInputType = "";
                     var compressedTitle = fieldTitle.replace(/\s+/g, '');
                     
-                    if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                    //(fieldTitle != "User") && 
+                    // if((fieldTitle != "Payroll No.") && (fieldTitle != "From") && (fieldTitle != "Department") && (fieldTitle != "No. of Days") && (fieldTitle != "Year") && (fieldTitle != "Type of leave") && (fieldTitle != "Reasons") && (fieldTitle != "From (date)") && (fieldTitle != "To") && (fieldTitle != "Duration (Days/ Hr/ s)") && (fieldTitle != "Resuming Date") && (fieldTitle != "Home Address (while on leave)") && (fieldTitle != "Telephone contact") & (fieldTitle != "Alternate contact (while on leave)") && 
+                    // (fieldTitle != "Payroll No.") && (fieldTitle != "Leave Due") && (fieldTitle != "Leave granted from") && (fieldTitle != "Leave granted to") && (fieldTitle != "Resume Date") && (fieldTitle != "HR representative") && (fieldTitle != "Leave days balance") && (fieldTitle != "Approved") && (fieldTitle != "Comments(if any)") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time") &&    
+                    if((fieldTitle != "User") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
                     {						
 						let formValue = "";
                         if(fieldType == 0){

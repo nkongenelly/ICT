@@ -142,6 +142,31 @@ var KASClient;
         }
         App.getUsersDetailsAsync = getUsersDetailsAsync;
         /**
+        * Shows profile page/details of a user
+        * @param {string} userId of the user whose profile is to be shown
+        * @param {boolean} isMiniProfile whether to show mini-profile first
+        */
+        function showUserProfileAsync(userId, isMiniProfile, callback) {
+            KASClient.showUserProfilePage(userId, isMiniProfile, function (success, error) {
+                if (callback) {
+                    callback(success, error);
+                }
+            });
+        }
+        App.showUserProfileAsync = showUserProfileAsync;
+        /**
+        * Starts chat with a user
+        * @param {string} userId of the user
+        */
+        function startChatAsync(userId, callback) {
+            KASClient.startChat(userId, function (success, error) {
+                if (callback) {
+                    callback(success, error);
+                }
+            });
+        }
+        App.startChatAsync = startChatAsync;
+        /**
         * Gets users' details (name, pic, phone number, etc.) against their ids
         * @param {Callback} callback with below parameters:
         * * * * @param {string} token got from integeration service
@@ -155,26 +180,6 @@ var KASClient;
             });
         }
         App.getIntegerationServiceTokenAsync = getIntegerationServiceTokenAsync;
-        /**
-        * Sets a key-value pair in secured app storage, should be used to store sensitive data like tokens
-        * @param {string} key got from integeration service
-        * @param {string} value got from integeration service
-        */
-        function setSecuredData(key, value) {
-            KASClient.setSecuredValue(key, value);
-        }
-        App.setSecuredData = setSecuredData;
-        /**
-        * Gets the data stored against a key from the secured app storage
-        * @param {string} key key for the data
-        * @param {Callback} callback with below parameters:
-        * * * * @param {string} value got from secured storage against the key
-        * * * * @param {string} error message in case of error, null otherwise
-        */
-        function getSecuredData(key, callback) {
-            KASClient.getSecuredValue(key, callback);
-        }
-        App.getSecuredData = getSecuredData;
         /**
         * Gets deviceId
         * @param {Callback} callback with below parameters:
@@ -280,6 +285,32 @@ var KASClient;
         }
         App.showAttachmentPickerAsync = showAttachmentPickerAsync;
         /**
+         * Download the base 64 image of map for the coordinates specified
+         * @param params KASLocationStaticMapImageParams
+         * @param callback callback on download completion
+         */
+        function getMapImageAsBase64Async(params, callback) {
+            KASClient.getStaticMapImage(params.toJSON(), function (downloadedAttachmentString, error) {
+                if (callback) {
+                    callback(downloadedAttachmentString, error);
+                }
+            });
+        }
+        App.getMapImageAsBase64Async = getMapImageAsBase64Async;
+        /**
+         * Get address string for specified coordinates
+         * @param params KASLocationAddressParams
+         * @param callback callback on address fetch
+         */
+        function getLocationAddressAsync(params, callback) {
+            KASClient.getLocationAddress(params.toJSON(), function (json, error) {
+                if (callback) {
+                    callback(json, error);
+                }
+            });
+        }
+        App.getLocationAddressAsync = getLocationAddressAsync;
+        /**
          * Download the attachment specified
          * @param attachment attachment with a valid server path to download
          * @param callback callback on download completion
@@ -332,6 +363,34 @@ var KASClient;
             });
         }
         App.showPlacePickerAsync = showPlacePickerAsync;
+        /**
+        * Launches the barcode scanner and returns the scanned object
+        * @param {Callback} callback with below parameters:
+        * * * * @param {string} barcodeInfo can be null in case of error
+        * * * * @param {string} error message in case of error, null otherwise
+        */
+        function showBarcodeScannerAsync(callback) {
+            KASClient.showBarcodeScanner(function (barcodeInfo, error) {
+                if (callback) {
+                    callback(barcodeInfo, error);
+                }
+            });
+        }
+        App.showBarcodeScannerAsync = showBarcodeScannerAsync;
+        /**
+          * Launches the QR code scanner and returns the scanned object
+          * @param {Callback} callback with below parameters:
+          * * * * @param {string} qrCodeInfo can be null in case of error
+          * * * * @param {string} error message in case of error, null otherwise
+          */
+        function showQRcodeScannerAsync(callback) {
+            KASClient.showQRcodeScanner(function (qrCodeInfo, error) {
+                if (callback) {
+                    callback(qrCodeInfo, error);
+                }
+            });
+        }
+        App.showQRcodeScannerAsync = showQRcodeScannerAsync;
         /**
         * Shows a native duration picker with day/hour/minute
         * @param {number} defaultDurationInMinutes the default duration to be shown on picker
@@ -436,6 +495,42 @@ var KASClient;
         }
         App.getAppLocaleAsync = getAppLocaleAsync;
         /**
+        * Gets the current app time format is 24hours or not, the time format selected by user, useful for formatting date time strings properly
+        * @param {Callback} callback with below parameters:
+        * * * * @param {string} isAppTimeFormat24Hours can be null in case of error
+        * * * * @param {string} error message in case of error, null otherwise
+        */
+        function getIsAppTimeFormat24HoursAsync(callback) {
+            //////////// MOCK ////////////
+            if (KASClient.shouldMockData()) {
+                if (callback) {
+                    callback(false, null);
+                }
+                return;
+            }
+            //////////// ACTUAL ////////////
+            KASClient.getIs24HourTimeFormat(callback);
+        }
+        App.getIsAppTimeFormat24HoursAsync = getIsAppTimeFormat24HoursAsync;
+        /**
+        * Gets the current system calendar setting. This is mainly for iOS to identify the calendar name set in phone setting like Gregorian or Japanese or Buddhists.
+        * @param {Callback} callback with below parameters:
+        * * * * @param {string} calendarName can be null in case of error
+        * * * * @param {string} error message in case of error, null otherwise
+        */
+        function getCalendarNameAsync(callback) {
+            //////////// MOCK ////////////
+            if (KASClient.shouldMockData()) {
+                if (callback) {
+                    callback('-u-ca-gregory', null);
+                }
+                return;
+            }
+            //////////// ACTUAL ////////////
+            KASClient.getCalendarName(callback);
+        }
+        App.getCalendarNameAsync = getCalendarNameAsync;
+        /**
         * Gets all the participant-ids of the current conversation
         * @param {Callback} callback with below parameters:
         * * * * @param {string} name can be null in case of error
@@ -449,6 +544,23 @@ var KASClient;
             });
         }
         App.getConversationParticipantsCountAsync = getConversationParticipantsCountAsync;
+        /**
+        * Gets all the participant-ids of the current conversation
+        * @param {Callback} callback with below parameters:
+        * * * * @param {string[]} participants Array of members for the  current group. Will return empty array if user if not the member of the group.
+        */
+        function getConversationParticipantsAsync(callback) {
+            KASClient.getConversationParticipants(function (participants, error) {
+                var userIds = [];
+                for (var i in participants) {
+                    userIds.push(participants[i]);
+                }
+                if (callback) {
+                    callback(userIds, error);
+                }
+            });
+        }
+        App.getConversationParticipantsAsync = getConversationParticipantsAsync;
         /**
         * Gets the current conversation name
         * @param {Callback} callback with below parameters:
@@ -571,6 +683,19 @@ var KASClient;
         }
         App.openAttachmentImmersiveView = openAttachmentImmersiveView;
         /**
+        * Open attachment in Immersive view.
+        * @param {KASAttachment} attachmentObj
+        */
+        function openImmersiveViewForAttachmentList(attachmentList, atIndex) {
+            if (atIndex === void 0) { atIndex = 0; }
+            var attachmentListJSON = JSON.parse("[]");
+            for (var i = 0; i < attachmentList.length; i++) {
+                attachmentListJSON.push(attachmentList[i].toJSON());
+            }
+            KASClient.openAttachmentListImmersiveView(attachmentListJSON, atIndex);
+        }
+        App.openImmersiveViewForAttachmentList = openImmersiveViewForAttachmentList;
+        /**
        * checks whether app has read/write access to the storage
        * @param {KASAttachmentType} attachmentType
        */
@@ -583,7 +708,12 @@ var KASClient;
         * @param {string} localPath localPath for the imageAttachment whose thumbnail needs to be generated:
         */
         function generateBase64ThumbnailAsync(localPath, callback) {
-            KASClient.generateBase64ThumbnailForAttachment(localPath, callback);
+            if (KASClient.isPDFDocument(localPath)) {
+                KASClient.generateBase64ThumbnailForPDFAttachment(localPath, callback, false);
+            }
+            else {
+                KASClient.generateBase64ThumbnailForAttachment(localPath, callback);
+            }
         }
         App.generateBase64ThumbnailAsync = generateBase64ThumbnailAsync;
         /**
@@ -679,6 +809,20 @@ var KASClient;
             });
         }
         App.getO365UserDetailsAsync = getO365UserDetailsAsync;
+        /**
+        * Gets Forward Context details such as : Card Creation is in forwarded mode
+        * @param {Callback} callback with below parameters:
+        * * * * @param {Json} returns the Context Details in Json structure
+        */
+        function getForwardContextAsync(callback) {
+            KASClient.getForwardContext(function (contextDetails, error) {
+                var context = KASClient.KASForwardContext.fromJSON(contextDetails);
+                if (callback) {
+                    callback(context, error);
+                }
+            });
+        }
+        App.getForwardContextAsync = getForwardContextAsync;
         /**
         * Gets the client details
         * @param {Callback} callback with below parameters:
@@ -1140,6 +1284,26 @@ var KASClient;
         }
         Form.getBatchResponsesAsync = getBatchResponsesAsync;
         /**
+        * Gets all the responses of the current form for given time range
+        * @param {number} startTime start timestamp of time range
+        * @param {number} endTime end timestamp of time range
+        * @param {string} userId for which response will be fetched. Should be empty to fetch responses of whole survey.
+        * @param {Callback} callback with below parameters:
+        * * * * @param {KASFormResponse[]} responses of the survey for given userId.
+        */
+        function getResponsesForTimeRangeAsync(startTime, endTime, userId, callback) {
+            KASClient.getResponsesForTimeRange(startTime, endTime, userId, function (responsesArray, error) {
+                var responses = [];
+                for (var i in responsesArray) {
+                    responses.push(KASClient.KASFormResponse.fromJSON(responsesArray[i]));
+                }
+                if (callback) {
+                    callback(responses, error);
+                }
+            });
+        }
+        Form.getResponsesForTimeRangeAsync = getResponsesForTimeRangeAsync;
+        /**
         * Submits a new response against the form associated with the conversation card
         * This will dismiss the current screen
         * @param {JSON} questionToAnswerMap question id to answer mapping
@@ -1545,47 +1709,6 @@ var KASClient;
         }
         Form.updateFormPropertiesAsync = updateFormPropertiesAsync;
         /**
-        * Requests to get local properties of an action, if it exists
-        * @param {Callback} callback with below parameters:
-        * * * * @param {KASActionProperties} actionProperties local properties
-        * * * * @param {string} error message in case of error, null otherwise
-        */
-        function getLocalActionPropertiesAsync(callback) {
-            //////////// MOCK ////////////
-            if (KASClient.shouldMockData()) {
-                alert("getLocalProperties");
-                return;
-            }
-            //////////// ACTUAL ////////////
-            KASClient.getLocalProperties(function (propertiesJson, error) {
-                if (callback) {
-                    callback(KASClient.KASActionProperties.fromJSON(propertiesJson), error);
-                }
-            });
-        }
-        Form.getLocalActionPropertiesAsync = getLocalActionPropertiesAsync;
-        /**
-        * Requests to update local properties of an action, if it exists
-        * @param {KASActionProperties} actionProperties properties to update
-        * @param {Callback} callback with below parameters:
-        * * * * @param {boolean} success indicates if the update is successful or not
-        * * * * @param {string} error message in case of error, null otherwise
-        */
-        function updateLocalActionPropertiesAsync(actionProperties, callback) {
-            //////////// MOCK ////////////
-            if (KASClient.shouldMockData()) {
-                alert("updateLocalProperties");
-                return;
-            }
-            //////////// ACTUAL ////////////
-            KASClient.updateLocalProperties(actionProperties.properties, function (success, error) {
-                if (callback) {
-                    callback(success, error);
-                }
-            });
-        }
-        Form.updateLocalActionPropertiesAsync = updateLocalActionPropertiesAsync;
-        /**
           * Requests to send push notification to a particular set of users with a custom message
           * @param {CustomNotificationMessage} customNotificationMessage list of userIds to whom the notification has to be sent
           * @param {Callback} callback with below parameters:
@@ -1607,49 +1730,77 @@ var KASClient;
         }
         Form.sendNotificationToUsers = sendNotificationToUsers;
         /**
-        * Requests to get custom storage properties of a package, if it exists
-        * @param {Callback} callback with below parameters:
-        * * * * @param {KASActionPackageProperties} packageProperties package custom properties
-        * * * * @param {string} error message in case of error, null otherwise
-        */
-        function getPackageCustomPropertiesAsync(callback) {
-            //////////// MOCK ////////////
-            if (KASClient.shouldMockData()) {
-                alert("getPackageCustomProperties");
-                return;
-            }
-            //////////// ACTUAL ////////////
-            KASClient.getPackageCustomProperties(function (propertiesJson, error) {
-                if (callback) {
-                    callback(KASClient.KASActionPackageProperties.fromJSON(propertiesJson), error);
-                }
-            });
-        }
-        Form.getPackageCustomPropertiesAsync = getPackageCustomPropertiesAsync;
-        /**
-        * Requests to update custom storage properties of a package, if it exists
-        * @param {KASActionPackageProperties} packageProperties package custom properties to update
+        * Updates/saves the given Action Package Properties to the local data cache
+        * These properties are saved at the action package level. So the data is
+        * shared among all action instances created from this action package.
+        * @param {KASActionPackageProperties} actionPackageProperties Action Package Properties to be updated/saved
         * @param {Callback} callback with below parameters:
         * * * * @param {boolean} success indicates if the update is successful or not
-        * * * * @param {string} error message in case of error, null otherwise
+        * * * * @param {string} error json string for the KASError object containing error code and/or description.
         */
-        function updatePackageCustomPropertiesAsync(packageProperties, callback) {
-            //////////// MOCK ////////////
-            if (KASClient.shouldMockData()) {
-                alert("updatePackageCustomProperties");
-                return;
-            }
-            //////////// ACTUAL ////////////
-            KASClient.updatePackageCustomProperties(packageProperties.properties, function (success, error) {
+        function updateActionPackageLocalDataCacheAsync(actionPackageProperties, callback) {
+            KASClient.updateActionPackageLocalDataCache(actionPackageProperties.properties, function (success, error) {
                 if (callback) {
                     callback(success, error);
                 }
             });
         }
-        Form.updatePackageCustomPropertiesAsync = updatePackageCustomPropertiesAsync;
+        Form.updateActionPackageLocalDataCacheAsync = updateActionPackageLocalDataCacheAsync;
+        /**
+        * Retrieves the Action Package Properties from the local data cache if any exists
+        * These properties are saved at the action package level. So all action instances
+        * created from this action package will receive the same data.
+        * @param {Callback} callback with below parameters:
+        * * * * @param {KASActionPackageProperties} actionPackageProperties Action Package Properties
+        * * * * @param {string} error json string for the KASError object containing error code and/or description.
+        */
+        function getActionPackageLocalDataCacheAsync(callback) {
+            KASClient.getActionPackageLocalDataCache(function (actionPackagePropertiesJson, error) {
+                if (callback) {
+                    callback(KASClient.KASActionPackageProperties.fromJSON(actionPackagePropertiesJson), error);
+                }
+            });
+        }
+        Form.getActionPackageLocalDataCacheAsync = getActionPackageLocalDataCacheAsync;
+        /**
+        * Updates/saves the given ActionInstance Properties to the local data cache
+        * These properties are stored at an action instance level. So each action
+        * instance can save some local data in the cache and it will only be
+        * accessible by that particular instance
+        * @param {KASActionProperties} actionProperties ActionInstance/Form Properties to be updated/saved
+        * @param {Callback} callback with below parameters:
+        * * * * @param {boolean} success indicates if the update is successful or not
+        * * * * @param {string} error json string for the KASError object containing error code and/or description.
+        */
+        function updateActionInstanceLocalDataCacheAsync(actionProperties, callback) {
+            KASClient.updateActionInstanceLocalDataCache(actionProperties.properties, function (success, error) {
+                if (callback) {
+                    callback(success, error);
+                }
+            });
+        }
+        Form.updateActionInstanceLocalDataCacheAsync = updateActionInstanceLocalDataCacheAsync;
+        /**
+        * Retrieves the ActionInstance Properties from the local data cache if any exists
+        * These properties are stored at an action instance level. So the local data saved
+        * for the particular action instance will be returned by this API.
+        * @param {Callback} callback with below parameters:
+        * * * * @param {KASActionProperties} actionProperties ActionInstance/Form  Properties
+        * * * * @param {string} error json string for the KASError object containing error code and/or description.
+        */
+        function getActionInstanceLocalDataCacheAsync(callback) {
+            KASClient.getActionInstanceLocalDataCache(function (actionPropertiesJson, error) {
+                if (callback) {
+                    callback(KASClient.KASActionProperties.fromJSON(actionPropertiesJson), error);
+                }
+            });
+        }
+        Form.getActionInstanceLocalDataCacheAsync = getActionInstanceLocalDataCacheAsync;
     })(Form = KASClient.Form || (KASClient.Form = {}));
 })(KASClient || (KASClient = {}));
 var iOSFontSizeScaleMultiplier = 1.0;
+var Is24HourFormat = false;
+var systemCalendarName = '-u-ca-gregory';
 var KASClient;
 (function (KASClient) {
     var Internal;
@@ -1700,6 +1851,20 @@ var KASClient;
             });
         }
         Internal.initialiseKASClientStrings = initialiseKASClientStrings;
+        function setTimeFormat() {
+            KASClient.App.getIsAppTimeFormat24HoursAsync(function (is24HourFormat) {
+                Is24HourFormat = is24HourFormat;
+            });
+        }
+        Internal.setTimeFormat = setTimeFormat;
+        function setCalendarName() {
+            KASClient.App.getCalendarNameAsync(function (calendarName) {
+                if (calendarName != 'gregorian') {
+                    systemCalendarName = '-u-ca-' + calendarName;
+                }
+            });
+        }
+        Internal.setCalendarName = setCalendarName;
         function getKASClientString(stringId) {
             var args = [];
             for (var _i = 1; _i < arguments.length; _i++) {
@@ -1725,13 +1890,24 @@ var KASClient;
         function setDocumentDomain() {
             if (document.domain === 'cdn-alpha.kaiza.la'
                 || document.domain === 'cdn.kaiza.la'
+                || document.domain === 'cdn-preprod.kaiza.la'
                 || document.domain === 'webapp-alpha.kaiza.la'
                 || document.domain === 'webapp.kaiza.la'
+                || document.domain === 'webapp-preprod.kaiza.la'
                 || document.domain === 'webapp-local.kaiza.la') {
                 document.domain = 'kaiza.la';
+                KASClient.setPlatformAsWebApp();
             }
         }
         Internal.setDocumentDomain = setDocumentDomain;
+        /**
+        * Generates Base64 thumbnail for a pdf document whose localPath is given
+        * @param {string} localPath localPath of the pdf document to generate thumbnail:
+        */
+        function generateThumbnailForPDFAsync(localPath, callback, withHighRes) {
+            KASClient.generateBase64ThumbnailForPDFAttachment(localPath, callback, withHighRes);
+        }
+        Internal.generateThumbnailForPDFAsync = generateThumbnailForPDFAsync;
     })(Internal = KASClient.Internal || (KASClient.Internal = {}));
 })(KASClient || (KASClient = {}));
 var KASClient;
@@ -1868,6 +2044,7 @@ var DEFAULT_SPACE_LENGTH = "10pt";
 var DEFAULT_IMAGE_DIMEN = "50pt";
 var BLUE_COLOR = "rgb(0, 111, 241)";
 var LIGHT_BLUE_COLOR = "rgb(0, 161, 255)";
+var BUTTON_BG_BLUE_COLOR = "rgb(0, 121, 216)";
 var RED_COLOR = "rgb(208, 2, 27)";
 var LIGHT_RED_COLOR = "rgb(222, 45, 79)";
 var LINE_SEPARATOR_ATTRIBUTE = "0.5pt solid #d4d8db";
@@ -1887,38 +2064,21 @@ var KASClient;
     /////////////////////////////////////////////////
     function showIncompatibleScreen() {
         // If progress bar is shown, hide it first
-        if (KASClient.Version.clientSupports(KASClient.Version.VERSION_1)) {
-            KASClient.App.hideProgressBar();
-        }
+        KASClient.App.hideProgressBar();
         var incompatibleModule = new KASClient.KASFormEmptyModule();
         incompatibleModule.title = KASClient.Internal.getKASClientString("KASFormErrorTitle");
         incompatibleModule.subtitle = KASClient.Internal.getKASClientString("KASFormErrorSubTitle");
         var dismissScreen = function () {
-            if (KASClient.Version.clientSupports(KASClient.Version.VERSION_1)) {
-                KASClient.App.dismissCurrentScreen();
-            }
-            else if (KASClient.getPlatform() == KASClient.Platform.iOS) {
-                // Submit a dummy response against a dummy id which will dismiss the screen
-                // without adding that response
-                KASClient.Form.sumbitFormResponse(JSON.parse("{}"), "DUMMY_ID", true, false, false);
-            }
+            KASClient.App.dismissCurrentScreen();
         };
-        if (KASClient.Version.clientSupports(KASClient.Version.VERSION_3)) {
-            incompatibleModule.actionTitle = KASClient.Internal.getKASClientString("KASFormErrorUpgradeAction");
-            incompatibleModule.action = function () {
-                KASClient.openStoreLink();
-            };
-            incompatibleModule.subActionTitle = KASClient.Internal.getKASClientString("KASFormErrorNotNowAction");
-            incompatibleModule.subAction = function () {
-                dismissScreen();
-            };
-        }
-        else {
-            incompatibleModule.actionTitle = KASClient.Internal.getKASClientString("KASFormErrorOkAction");
-            incompatibleModule.action = function () {
-                dismissScreen();
-            };
-        }
+        incompatibleModule.actionTitle = KASClient.Internal.getKASClientString("KASFormErrorUpgradeAction");
+        incompatibleModule.action = function () {
+            KASClient.openStoreLink();
+        };
+        incompatibleModule.subActionTitle = KASClient.Internal.getKASClientString("KASFormErrorNotNowAction");
+        incompatibleModule.subAction = function () {
+            dismissScreen();
+        };
         addCSS(document.body, { "background-color": "white" });
         clearElement(document.body);
         addElement(incompatibleModule.getView(), document.body);
@@ -2293,7 +2453,10 @@ var KASClient;
         element.setAttribute('contenteditable', "true");
         element.innerText = text;
         var maxLength = attributes["max-length"];
-        var prevString = "";
+        if (maxLength) {
+            element.innerText = text.length > maxLength ? text.substr(0, maxLength) : text;
+        }
+        var prevString = element.innerText;
         element.addEventListener('input', function () {
             if (this.innerText.trim() == "") {
                 clearElement(this);
@@ -2421,6 +2584,14 @@ var KASClient;
         }
     }
     KASClient.getStyle = getStyle;
+    function isPDFDocument(localPath) {
+        if (!KASClient.isEmptyString(localPath)) {
+            var fileExt = localPath.split('.').pop().toLowerCase();
+            return (fileExt == "pdf");
+        }
+        return false;
+    }
+    KASClient.isPDFDocument = isPDFDocument;
 })(KASClient || (KASClient = {}));
 var KASClient;
 (function (KASClient) {
@@ -2686,12 +2857,7 @@ var KASClient;
             if (args === void 0) { args = null; }
             if (successCallback === void 0) { successCallback = null; }
             if (errorCallback === void 0) { errorCallback = null; }
-            if (KASClient.Version.clientSupports(KASClient.Version.VERSION_3_1, true /* considerMinorVersion */)) {
-                callNativeCommandAsync(command, args, successCallback, errorCallback);
-            }
-            else {
-                callNativeCommandSync(command, args, successCallback, errorCallback);
-            }
+            callNativeCommandAsync(command, args, successCallback, errorCallback);
         }
         Android.callNativeCommand = callNativeCommand;
         function callNativeCommandAsync(command, args, successCallback, errorCallback) {
@@ -2728,16 +2894,20 @@ var KASClient;
                 case KASClient.RECORD_EVENT_COMMAND:
                 case KASClient.CREATE_MEETING_REQUEST:
                 case KASClient.EDIT_CARD_COMMAND:
-                case KASClient.UPDATE_REQUEST_COMMAND:
                 case KASClient.OPEN_IMMERSIVE_VIEW_FOR_ATTACHMENT:
+                case KASClient.OPEN_IMMERSIVE_VIEW_FOR_ATTACHMENT_LIST:
                 case KASClient.GET_UUID:
                 case KASClient.CUSTOMIZE_NATIVE_TOOLBAR:
                 case KASClient.GET_CLIENT_DETAILS:
                 case KASClient.SHOW_LOCATION_MAP:
                 case KASClient.OPEN_LINK_IN_BROWSER:
+                case KASClient.GET_LOCALIZED_DATE:
                     // For these commands, we don't need an Async API
                     callNativeCommandSync(command, args, successCallback, errorCallback);
                     break;
+                case KASClient.UPDATE_REQUEST_COMMAND:
+                    KaizalaPlatform.updateSurvey(args[0], successCallback, errorCallback);
+                    return;
                 case KASClient.GET_SURVEY_JSON_COMMAND:
                     KaizalaPlatform.getValueAsync(successCallback, errorCallback, "surveyJson");
                     return;
@@ -2785,12 +2955,6 @@ var KASClient;
                     break;
                 case KASClient.PERFORM_SPEECH_TO_TEXT:
                     KaizalaPlatform.performSpeechToText(successCallback, errorCallback);
-                    break;
-                case KASClient.SET_SECURED_VALUE:
-                    KaizalaPlatform.setSecuredValue(args[0] /* Key */, args[1] /* Value */);
-                    break;
-                case KASClient.GET_SECURED_VALUE:
-                    KaizalaPlatform.getSecuredValue(args[0] /* Key */, successCallback, errorCallback);
                     break;
                 case KASClient.GET_DEVICE_ID_COMMAND:
                     KaizalaPlatform.getDeviceId(successCallback, errorCallback);
@@ -2840,11 +3004,20 @@ var KASClient;
                 case KASClient.GET_O365_USER_DETAILS:
                     KaizalaPlatform.getO365UserDetails(successCallback, errorCallback);
                     return;
+                case KASClient.GET_FORWARD_CONTEXT:
+                    KaizalaPlatform.getForwardContext(successCallback, errorCallback);
+                    return;
                 case KASClient.GET_CONVERSATION_PARTICIPANTS_COUNT:
                     KaizalaPlatform.getConversationParticipantsCountAsync(successCallback, errorCallback);
                     return;
                 case KASClient.SHOW_PLACE_PICKER:
                     KaizalaPlatform.showPlacePickerAsync(successCallback, errorCallback);
+                    return;
+                case KASClient.SHOW_BARCODE_SCANNER:
+                    KaizalaPlatform.showBarcodeScannerAsync(successCallback, errorCallback);
+                    return;
+                case KASClient.SHOW_QRCODE_SCANNER:
+                    KaizalaPlatform.showQRcodeScannerAsync(successCallback, errorCallback);
                     return;
                 case KASClient.SHOW_DURATION_PICKER:
                     KaizalaPlatform.showDurationPickerAsync(args[0], successCallback, errorCallback);
@@ -2855,29 +3028,26 @@ var KASClient;
                 case KASClient.DOWNLOAD_ATTACHMENT_COMMAND:
                     KaizalaPlatform.downloadAttachmentAsync(JSON.stringify(args[0]), successCallback, errorCallback);
                     return;
+                case KASClient.GET_STATIC_MAP_IMAGE:
+                    KaizalaPlatform.getStaticMapImageAsync(JSON.stringify(args[0]), successCallback, errorCallback);
+                    return;
+                case KASClient.GET_LOCATION_ADDRESS:
+                    KaizalaPlatform.getLocationAddressAsync(JSON.stringify(args[0]), successCallback, errorCallback);
+                    return;
                 case KASClient.CANCEL_ATTACHMENT_DOWNLOAD_COMMAND:
                     KaizalaPlatform.cancelAttachmentDownloadAsync(JSON.stringify(args[0]), successCallback, errorCallback);
                     return;
                 case KASClient.GENERATE_THUMBNAIL_FOR_IMAGE_ATTACHMENT:
                     KaizalaPlatform.generateBase64ThumbnailForAttachmentAsync(args[0], successCallback, errorCallback);
                     return;
+                case KASClient.GENERATE_THUMBNAIL_FOR_PDF_ATTACHMENT:
+                    KaizalaPlatform.generateThumbnailForPDFAttachmentAsync(args[0], args[1], successCallback, errorCallback);
+                    return;
                 case KASClient.CHECK_STORAGE_ACCESS_FOR_ATTACHMENTS:
                     KaizalaPlatform.checkStoragePermissionAsync(successCallback, errorCallback);
                     return;
-                case KASClient.GET_LOCAL_PROPERTIES:
-                    KaizalaPlatform.getLocalActionPropertiesAsync(successCallback, errorCallback);
-                    return;
-                case KASClient.UPDATE_LOCAL_PROPERTIES:
-                    KaizalaPlatform.updateLocalActionPropertiesAsync(args[0], successCallback, errorCallback);
-                    return;
                 case KASClient.GET_PACKAGE_CUSTOM_SETTINGS:
                     KaizalaPlatform.getPackageCustomSettings(successCallback, errorCallback);
-                    return;
-                case KASClient.GET_PACKAGE_CUSTOM_PROPERTIES:
-                    KaizalaPlatform.getPackageCustomProperties(successCallback, errorCallback);
-                    return;
-                case KASClient.UPDATE_PACKAGE_CUSTOM_PROPERTIES:
-                    KaizalaPlatform.updatePackageCustomProperties(args[0], successCallback, errorCallback);
                     return;
                 case KASClient.IS_ATTACHMENT_DOWNLOADING:
                     KaizalaPlatform.isAttachmentDownloadingAsync(JSON.stringify(args[0]), successCallback, errorCallback);
@@ -2894,6 +3064,12 @@ var KASClient;
                 case KASClient.GET_BATCH_RESPONSES_COMMAND:
                     KaizalaPlatform.getAllFormResponsesAsync(args[0], args[1], successCallback, errorCallback);
                     return;
+                case KASClient.SHOW_USER_PROFILE:
+                    KaizalaPlatform.showUserProfilePageAsync(args[0], args[1], successCallback, errorCallback);
+                    return;
+                case KASClient.START_CHAT_COMMAND:
+                    KaizalaPlatform.startChatAsync(args[0], successCallback, errorCallback);
+                    return;
                 case KASClient.UPDATE_BATCH_RESPONSES_COMMAND:
                     KaizalaPlatform.updateBatchMyResponses(JSON.stringify(args[0]), args[1], args[2], args[3]);
                     return;
@@ -2902,6 +3078,24 @@ var KASClient;
                     break;
                 case KASClient.PERFORM_HTTP_REQUEST:
                     KaizalaPlatform.performHTTPRequest(args[0], args[1], successCallback, errorCallback);
+                    break;
+                case KASClient.GET_RESPONSES_TIME_RANGE_COMMAND:
+                    KaizalaPlatform.getResponsesForTimeRangeAsync(args[0], args[1], args[2], successCallback, errorCallback);
+                    break;
+                case KASClient.GET_CONVERSATION_PARTICIPANTS:
+                    KaizalaPlatform.getConversationParticipantsAsync(successCallback, errorCallback);
+                    break;
+                case KASClient.UPDATE_ACTION_PACKAGE_LOCAL_DATA_CACHE:
+                    KaizalaPlatform.updateActionPackageLocalDataCache(args[0], successCallback, errorCallback);
+                    break;
+                case KASClient.GET_ACTION_PACKAGE_LOCAL_DATA_CACHE:
+                    KaizalaPlatform.getActionPackageLocalDataCache(successCallback, errorCallback);
+                    break;
+                case KASClient.UPDATE_ACTION_INSTANCE_LOCAL_DATA_CACHE:
+                    KaizalaPlatform.updateActionInstanceLocalDataCache(args[0], successCallback, errorCallback);
+                    break;
+                case KASClient.GET_ACTION_INSTANCE_LOCAL_DATA_CACHE:
+                    KaizalaPlatform.getActionInstanceLocalDataCache(successCallback, errorCallback);
                     break;
                 default:
             }
@@ -2912,6 +3106,9 @@ var KASClient;
             if (errorCallback === void 0) { errorCallback = null; }
             var result = null;
             switch (command) {
+                case KASClient.GET_LOCALIZED_DATE:
+                    result = [KaizalaPlatform.getDateString(args[0], args[1], args[2], args[3])];
+                    break;
                 case KASClient.GET_UUID:
                     result = [KaizalaPlatform.generateUUID()];
                     break;
@@ -3026,7 +3223,12 @@ var KASClient;
                     KaizalaPlatform.dismissActivity();
                     break;
                 case KASClient.SHOW_PROGRESS_BAR_COMMAND:
-                    KaizalaPlatform.showProgressBar();
+                    if (KASClient.Version.clientSupports(KASClient.Version.VERSION_28_1, true /* considerMinorVersion */)) {
+                        KaizalaPlatform.showProgressBar(args[0]);
+                    }
+                    else {
+                        KaizalaPlatform.showProgressBar();
+                    }
                     break;
                 case KASClient.HIDE_PROGRESS_BAR_COMMAND:
                     KaizalaPlatform.hideProgressBar();
@@ -3073,11 +3275,11 @@ var KASClient;
                 case KASClient.EDIT_CARD_COMMAND:
                     KaizalaPlatform.editCard();
                     return;
-                case KASClient.UPDATE_REQUEST_COMMAND:
-                    result = [KaizalaPlatform.updateSurvey(args[0], successCallback, errorCallback)];
-                    break;
                 case KASClient.OPEN_IMMERSIVE_VIEW_FOR_ATTACHMENT:
                     KaizalaPlatform.openImmersiveViewForAttachment(JSON.stringify(args[0]));
+                    return;
+                case KASClient.OPEN_IMMERSIVE_VIEW_FOR_ATTACHMENT_LIST:
+                    KaizalaPlatform.openImmersiveViewForAttachmentList(JSON.stringify(args[0]), args[1]);
                     return;
                 case KASClient.CUSTOMIZE_NATIVE_TOOLBAR:
                     KaizalaPlatform.customizeNativeToolbar(JSON.stringify(args[0]));
@@ -3115,6 +3317,7 @@ var KASClient;
     KASClient.GET_SURVEY_URL_COMMAND = "getSurveyURL";
     KASClient.GET_RESPONSES_COMMAND = "getResponses";
     KASClient.GET_BATCH_RESPONSES_COMMAND = "getBatchResponses";
+    KASClient.GET_RESPONSES_TIME_RANGE_COMMAND = "getResponsesTimeRange";
     KASClient.GET_LIKES_AND_COMMENTS_DATA_COMMAND = "getLikesAndCommentsData";
     KASClient.GET_ASSET_PATHS_COMMAND = "getAssetPaths";
     KASClient.GET_LOCALIZED_STRINGS_COMMAND = "getLocalizedStrings";
@@ -3123,6 +3326,8 @@ var KASClient;
     KASClient.GET_LOCATION_COMMAND = "getCurrentLocation";
     KASClient.GET_CURRENT_LOCATION_COMMAND = "getCurrentLocationV2";
     KASClient.GET_USER_DETAILS_COMMAND = "getUserDetails";
+    KASClient.SHOW_USER_PROFILE = "showUserProfile";
+    KASClient.START_CHAT_COMMAND = "startChat";
     KASClient.GET_CONVERSATION_NAME_COMMAND = "getConversationName";
     KASClient.GET_APP_INFO_COMMAND = "getAppInfo";
     KASClient.GET_ATTACHMENT_PATH_COMMAND = "getAttachmentPath";
@@ -3164,9 +3369,13 @@ var KASClient;
     KASClient.RECORD_EVENT_COMMAND = "recordEvent";
     KASClient.IS_CURRENT_USER_O365_SUBSCRIBED = "isCurrentUserO365Subscribed";
     KASClient.GET_O365_USER_DETAILS = "getO365UserDetails";
+    KASClient.GET_FORWARD_CONTEXT = "getForwardContext";
     KASClient.CREATE_MEETING_REQUEST = "createMeetingRequest";
     KASClient.GET_CONVERSATION_PARTICIPANTS_COUNT = "getConversationParticipantsCount";
+    KASClient.GET_CONVERSATION_PARTICIPANTS = "getConversationParticipants";
     KASClient.SHOW_PLACE_PICKER = "showPlacePicker";
+    KASClient.SHOW_BARCODE_SCANNER = "showBarcodeScanner";
+    KASClient.SHOW_QRCODE_SCANNER = "showQRcodeScanner";
     KASClient.SHOW_DURATION_PICKER = "showDurationPicker";
     KASClient.EDIT_CARD_COMMAND = "editCard";
     KASClient.UPDATE_REQUEST_COMMAND = "updateRequest";
@@ -3174,16 +3383,14 @@ var KASClient;
     KASClient.GET_FONT_SIZE_MULTIPIER = "getFontSizeMultiplier";
     KASClient.SELECT_ATTACHMENTS_COMMAND = "selectAttachments";
     KASClient.DOWNLOAD_ATTACHMENT_COMMAND = "downloadAttachment";
+    KASClient.GET_STATIC_MAP_IMAGE = "getStaticMapImage";
+    KASClient.GET_LOCATION_ADDRESS = "getLocationAddress";
     KASClient.IS_ATTACHMENT_DOWNLOADING = "isAttachmentDownloading";
     KASClient.CANCEL_ATTACHMENT_DOWNLOAD_COMMAND = "cancelAttachmentDownload";
     KASClient.OPEN_IMMERSIVE_VIEW_FOR_ATTACHMENT = "openImmersiveViewForAttachment";
     KASClient.GENERATE_THUMBNAIL_FOR_IMAGE_ATTACHMENT = "generateBase64ThumbnailForAttachment";
     KASClient.CHECK_STORAGE_ACCESS_FOR_ATTACHMENTS = "checkStorageAccessForAttachmentType";
-    KASClient.GET_LOCAL_PROPERTIES = "getLocalActionProperties";
-    KASClient.UPDATE_LOCAL_PROPERTIES = "updateLocalActionProperties";
     KASClient.GET_PACKAGE_CUSTOM_SETTINGS = "getPackageCustomSettings";
-    KASClient.GET_PACKAGE_CUSTOM_PROPERTIES = "getPackageCustomProperties";
-    KASClient.UPDATE_PACKAGE_CUSTOM_PROPERTIES = "updatePackageCustomProperties";
     KASClient.GET_DEVICE_ID_COMMAND = "getDeviceId";
     KASClient.GET_UUID = "generateUUID";
     KASClient.SEND_NOTIFICATION = "sendNotification";
@@ -3196,9 +3403,14 @@ var KASClient;
     KASClient.OPEN_LINK_IN_BROWSER = "openLinkInBrowser";
     KASClient.CREATE_REQUEST_COMMAND_V2 = "createRequestV2";
     KASClient.PERFORM_SPEECH_TO_TEXT = "performSpeechToText";
-    KASClient.SET_SECURED_VALUE = "setSecuredValue";
-    KASClient.GET_SECURED_VALUE = "getSecuredValue";
     KASClient.PERFORM_HTTP_REQUEST = "performHTTPRequest";
+    KASClient.GENERATE_THUMBNAIL_FOR_PDF_ATTACHMENT = "generateThumbnailForPDFAttachment";
+    KASClient.OPEN_IMMERSIVE_VIEW_FOR_ATTACHMENT_LIST = "openImmersiveViewForAttachmentList";
+    KASClient.GET_LOCALIZED_DATE = "getDateStringAndroid";
+    KASClient.UPDATE_ACTION_PACKAGE_LOCAL_DATA_CACHE = "updateActionPackageLocalDataCache";
+    KASClient.GET_ACTION_PACKAGE_LOCAL_DATA_CACHE = "getActionPackageLocalDataCache";
+    KASClient.UPDATE_ACTION_INSTANCE_LOCAL_DATA_CACHE = "updateActionInstanceLocalDataCache";
+    KASClient.GET_ACTION_INSTANCE_LOCAL_DATA_CACHE = "getActionInstanceLocalDataCache";
     // Note: If you are adding new commands here, please increment
     // the supported SDK version in clients as well as add details
     // of that version in VersionUtil.ts
@@ -3418,6 +3630,17 @@ var KASClient;
     }
     KASClient.getBatchResponsesJson = getBatchResponsesJson;
     ///////////////////////////////////////////////////////
+    function getResponsesForTimeRange(startTime, endTime, userId, jsonCallback) {
+        if (startTime === void 0) { startTime = 0; }
+        if (endTime === void 0) { endTime = 0; }
+        if (userId === void 0) { userId = ""; }
+        if (jsonCallback === void 0) { jsonCallback = null; }
+        var value = getCorrelationIdForCallback(jsonCallback, "onGetJson");
+        sanitizeCallback(value["correlationId"]);
+        KASClient.callNativeCommand(KASClient.GET_RESPONSES_TIME_RANGE_COMMAND, [startTime, endTime, userId], value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.getResponsesForTimeRange = getResponsesForTimeRange;
+    ///////////////////////////////////////////////////////
     function getAssetPathsJson(jsonCallback) {
         if (jsonCallback === void 0) { jsonCallback = null; }
         var value = getCorrelationIdForCallback(jsonCallback, "onGetJson");
@@ -3491,6 +3714,34 @@ var KASClient;
     }
     KASClient.getAppLocale = getAppLocale;
     ///////////////////////////////////////////////////////
+    function getIs24HourTimeFormat(timeFormatCallback) {
+        if (timeFormatCallback === void 0) { timeFormatCallback = null; }
+        getAppInfo(function (appInfo, error) {
+            var is24HourFormat = false;
+            if (appInfo && appInfo.hasOwnProperty("is24HourFormat")) {
+                is24HourFormat = appInfo["is24HourFormat"];
+            }
+            if (timeFormatCallback) {
+                timeFormatCallback(is24HourFormat, error);
+            }
+        });
+    }
+    KASClient.getIs24HourTimeFormat = getIs24HourTimeFormat;
+    ///////////////////////////////////////////////////////
+    function getCalendarName(calendarNameCallback) {
+        if (calendarNameCallback === void 0) { calendarNameCallback = null; }
+        getAppInfo(function (appInfo, error) {
+            var calendarName = 'gregory';
+            if (appInfo && appInfo.hasOwnProperty("calendarName")) {
+                calendarName = appInfo["calendarName"];
+            }
+            if (calendarNameCallback) {
+                calendarNameCallback(calendarName, error);
+            }
+        });
+    }
+    KASClient.getCalendarName = getCalendarName;
+    ///////////////////////////////////////////////////////
     function getUserDetails(userIds, jsonCallback) {
         if (userIds === void 0) { userIds = []; }
         if (jsonCallback === void 0) { jsonCallback = null; }
@@ -3498,6 +3749,23 @@ var KASClient;
         KASClient.callNativeCommand(KASClient.GET_USER_DETAILS_COMMAND, userIds, value["successCallback"], value["errorCallback"]);
     }
     KASClient.getUserDetails = getUserDetails;
+    ///////////////////////////////////////////////////////
+    function showUserProfilePage(userId, isMiniProfile, boolCallback) {
+        if (userId === void 0) { userId = ""; }
+        if (isMiniProfile === void 0) { isMiniProfile = true; }
+        if (boolCallback === void 0) { boolCallback = null; }
+        var value = getCorrelationIdForCallback(boolCallback, "onGetBool");
+        KASClient.callNativeCommand(KASClient.SHOW_USER_PROFILE, [userId, isMiniProfile], value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.showUserProfilePage = showUserProfilePage;
+    ///////////////////////////////////////////////////////
+    function startChat(userId, boolCallback) {
+        if (userId === void 0) { userId = ""; }
+        if (boolCallback === void 0) { boolCallback = null; }
+        var value = getCorrelationIdForCallback(boolCallback, "onGetBool");
+        KASClient.callNativeCommand(KASClient.START_CHAT_COMMAND, [userId], value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.startChat = startChat;
     ///////////////////////////////////////////////////////
     function getIntegerationServiceToken(stringCallback) {
         if (stringCallback === void 0) { stringCallback = null; }
@@ -3512,21 +3780,6 @@ var KASClient;
         KASClient.callNativeCommand(KASClient.PERFORM_SPEECH_TO_TEXT, null, value["successCallback"], value["errorCallback"]);
     }
     KASClient.performSpeechToText = performSpeechToText;
-    ///////////////////////////////////////////////////////
-    function setSecuredValue(key, value) {
-        if (key === void 0) { key = ""; }
-        if (value === void 0) { value = ""; }
-        KASClient.callNativeCommand(KASClient.SET_SECURED_VALUE, [key, value]);
-    }
-    KASClient.setSecuredValue = setSecuredValue;
-    ///////////////////////////////////////////////////////
-    function getSecuredValue(key, stringCallback) {
-        if (key === void 0) { key = ""; }
-        if (stringCallback === void 0) { stringCallback = null; }
-        var value = getCorrelationIdForCallback(stringCallback, "onGetString");
-        KASClient.callNativeCommand(KASClient.GET_SECURED_VALUE, [key], value["successCallback"], value["errorCallback"]);
-    }
-    KASClient.getSecuredValue = getSecuredValue;
     ///////////////////////////////////////////////////////
     function getDeviceId(stringCallback) {
         if (stringCallback === void 0) { stringCallback = null; }
@@ -3579,6 +3832,20 @@ var KASClient;
     }
     KASClient.downloadAttachment = downloadAttachment;
     ///////////////////////////////////////////////////////
+    function getStaticMapImage(params, stringCallback) {
+        if (stringCallback === void 0) { stringCallback = null; }
+        var value = getCorrelationIdForCallback(stringCallback, "onGetString");
+        KASClient.callNativeCommand(KASClient.GET_STATIC_MAP_IMAGE, [params], value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.getStaticMapImage = getStaticMapImage;
+    ///////////////////////////////////////////////////////
+    function getLocationAddress(params, jsonCallback) {
+        if (jsonCallback === void 0) { jsonCallback = null; }
+        var value = getCorrelationIdForCallback(jsonCallback, "onGetJson");
+        KASClient.callNativeCommand(KASClient.GET_LOCATION_ADDRESS, [params], value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.getLocationAddress = getLocationAddress;
+    ///////////////////////////////////////////////////////
     function isAttachmentDownloading(attachment, boolCallback) {
         if (attachment === void 0) { attachment = null; }
         if (boolCallback === void 0) { boolCallback = null; }
@@ -3601,6 +3868,20 @@ var KASClient;
         KASClient.callNativeCommand(KASClient.SHOW_PLACE_PICKER, null, value["successCallback"], value["errorCallback"]);
     }
     KASClient.showPlacePicker = showPlacePicker;
+    ///////////////////////////////////////////////////////
+    function showBarcodeScanner(stringCallback) {
+        if (stringCallback === void 0) { stringCallback = null; }
+        var value = getCorrelationIdForCallback(stringCallback, "onGetString");
+        KASClient.callNativeCommand(KASClient.SHOW_BARCODE_SCANNER, null, value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.showBarcodeScanner = showBarcodeScanner;
+    ///////////////////////////////////////////////////////
+    function showQRcodeScanner(stringCallback) {
+        if (stringCallback === void 0) { stringCallback = null; }
+        var value = getCorrelationIdForCallback(stringCallback, "onGetString");
+        KASClient.callNativeCommand(KASClient.SHOW_QRCODE_SCANNER, null, value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.showQRcodeScanner = showQRcodeScanner;
     ///////////////////////////////////////////////////////
     function showDurationPicker(defaultDurationInMinutes, stringCallback) {
         if (defaultDurationInMinutes === void 0) { defaultDurationInMinutes = 0; }
@@ -3730,6 +4011,13 @@ var KASClient;
     }
     KASClient.openImmersiveViewForAttachment = openImmersiveViewForAttachment;
     ///////////////////////////////////////////////////////
+    function openAttachmentListImmersiveView(attachmentList, atIndex) {
+        if (attachmentList === void 0) { attachmentList = null; }
+        if (atIndex === void 0) { atIndex = 0; }
+        KASClient.callNativeCommand(KASClient.OPEN_IMMERSIVE_VIEW_FOR_ATTACHMENT_LIST, [attachmentList, atIndex]);
+    }
+    KASClient.openAttachmentListImmersiveView = openAttachmentListImmersiveView;
+    ///////////////////////////////////////////////////////
     function openHttpLinkInBrowser(urlStr) {
         if (urlStr === void 0) { urlStr = null; }
         KASClient.callNativeCommand(KASClient.OPEN_LINK_IN_BROWSER, [urlStr]);
@@ -3751,6 +4039,15 @@ var KASClient;
         KASClient.callNativeCommand(KASClient.GENERATE_THUMBNAIL_FOR_IMAGE_ATTACHMENT, [localPath], value["successCallback"], value["errorCallback"]);
     }
     KASClient.generateBase64ThumbnailForAttachment = generateBase64ThumbnailForAttachment;
+    ///////////////////////////////////////////////////////
+    function generateBase64ThumbnailForPDFAttachment(localPath, stringCallback, withHighRes) {
+        if (localPath === void 0) { localPath = null; }
+        if (stringCallback === void 0) { stringCallback = null; }
+        if (withHighRes === void 0) { withHighRes = false; }
+        var value = getCorrelationIdForCallback(stringCallback, "onGetString");
+        KASClient.callNativeCommand(KASClient.GENERATE_THUMBNAIL_FOR_PDF_ATTACHMENT, [localPath, withHighRes], value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.generateBase64ThumbnailForPDFAttachment = generateBase64ThumbnailForPDFAttachment;
     ///////////////////////////////////////////////////////
     function getFontSizeMultiplier(stringCallback) {
         if (stringCallback === void 0) { stringCallback = null; }
@@ -3870,6 +4167,13 @@ var KASClient;
     }
     KASClient.generateUUID = generateUUID;
     ///////////////////////////////////////////////////////////
+    function getDateStringAndroid(args, stringCallback) {
+        if (args === void 0) { args = []; }
+        if (stringCallback === void 0) { stringCallback = null; }
+        var value = getCorrelationIdForCallback(stringCallback, "onGetString");
+        KASClient.callNativeCommand(KASClient.GET_LOCALIZED_DATE, args, value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.getDateStringAndroid = getDateStringAndroid;
     function shouldSeeSurveySummary(boolCallback) {
         if (boolCallback === void 0) { boolCallback = null; }
         var value = getCorrelationIdForCallback(boolCallback, "onGetBool");
@@ -3931,6 +4235,13 @@ var KASClient;
         KASClient.callNativeCommand(KASClient.GET_O365_USER_DETAILS, null, value["successCallback"], value["errorCallback"]);
     }
     KASClient.getO365UserDetails = getO365UserDetails;
+    ///////////////////////////////////////////////////////////
+    function getForwardContext(jsonCallback) {
+        if (jsonCallback === void 0) { jsonCallback = null; }
+        var value = getCorrelationIdForCallback(jsonCallback, "onGetJson");
+        KASClient.callNativeCommand(KASClient.GET_FORWARD_CONTEXT, null, value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.getForwardContext = getForwardContext;
     ///////////////////////////////////////////////////////
     function getConversationParticipantsCount(stringCallback) {
         if (stringCallback === void 0) { stringCallback = null; }
@@ -3938,36 +4249,13 @@ var KASClient;
         KASClient.callNativeCommand(KASClient.GET_CONVERSATION_PARTICIPANTS_COUNT, null, value["successCallback"], value["errorCallback"]);
     }
     KASClient.getConversationParticipantsCount = getConversationParticipantsCount;
-    ///////////////////////////////////////////////////////////
-    function getLocalProperties(jsonCallback) {
+    ///////////////////////////////////////////////////////
+    function getConversationParticipants(jsonCallback) {
         if (jsonCallback === void 0) { jsonCallback = null; }
         var value = getCorrelationIdForCallback(jsonCallback, "onGetJson");
-        KASClient.callNativeCommand(KASClient.GET_LOCAL_PROPERTIES, null, value["successCallback"], value["errorCallback"]);
+        KASClient.callNativeCommand(KASClient.GET_CONVERSATION_PARTICIPANTS, null, value["successCallback"], value["errorCallback"]);
     }
-    KASClient.getLocalProperties = getLocalProperties;
-    ///////////////////////////////////////////////////////////
-    function updateLocalProperties(properties, boolCallback) {
-        if (properties === void 0) { properties = null; }
-        if (boolCallback === void 0) { boolCallback = null; }
-        var value = getCorrelationIdForCallback(boolCallback, "onGetBool");
-        KASClient.callNativeCommand(KASClient.UPDATE_LOCAL_PROPERTIES, [JSON.stringify(properties)], value["successCallback"], value["errorCallback"]);
-    }
-    KASClient.updateLocalProperties = updateLocalProperties;
-    ///////////////////////////////////////////////////////////
-    function getPackageCustomProperties(jsonCallback) {
-        if (jsonCallback === void 0) { jsonCallback = null; }
-        var value = getCorrelationIdForCallback(jsonCallback, "onGetJson");
-        KASClient.callNativeCommand(KASClient.GET_PACKAGE_CUSTOM_PROPERTIES, null, value["successCallback"], value["errorCallback"]);
-    }
-    KASClient.getPackageCustomProperties = getPackageCustomProperties;
-    ///////////////////////////////////////////////////////////
-    function updatePackageCustomProperties(properties, boolCallback) {
-        if (properties === void 0) { properties = null; }
-        if (boolCallback === void 0) { boolCallback = null; }
-        var value = getCorrelationIdForCallback(boolCallback, "onGetBool");
-        KASClient.callNativeCommand(KASClient.UPDATE_PACKAGE_CUSTOM_PROPERTIES, [JSON.stringify(properties)], value["successCallback"], value["errorCallback"]);
-    }
-    KASClient.updatePackageCustomProperties = updatePackageCustomProperties;
+    KASClient.getConversationParticipants = getConversationParticipants;
     ///////////////////////////////////////////////////////////
     function sendNotification(customNotificationMessage, boolCallback) {
         if (boolCallback === void 0) { boolCallback = null; }
@@ -4008,6 +4296,36 @@ var KASClient;
         KASClient.callNativeCommand(KASClient.PERFORM_HTTP_REQUEST, [url, parameters], value["successCallback"], value["errorCallback"]);
     }
     KASClient.performHTTPRequestNative = performHTTPRequestNative;
+    ///////////////////////////////////////////////////////////
+    function updateActionPackageLocalDataCache(properties, boolCallback) {
+        if (properties === void 0) { properties = null; }
+        if (boolCallback === void 0) { boolCallback = null; }
+        var value = getCorrelationIdForCallback(boolCallback, "onGetBool");
+        KASClient.callNativeCommand(KASClient.UPDATE_ACTION_PACKAGE_LOCAL_DATA_CACHE, [JSON.stringify(properties)], value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.updateActionPackageLocalDataCache = updateActionPackageLocalDataCache;
+    ///////////////////////////////////////////////////////////
+    function getActionPackageLocalDataCache(jsonCallback) {
+        if (jsonCallback === void 0) { jsonCallback = null; }
+        var value = getCorrelationIdForCallback(jsonCallback, "onGetJson");
+        KASClient.callNativeCommand(KASClient.GET_ACTION_PACKAGE_LOCAL_DATA_CACHE, null, value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.getActionPackageLocalDataCache = getActionPackageLocalDataCache;
+    ///////////////////////////////////////////////////////////
+    function updateActionInstanceLocalDataCache(properties, boolCallback) {
+        if (properties === void 0) { properties = null; }
+        if (boolCallback === void 0) { boolCallback = null; }
+        var value = getCorrelationIdForCallback(boolCallback, "onGetBool");
+        KASClient.callNativeCommand(KASClient.UPDATE_ACTION_INSTANCE_LOCAL_DATA_CACHE, [JSON.stringify(properties)], value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.updateActionInstanceLocalDataCache = updateActionInstanceLocalDataCache;
+    ///////////////////////////////////////////////////////////
+    function getActionInstanceLocalDataCache(jsonCallback) {
+        if (jsonCallback === void 0) { jsonCallback = null; }
+        var value = getCorrelationIdForCallback(jsonCallback, "onGetJson");
+        KASClient.callNativeCommand(KASClient.GET_ACTION_INSTANCE_LOCAL_DATA_CACHE, null, value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.getActionInstanceLocalDataCache = getActionInstanceLocalDataCache;
     ///////////////////////////////////////////////////////////
     var currentLocale = null;
     function convertErrorCodeToStringAsync(errorCode, callback) {
@@ -4560,6 +4878,7 @@ if (typeof Object.values != 'function') {
 }
 var KASClient;
 (function (KASClient) {
+    var isWebAppPlatform;
     var Platform;
     (function (Platform) {
         Platform[Platform["Unknown"] = 0] = "Unknown";
@@ -4567,8 +4886,12 @@ var KASClient;
         Platform[Platform["Android"] = 2] = "Android";
         Platform[Platform["WindowsPhone"] = 3] = "WindowsPhone";
         Platform[Platform["WindowsImmersive"] = 4] = "WindowsImmersive";
+        Platform[Platform["WebApp"] = 5] = "WebApp";
     })(Platform = KASClient.Platform || (KASClient.Platform = {}));
     function getPlatform() {
+        if (isWebAppPlatform) {
+            return Platform.WebApp;
+        }
         var userAgent = navigator.userAgent || navigator.vendor || window["KASClient"].opera;
         // Windows Phone must come first because its UA also contains "Android"
         if (/windows phone/i.test(userAgent)) {
@@ -4601,6 +4924,10 @@ var KASClient;
         }
     }
     KASClient.getVersion = getVersion;
+    function setPlatformAsWebApp() {
+        isWebAppPlatform = true;
+    }
+    KASClient.setPlatformAsWebApp = setPlatformAsWebApp;
 })(KASClient || (KASClient = {}));
 var KASClient;
 (function (KASClient) {
@@ -4622,6 +4949,16 @@ var KASClient;
         }
     }
     KASClient.parseJsonObject = parseJsonObject;
+    function isValidJson(json) {
+        try {
+            JSON.parse(JSON.stringify(json));
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
+    }
+    KASClient.isValidJson = isValidJson;
     // To avoid HTML injections, we sanitize all HTML tags
     // by replacing all '<' with '&lt;' and '>' with '&gt;'
     function sanitizeHtmlTags(string) {
@@ -4813,7 +5150,10 @@ var KASClient;
     function getLocationName(response) {
         if (isLocation(response)) {
             var location = parseJsonObject(response);
-            return location["n"];
+            if (location.hasOwnProperty("n") && !KASClient.isEmptyString(location["n"]))
+                return location["n"];
+            else
+                return location["lt"] + ", " + location["lg"];
         }
         return null;
     }
@@ -4825,66 +5165,49 @@ var KASClient;
     function getExpiryUntilString(date, forAccessibility) {
         if (forAccessibility === void 0) { forAccessibility = false; }
         var expiryUntil = (date.getTime() - (new Date()).getTime()) / 1000; // seconds
-        var expiryString = "";
-        var days = 0, hours = 0, minutes = 0, seconds = 0;
-        var dayInSeconds = 24 * 60 * 60;
-        if (expiryUntil >= dayInSeconds) {
-            days = Math.floor(expiryUntil / dayInSeconds);
-            expiryUntil -= (days * dayInSeconds);
-            if (!forAccessibility) {
-                expiryString += days + "d ";
-            }
-            else {
-                expiryString += days + KASClient.App.printf(KASClient.Internal.getKASClientString(days == 1 ? "Day" : "Days")) + " ";
-            }
-        }
-        var hourInSeconds = 60 * 60;
-        if (expiryUntil >= hourInSeconds) {
-            hours = Math.floor(expiryUntil / hourInSeconds);
-            expiryUntil -= (hours * hourInSeconds);
-            if (!forAccessibility) {
-                expiryString += hours + "h ";
-            }
-            else {
-                expiryString += hours + KASClient.App.printf(KASClient.Internal.getKASClientString(hours == 1 ? "Hour" : "Hours")) + " ";
-            }
-        }
-        var minuteInSeconds = 60;
-        if (expiryUntil >= minuteInSeconds) {
-            minutes = Math.floor(expiryUntil / minuteInSeconds);
-            expiryUntil -= (minutes * minuteInSeconds);
-            if (!forAccessibility) {
-                expiryString += minutes + "m ";
-            }
-            else {
-                expiryString += minutes + KASClient.App.printf(KASClient.Internal.getKASClientString(minuteInSeconds == 1 ? "Minute" : "Minutes")) + " ";
-            }
-        }
-        seconds = expiryUntil;
-        return expiryString;
+        return getDurationString(expiryUntil);
     }
     KASClient.getExpiryUntilString = getExpiryUntilString;
     function getDateString(date, showDayOfWeek, showTime, showYear) {
         if (showDayOfWeek === void 0) { showDayOfWeek = true; }
         if (showTime === void 0) { showTime = true; }
         if (showYear === void 0) { showYear = false; }
-        var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        var day = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         // Format "Mon Aug 15, 12:30 AM"
         var dateString = "";
+        // Mandatory
+        var formatParams = { 'day': 'numeric', 'month': 'short' };
+        var locale = navigator.language;
+        if (KASClient.getPlatform() == KASClient.Platform.Android) {
+            // Restrict the calendar to Gregorian in Android
+            locale += "-u-ca-gregory";
+        }
+        else if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+            // for iOS set the calendar name to the one returned from Native layer
+            locale += systemCalendarName;
+        }
         // Optional
         if (showDayOfWeek) {
-            dateString += day[date.getDay()] + ", ";
+            formatParams['weekday'] = 'short';
         }
-        // Mandatory
-        dateString += PrefixZero(date.getDate()) + " " + month[date.getMonth()];
         if (showYear) {
-            dateString += " " + date.getFullYear();
+            formatParams['year'] = 'numeric';
         }
         // Optional
         if (showTime) {
-            var strTime = getTimeString(date);
-            dateString += ", " + strTime;
+            formatParams['hour'] = 'numeric';
+            formatParams['minute'] = 'numeric';
+            formatParams['hour12'] = !Is24HourFormat;
+        }
+        dateString = date.toLocaleString(locale, formatParams);
+        // For some Indian languages toLocaleString is not localizing dates properly on "Android". Using a native android call as an alternative.
+        if (KASClient.getPlatform() == KASClient.Platform.Android && KASClient.Version.clientSupports(KASClient.Version.VERSION_28_2, true)) {
+            var dateInMillis = date.getTime();
+            var callBack = function (returnedDateString, error) {
+                if (error == null && !isEmptyString(returnedDateString)) {
+                    dateString = returnedDateString;
+                }
+            };
+            KASClient.getDateStringAndroid([dateInMillis, showDayOfWeek, showTime, showYear], callBack);
         }
         return dateString;
     }
@@ -4892,28 +5215,95 @@ var KASClient;
     /* convert DateTime object to readable String format
     */
     function getTimeString(date) {
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
-        var ampm = hours >= 12 ? "PM" : "AM";
-        hours = hours % 12;
-        hours = hours ? hours : 12;
-        minutes = minutes < 10 ? minutes : minutes;
-        var strTime = PrefixZero(hours) + ":" + PrefixZero(minutes) + " " + ampm;
-        return strTime;
+        return date.toLocaleString(navigator.language, { 'hour': 'numeric', 'minute': 'numeric', 'hour12': !Is24HourFormat });
     }
     KASClient.getTimeString = getTimeString;
+    /* convert duration in seconds to readable String format
+    */
+    function getDurationString(duration) {
+        var expiryString = "";
+        var days = 0, hours = 0, minutes = 0, seconds = 0;
+        var dayInSeconds = 24 * 60 * 60;
+        if (duration >= dayInSeconds) {
+            days = Math.floor(duration / dayInSeconds);
+            duration -= (days * dayInSeconds);
+            expiryString += days.toLocaleString() + KASClient.App.printf(KASClient.Internal.getKASClientString(days == 1 ? KASClient.Internal.getKASClientString("Day") : KASClient.Internal.getKASClientString("Days"))) + " ";
+        }
+        var hourInSeconds = 60 * 60;
+        if (duration >= hourInSeconds) {
+            hours = Math.floor(duration / hourInSeconds);
+            duration -= (hours * hourInSeconds);
+            expiryString += hours.toLocaleString() + KASClient.App.printf(KASClient.Internal.getKASClientString(hours == 1 ? KASClient.Internal.getKASClientString("Hour") : KASClient.Internal.getKASClientString("Hours"))) + " ";
+        }
+        var minuteInSeconds = 60;
+        if (duration >= minuteInSeconds) {
+            minutes = Math.floor(duration / minuteInSeconds);
+            duration -= (minutes * minuteInSeconds);
+            expiryString += minutes.toLocaleString() + KASClient.App.printf(KASClient.Internal.getKASClientString(minuteInSeconds == 1 ? KASClient.Internal.getKASClientString("Minute") : KASClient.Internal.getKASClientString("Minutes")));
+        }
+        seconds = duration;
+        return expiryString;
+    }
+    KASClient.getDurationString = getDurationString;
     /* convert Time object as Number value to readable String format
     */
     function toStringTimeObject(time) {
         var hours = time.split(":")[0];
         var minutes = time.split(":")[1];
-        var suffix = hours >= 12 ? "pm" : "am";
-        hours = hours % 12 || 12;
-        hours = hours < 10 ? "0" + hours : hours;
+        hours = parseInt(hours);
+        minutes = parseInt(minutes);
+        var zeroValue = 0;
+        minutes = minutes < 10 ? zeroValue.toLocaleString() + minutes.toLocaleString() : minutes.toLocaleString();
+        var suffix = '';
+        if (!Is24HourFormat) {
+            suffix = hours >= 12 ? KASClient.Internal.getKASClientString("PM") : KASClient.Internal.getKASClientString("AM");
+            hours = hours % 12 || 12;
+        }
+        hours = hours < 10 ? zeroValue.toLocaleString() + hours.toLocaleString() : hours.toLocaleString();
         var displayTime = hours + ":" + minutes + " " + suffix;
         return displayTime;
     }
     KASClient.toStringTimeObject = toStringTimeObject;
+    function getServerTime(callback) {
+        var url = 'https://api.kaiza.la';
+        KASClient.App.performHTTPRequest(url, JSON.stringify({
+            "method": "HEAD"
+        }), function (resp, error) {
+            if (callback) {
+                if (error) {
+                    callback(-1, error);
+                    return;
+                }
+                var errorString = "Something went wrong.";
+                var response = JSON.parse(resp);
+                if (isEmptyObject(response)) {
+                    callback(-1, errorString);
+                    return;
+                }
+                var header = response["HttpResponseHeader"];
+                if (isEmptyObject(header)) {
+                    callback(-1, errorString);
+                    return;
+                }
+                if (typeof header === "string") {
+                    header = JSON.parse(header);
+                }
+                var date = header["Date"];
+                if (isEmptyObject(date)) {
+                    callback(-1, errorString);
+                    return;
+                }
+                var now = new Date(date);
+                // Checking date is valid or not.
+                if (now.getTime() !== now.getTime()) {
+                    callback(-1, errorString);
+                    return;
+                }
+                callback(now.getTime(), error);
+            }
+        });
+    }
+    KASClient.getServerTime = getServerTime;
     function PrefixZero(n) {
         return ("0" + n).slice(-2);
     }
@@ -4926,17 +5316,40 @@ var KASClient;
             return bytes + " B";
         var exp = parseInt("" + (Math.log(bytes) / Math.log(unit)));
         var pre = "KMGTPE"[exp - 1];
-        var retVal = (bytes / Math.pow(unit, exp)).toFixed(1) + " " + pre + "B";
+        // shows till one and only one decimal point and localizes it
+        var retVal = (bytes / Math.pow(unit, exp)).toLocaleString(undefined, {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1
+        }) + " " + pre + "B";
         return retVal;
     }
     KASClient.formatSize = formatSize;
     function isEmptyString(str) {
-        if (str == undefined || str == null || typeof str !== 'string' || str.trim().length == 0) {
-            return true;
-        }
-        return false;
+        return isEmptyObject(str);
     }
     KASClient.isEmptyString = isEmptyString;
+    function isEmptyObject(obj) {
+        if (obj == undefined || obj == null) {
+            return true;
+        }
+        var isEmpty = false;
+        if (typeof obj === "number" || typeof obj === "boolean") {
+            isEmpty = false;
+        }
+        else if (typeof obj === "string") {
+            isEmpty = obj.trim().length == 0;
+        }
+        else if (Array.isArray(obj)) {
+            isEmpty = obj.length == 0;
+        }
+        else if (typeof obj === "object") {
+            if (isValidJson(obj)) {
+                isEmpty = JSON.stringify(obj) == "{}";
+            }
+        }
+        return isEmpty;
+    }
+    KASClient.isEmptyObject = isEmptyObject;
     function getJsonFromFileAsync(file, callback) {
         var json = JSON.parse("{}");
         var rawFile = new XMLHttpRequest();
@@ -5089,6 +5502,15 @@ var KASClient;
         Version.VERSION_23 = "23";
         Version.VERSION_24 = "24";
         Version.VERSION_25 = "25";
+        Version.VERSION_26 = "26";
+        Version.VERSION_27 = "27";
+        Version.VERSION_28 = "28";
+        Version.VERSION_28_1 = "28.1"; //support ProgressBar for Custom Action Summary with text in android
+        Version.VERSION_28_2 = "28.2"; //support get localized date for android from native 
+        Version.VERSION_29 = "29";
+        Version.VERSION_30 = "30";
+        Version.VERSION_29_1 = "29.1"; // support Base64 image in Attachment type Property.
+        Version.VERSION_31 = "31";
         var commandVersion = {};
         // Commands introduced in version-0 SDK
         commandVersion[KASClient.CLOSE_CARD_COMMAND] = Version.VERSION_0;
@@ -5163,10 +5585,14 @@ var KASClient;
         commandVersion[KASClient.CHECK_STORAGE_ACCESS_FOR_ATTACHMENTS] = Version.VERSION_12;
         commandVersion[KASClient.GET_PACKAGE_CUSTOM_SETTINGS] = Version.VERSION_12;
         // Commands introduced in version-13 SDK
-        commandVersion[KASClient.GET_LOCAL_PROPERTIES] = Version.VERSION_13;
-        commandVersion[KASClient.UPDATE_LOCAL_PROPERTIES] = Version.VERSION_13;
-        commandVersion[KASClient.GET_PACKAGE_CUSTOM_PROPERTIES] = Version.VERSION_13;
-        commandVersion[KASClient.UPDATE_PACKAGE_CUSTOM_PROPERTIES] = Version.VERSION_13;
+        /* Going forward, the below 2 commented out API will not
+         be supported to avoid any discrepancies with chat history feature */
+        // commandVersion[GET_LOCAL_PROPERTIES] = VERSION_13;
+        // commandVersion[UPDATE_LOCAL_PROPERTIES] = VERSION_13;
+        /* Going forward, the below 2 commented out API will not
+         be supported  - https://office.visualstudio.com/OC/_workitems/edit/2081189*/
+        //commandVersion[GET_PACKAGE_CUSTOM_PROPERTIES] = VERSION_13;
+        //commandVersion[UPDATE_PACKAGE_CUSTOM_PROPERTIES] = VERSION_13;
         commandVersion[KASClient.GET_DEVICE_ID_COMMAND] = Version.VERSION_13;
         // Commands introduced in version-14 SDK
         commandVersion[KASClient.GET_UUID] = Version.VERSION_14;
@@ -5195,14 +5621,38 @@ var KASClient;
         commandVersion[KASClient.OPEN_LINK_IN_BROWSER] = Version.VERSION_23;
         // Commands introduced in Version-24 SDK
         commandVersion[KASClient.PERFORM_SPEECH_TO_TEXT] = Version.VERSION_24;
-        commandVersion[KASClient.SET_SECURED_VALUE] = Version.VERSION_24;
-        commandVersion[KASClient.GET_SECURED_VALUE] = Version.VERSION_24;
+        /* Going forward, the following commented out API will not
+         be supported to avoid any discrepancies with chat history feature */
+        // commandVersion[KASClient.SET_SECURED_VALUE] = Version.VERSION_24;
+        // commandVersion[KASClient.GET_SECURED_VALUE] = Version.VERSION_24;
         commandVersion[KASClient.CREATE_REQUEST_COMMAND_V2] = Version.VERSION_24;
         commandVersion[KASClient.PERFORM_HTTP_REQUEST] = Version.VERSION_24;
-        //Commands introduced in Version-25 SDK
+        // Commands introduced in Version-25 SDK
         commandVersion[KASClient.GET_BATCH_RESPONSES_COMMAND] = Version.VERSION_25;
         commandVersion[KASClient.CREATE_REQUEST_WITH_RESPONSES_COMMAND] = Version.VERSION_25;
         commandVersion[KASClient.UPDATE_BATCH_RESPONSES_COMMAND] = Version.VERSION_25;
+        // Commands introduced in Version-26 SDK
+        commandVersion[KASClient.SHOW_USER_PROFILE] = Version.VERSION_26;
+        commandVersion[KASClient.START_CHAT_COMMAND] = Version.VERSION_26;
+        //commands introduced in Version-27 SDK
+        commandVersion[KASClient.GET_FORWARD_CONTEXT] = Version.VERSION_27;
+        // Commands introduced in Version-28 SDK
+        commandVersion[KASClient.GET_RESPONSES_TIME_RANGE_COMMAND] = Version.VERSION_28;
+        commandVersion[KASClient.GET_CONVERSATION_PARTICIPANTS] = Version.VERSION_28;
+        commandVersion[KASClient.GENERATE_THUMBNAIL_FOR_PDF_ATTACHMENT] = Version.VERSION_28;
+        commandVersion[KASClient.OPEN_IMMERSIVE_VIEW_FOR_ATTACHMENT_LIST] = Version.VERSION_28;
+        commandVersion[KASClient.GET_LOCALIZED_DATE] = Version.VERSION_28;
+        //commands introduced in Version-29 SDK
+        commandVersion[KASClient.SHOW_BARCODE_SCANNER] = Version.VERSION_29;
+        commandVersion[KASClient.SHOW_QRCODE_SCANNER] = Version.VERSION_29;
+        //commands introduced in Version-30 SDK
+        commandVersion[KASClient.GET_STATIC_MAP_IMAGE] = Version.VERSION_30;
+        commandVersion[KASClient.GET_LOCATION_ADDRESS] = Version.VERSION_30;
+        //commands introduced in Version-31 SDK
+        commandVersion[KASClient.UPDATE_ACTION_PACKAGE_LOCAL_DATA_CACHE] = Version.VERSION_31;
+        commandVersion[KASClient.GET_ACTION_PACKAGE_LOCAL_DATA_CACHE] = Version.VERSION_31;
+        commandVersion[KASClient.UPDATE_ACTION_INSTANCE_LOCAL_DATA_CACHE] = Version.VERSION_31;
+        commandVersion[KASClient.GET_ACTION_INSTANCE_LOCAL_DATA_CACHE] = Version.VERSION_31;
         // The below method doesn't consider minor version
         function commandIsCompatible(command, callback) {
             if (!commandVersion.hasOwnProperty(command)) {
@@ -5247,95 +5697,13 @@ var KASClient;
                 callback(_clientSupportedSDKVersion);
             }
             else {
-                // Version-3+ representative API
-                var version3PlusChecker = function (commandReturned) {
-                    KASClient.getClientSupportedSDKVersion(function (version, error) {
-                        _clientSupportedSDKVersion = version;
-                        commandReturned();
-                    }, true /* bypassVersionChecking */);
-                };
-                // Version-2 representative API
-                var version2Checker = function (commandReturned) {
-                    KASClient.getPackageProperties(function (properties, error) {
-                        if (_clientSupportedSDKVersion == null) {
-                            _clientSupportedSDKVersion = Version.VERSION_2;
-                            commandReturned();
-                        }
-                        // Else it's a stale call, cause we've already got the version
-                    }, true /* bypassVersionChecking */);
-                };
-                // Version-1 representative API
-                var version1Checker = function (commandReturned) {
-                    KASClient.getCurrentUserId(function (userId, error) {
-                        if (_clientSupportedSDKVersion == null) {
-                            _clientSupportedSDKVersion = Version.VERSION_1;
-                            commandReturned();
-                        }
-                        // Else it's a stale call, cause we've already got the version
-                    }, true /* bypassVersionChecking */);
-                };
-                // If client already supports version-3+ SDK, then we can query
-                // for the supported version directly!
-                checkIfCommandExists(version3PlusChecker, function (exists) {
-                    if (exists) {
-                        callback(_clientSupportedSDKVersion);
-                    }
-                    else {
-                        // Else client is older than version-3,
-                        // Check for version-2 first, then version-1,
-                        // if none is compatible, then it's version-0
-                        checkIfCommandExists(version2Checker, function (exists) {
-                            if (exists) {
-                                callback(_clientSupportedSDKVersion);
-                            }
-                            else {
-                                checkIfCommandExists(version1Checker, function (exists) {
-                                    if (exists) {
-                                        callback(_clientSupportedSDKVersion);
-                                    }
-                                    else {
-                                        // At this point it's safe to say that the client is primitive
-                                        _clientSupportedSDKVersion = Version.VERSION_0;
-                                        callback(_clientSupportedSDKVersion);
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
+                KASClient.getClientSupportedSDKVersion(function (version, error) {
+                    _clientSupportedSDKVersion = version;
+                    callback(_clientSupportedSDKVersion);
+                }, true /* bypassVersionChecking */);
             }
         }
         Version.getClientSupportedVersion = getClientSupportedVersion;
-        function checkIfCommandExists(commandWrapper, callback) {
-            if (KASClient.getPlatform() == KASClient.Platform.iOS) {
-                // iOS runs in asynchronous model, so only a timeout
-                // can indicate the api doesn't exist in client side
-                var callbackCalled = false;
-                commandWrapper(function () {
-                    callbackCalled = true;
-                    callback(true);
-                });
-                setTimeout(function () {
-                    // Timeout occurred
-                    if (!callbackCalled) {
-                        callback(false);
-                    }
-                }, 100 /* ms */);
-            }
-            else {
-                // Android runs in synchronous model, so an exception
-                // will indicate the api doesn't exist in client side
-                try {
-                    commandWrapper(function () {
-                        callback(true);
-                    });
-                }
-                catch (e) {
-                    callback(false);
-                }
-            }
-        }
-        Version.checkIfCommandExists = checkIfCommandExists;
     })(Version = KASClient.Version || (KASClient.Version = {}));
 })(KASClient || (KASClient = {}));
 var KASClient;
@@ -5443,6 +5811,9 @@ var KASClient;
             this.localPath = "";
             this.serverPath = "";
             this.attachmentId = "";
+            this.hasSetThumbnail = false;
+            this.thumbnail = "";
+            this.requireHighResThumbnail = false;
         }
         /**
          * The following string keys("ty", "afn", "asb", etc.) MUST be in sync with the Attachment object model representation in iOS and Android code.
@@ -5456,6 +5827,9 @@ var KASClient;
             object["spu"] = this.serverPath;
             object["lpu"] = this.localPath;
             object["id"] = this.attachmentId;
+            object["th"] = this.hasSetThumbnail;
+            object["tib"] = this.thumbnail;
+            object["rhrt"] = this.requireHighResThumbnail;
             return object;
         };
         KASAttachment.fromJSON = function (object) {
@@ -5486,6 +5860,15 @@ var KASClient;
             }
             if (object.hasOwnProperty("id")) {
                 attachment.attachmentId = object["id"];
+            }
+            if (object.hasOwnProperty("tib")) {
+                attachment.thumbnail = object["tib"];
+            }
+            if (object.hasOwnProperty("th")) {
+                attachment.hasSetThumbnail = object["th"];
+            }
+            if (object.hasOwnProperty("rhrt")) {
+                attachment.requireHighResThumbnail = object["rhrt"];
             }
         };
         KASAttachment.hasLocalPath = function (obj) {
@@ -5585,6 +5968,7 @@ var KASClient;
             _this.imageSource = KASClient.ImagePickerSource.All;
             _this.maxImageCount = 10;
             _this.attachmentListType = AttachmentListResponseType.GENERIC;
+            _this.defaultCameraFilterMode = KASClient.CameraFilterMode.Photo;
             return _this;
         }
         KASAttachmentListQuestionConfig.prototype.toJSON = function () {
@@ -5592,6 +5976,7 @@ var KASClient;
             object[KASAttachmentListQuestionConfig.MAX_IMAGE_COUNT_KEY] = this.maxImageCount;
             object[KASAttachmentListQuestionConfig.IMAGE_SOURCE_KEY] = this.imageSource;
             object[KASAttachmentListQuestionConfig.ATTACHMENT_LIST_TYPE] = this.attachmentListType;
+            object[KASAttachmentListQuestionConfig.DEFAULT_CAMERA_FILTER_MODE] = this.defaultCameraFilterMode;
             return object;
         };
         KASAttachmentListQuestionConfig.fromJSON = function (object) {
@@ -5610,12 +5995,16 @@ var KASClient;
             if (object.hasOwnProperty(KASAttachmentListQuestionConfig.ATTACHMENT_LIST_TYPE)) {
                 attachmentListConfig.attachmentListType = object[KASAttachmentListQuestionConfig.ATTACHMENT_LIST_TYPE];
             }
+            if (object.hasOwnProperty(KASAttachmentListQuestionConfig.DEFAULT_CAMERA_FILTER_MODE)) {
+                attachmentListConfig.defaultCameraFilterMode = object[KASAttachmentListQuestionConfig.DEFAULT_CAMERA_FILTER_MODE];
+            }
             return attachmentListConfig;
         };
         // Config to denote what picker sources to show in image type question
         KASAttachmentListQuestionConfig.MAX_IMAGE_COUNT_KEY = "mic";
         KASAttachmentListQuestionConfig.IMAGE_SOURCE_KEY = "is";
         KASAttachmentListQuestionConfig.ATTACHMENT_LIST_TYPE = "alt";
+        KASAttachmentListQuestionConfig.DEFAULT_CAMERA_FILTER_MODE = "dcfm";
         return KASAttachmentListQuestionConfig;
     }(KASClient.KASQuestionConfig));
     KASClient.KASAttachmentListQuestionConfig = KASAttachmentListQuestionConfig;
@@ -5757,7 +6146,7 @@ var KASClient;
         KASCountryPhoneCode.getAllCountryPhoneCodes = function () {
             var countryPhoneCodes = [];
             this.countryPhoneCodeList.forEach(function (element) {
-                if (!KASClient.isEmptyString(element["phoneCode"])) {
+                if (!KASClient.isEmptyObject(element["phoneCode"])) {
                     countryPhoneCodes.push(element["phoneCode"]);
                 }
             });
@@ -5768,7 +6157,7 @@ var KASClient;
             if (includeCountryName === void 0) { includeCountryName = true; }
             var formattedCountryPhoneCodes = [];
             this.countryPhoneCodeList.forEach(function (element) {
-                if (!KASClient.isEmptyString(element["phoneCode"])) {
+                if (!KASClient.isEmptyObject(element["phoneCode"])) {
                     formattedCountryPhoneCodes.push(_this.getFormattedString(element["phoneCode"], includeCountryName ? element["name_en"] : ""));
                 }
             });
@@ -5789,7 +6178,7 @@ var KASClient;
             var formattedString = null;
             if (!KASClient.isEmptyString(countryPhoneCode + "")) {
                 formattedString = "+" + countryPhoneCode;
-                if (!KASClient.isEmptyString(countryName)) {
+                if (!KASClient.isEmptyObject(countryName)) {
                     formattedString = formattedString + " " + countryName;
                 }
             }
@@ -7145,7 +7534,7 @@ var KASClient;
             actionBody["title"] = this.title;
             actionBody["isAnonymous"] = this.isAnonymous;
             actionBody["expiry"] = this.expiry;
-            actionBody["visibility"] = KASClient.KASFormResultVisibility[this.visibility];
+            actionBody["visibility"] = this.getAPICompatibleVisibilityType(this.visibility);
             actionBody["isResponseAppended"] = this.isResponseAppended;
             actionBody["type"] = this.type;
             actionBody["reportType"] = this.reportType;
@@ -7163,6 +7552,20 @@ var KASClient;
             object["id"] = this.packageId;
             object["actionBody"] = actionBody;
             return object;
+        };
+        KASForm.prototype.getAPICompatibleVisibilityType = function (visibilityType) {
+            switch (this.visibility) {
+                case KASClient.KASFormResultVisibility.All:
+                    return "All";
+                case KASClient.KASFormResultVisibility.Sender:
+                    return "Sender";
+                case KASClient.KASFormResultVisibility.Admin:
+                    return "Admins";
+                case KASClient.KASFormResultVisibility.MembersAndSubscribers:
+                    return "MembersAndSubscribers";
+                default:
+                    return "";
+            }
         };
         KASForm.fromJSON = function (object) {
             if (object == null) {
@@ -7804,6 +8207,14 @@ var KASClient;
             // A map of question id to answer
             // Dictionary<QuestionId: number, Answer: string>
             this.questionToAnswerMap = {};
+            // Group id
+            this.groupId = "";
+            // Group Name
+            this.groupName = "";
+            // Responder id
+            this.responderId = "";
+            // Responder name
+            this.responderName = "";
         }
         KASFormResponse.fromJSON = function (object) {
             if (object == null) {
@@ -7824,6 +8235,18 @@ var KASClient;
             }
             if (object.hasOwnProperty("response_payload_native")) {
                 response.questionToAnswerMap = KASClient.parseJsonObject(object["response_payload_native"]);
+            }
+            if (object.hasOwnProperty("gid")) {
+                response.groupId = object["gid"];
+            }
+            if (object.hasOwnProperty("group")) {
+                response.groupName = object["group"];
+            }
+            if (object.hasOwnProperty("rid")) {
+                response.responderId = object["rid"];
+            }
+            if (object.hasOwnProperty("name")) {
+                response.responderName = object["name"];
             }
             return response;
         };
@@ -7956,26 +8379,42 @@ var KASClient;
 })(KASClient || (KASClient = {}));
 var KASClient;
 (function (KASClient) {
+    var KASForwardContext = /** @class */ (function () {
+        function KASForwardContext() {
+            this.inForwardMode = false;
+        }
+        KASForwardContext.fromJSON = function (object) {
+            if (object == null) {
+                return null;
+            }
+            var context = new KASForwardContext();
+            if (object.hasOwnProperty("inForwardMode")) {
+                context.inForwardMode = object["inForwardMode"];
+            }
+            return context;
+        };
+        return KASForwardContext;
+    }());
+    KASClient.KASForwardContext = KASForwardContext;
+})(KASClient || (KASClient = {}));
+var KASClient;
+(function (KASClient) {
     var KASImageAttachment = /** @class */ (function (_super) {
         __extends(KASImageAttachment, _super);
         function KASImageAttachment() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.hasSetThumbnail = false;
             _this.generateThumbnailServerUrl = false;
             _this.thumbnailServerUrl = "";
             _this.width = 0;
             _this.height = 0;
-            _this.thumbnail = "";
             return _this;
         }
         KASImageAttachment.prototype.toJSON = function () {
             var object = _super.prototype.toJSON.call(this);
             object["iw"] = this.width;
             object["ih"] = this.height;
-            object["th"] = this.hasSetThumbnail;
             object["turl"] = this.thumbnailServerUrl;
             object["gts"] = this.generateThumbnailServerUrl;
-            object["tib"] = this.thumbnail;
             return object;
         };
         KASImageAttachment.fromJSON = function (object) {
@@ -7989,23 +8428,17 @@ var KASClient;
         KASImageAttachment.populateModelFromJSON = function (attachment, object) {
             _super.populateModelFromJSON.call(this, attachment, object);
             attachment.type = KASClient.KASAttachmentType.Image;
-            if (object.hasOwnProperty("tib")) {
-                attachment.thumbnail = object["tib"];
+            if (object.hasOwnProperty("iw")) {
+                attachment.width = object["iw"];
             }
-            if (object.hasOwnProperty("th")) {
-                attachment.hasSetThumbnail = object["th"];
+            if (object.hasOwnProperty("ih")) {
+                attachment.height = object["iw"];
             }
             if (object.hasOwnProperty("turl")) {
                 attachment.thumbnailServerUrl = object["turl"];
             }
             if (object.hasOwnProperty("gts")) {
                 attachment.generateThumbnailServerUrl = object["gts"];
-            }
-            if (object.hasOwnProperty("iw")) {
-                attachment.width = object["iw"];
-            }
-            if (object.hasOwnProperty("ih")) {
-                attachment.height = object["iw"];
             }
         };
         return KASImageAttachment;
@@ -8024,16 +8457,26 @@ var KASClient;
         // Only Camera will be shown in picker, by default back camera will launch
         ImagePickerSource[ImagePickerSource["CameraBack"] = 2] = "CameraBack";
     })(ImagePickerSource = KASClient.ImagePickerSource || (KASClient.ImagePickerSource = {}));
+    var CameraFilterMode;
+    (function (CameraFilterMode) {
+        //Should be consistent with the lens modes
+        CameraFilterMode["WhiteBoard"] = "WhiteBoard";
+        CameraFilterMode["BusinessCard"] = "BusinessCard";
+        CameraFilterMode["Document"] = "Document";
+        CameraFilterMode["Photo"] = "Photo";
+    })(CameraFilterMode = KASClient.CameraFilterMode || (KASClient.CameraFilterMode = {}));
     var KASImageQuestionConfig = /** @class */ (function (_super) {
         __extends(KASImageQuestionConfig, _super);
         function KASImageQuestionConfig() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
             _this.imageSource = ImagePickerSource.All;
+            _this.defaultCameraFilterMode = CameraFilterMode.Photo;
             return _this;
         }
         KASImageQuestionConfig.prototype.toJSON = function () {
             var object = _super.prototype.toJSON.call(this);
             object[KASImageQuestionConfig.IMAGE_SOURCE_KEY] = this.imageSource;
+            object[KASImageQuestionConfig.DEFAULT_CAMERA_FILTER_MODE] = this.defaultCameraFilterMode;
             return object;
         };
         KASImageQuestionConfig.fromJSON = function (object) {
@@ -8046,10 +8489,14 @@ var KASClient;
             if (object.hasOwnProperty(KASImageQuestionConfig.IMAGE_SOURCE_KEY)) {
                 imageConfig.imageSource = object[KASImageQuestionConfig.IMAGE_SOURCE_KEY];
             }
+            if (object.hasOwnProperty(KASImageQuestionConfig.DEFAULT_CAMERA_FILTER_MODE)) {
+                imageConfig.defaultCameraFilterMode = object[KASImageQuestionConfig.DEFAULT_CAMERA_FILTER_MODE];
+            }
             return imageConfig;
         };
         // Config to denote what picker sources to show in image type question
         KASImageQuestionConfig.IMAGE_SOURCE_KEY = "is";
+        KASImageQuestionConfig.DEFAULT_CAMERA_FILTER_MODE = "dcfm";
         return KASImageQuestionConfig;
     }(KASClient.KASQuestionConfig));
     KASClient.KASImageQuestionConfig = KASImageQuestionConfig;
@@ -8097,6 +8544,63 @@ var KASClient;
         return KASLocation;
     }());
     KASClient.KASLocation = KASLocation;
+})(KASClient || (KASClient = {}));
+var KASClient;
+(function (KASClient) {
+    var KASLocationAddressParams = /** @class */ (function () {
+        function KASLocationAddressParams() {
+        }
+        KASLocationAddressParams.prototype.toJSON = function () {
+            var object = JSON.parse("{}");
+            if (this.latitude) {
+                object["latitude"] = this.latitude;
+            }
+            if (this.longitude) {
+                object["longitude"] = this.longitude;
+            }
+            if (this.language) {
+                object["language"] = this.language;
+            }
+            return object;
+        };
+        return KASLocationAddressParams;
+    }());
+    KASClient.KASLocationAddressParams = KASLocationAddressParams;
+})(KASClient || (KASClient = {}));
+var KASClient;
+(function (KASClient) {
+    var KASLocationStaticMapImageParams = /** @class */ (function () {
+        function KASLocationStaticMapImageParams() {
+            /*Theses parameters are as used in Google maps static image api*/
+            this.sizeX = 360;
+            this.sizeY = 170;
+            this.markerColor = "red";
+        }
+        KASLocationStaticMapImageParams.prototype.toJSON = function () {
+            var object = JSON.parse("{}");
+            if (this.latitude) {
+                object["latitude"] = this.latitude;
+            }
+            if (this.longitude) {
+                object["longitude"] = this.longitude;
+            }
+            object["markerColor"] = this.markerColor;
+            object["sizeX"] = this.sizeX;
+            object["sizeY"] = this.sizeY;
+            if (this.language) {
+                object["language"] = this.language;
+            }
+            if (this.zoom) {
+                object["zoom"] = this.zoom;
+            }
+            if (this.mapType) {
+                object["mapType"] = this.mapType;
+            }
+            return object;
+        };
+        return KASLocationStaticMapImageParams;
+    }());
+    KASClient.KASLocationStaticMapImageParams = KASLocationStaticMapImageParams;
 })(KASClient || (KASClient = {}));
 var KASClient;
 (function (KASClient) {
@@ -8760,8 +9264,18 @@ var KASClient;
                 object["errMsg"] = this.errorString;
             if (this.helpText)
                 object["helpText"] = this.helpText;
-            var attributes = JSON.parse(this.attributes);
-            object["attributes"] = attributes;
+            if (this.attributes) {
+                var attr = this.attributes;
+                if (attr.hasOwnProperty("minValue")) {
+                    object["minValue"] = attr["minValue"];
+                }
+                if (attr.hasOwnProperty("maxValue")) {
+                    object["maxValue"] = attr["maxValue"];
+                }
+                if (attr.hasOwnProperty("allowOnlyIntegers")) {
+                    object["allowOnlyIntegers"] = attr["allowOnlyIntegers"];
+                }
+            }
             return object;
         };
         return KASValidationRule;
@@ -8774,14 +9288,12 @@ var KASClient;
         __extends(KASVideoAttachment, _super);
         function KASVideoAttachment() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.thumbnail = "";
             _this.duration = 0;
             _this.streamingPath = "";
             return _this;
         }
         KASVideoAttachment.prototype.toJSON = function () {
             var object = _super.prototype.toJSON.call(this);
-            object["tib"] = this.thumbnail;
             object["adr"] = this.duration;
             object["strpu"] = this.streamingPath;
             return object;
@@ -8797,9 +9309,6 @@ var KASClient;
         KASVideoAttachment.populateModelFromJSON = function (attachment, object) {
             _super.populateModelFromJSON.call(this, attachment, object);
             attachment.type = KASClient.KASAttachmentType.Video;
-            if (object.hasOwnProperty("tib")) {
-                attachment.thumbnail = object["tib"];
-            }
             if (object.hasOwnProperty("adr")) {
                 attachment.duration = object["adr"];
             }
@@ -8881,10 +9390,10 @@ var KASClient;
             Assets.emptyState = KASClient.Assets.emptyState;
             Assets.cancel = "iVBORw0KGgoAAAANSUhEUgAAACoAAAAqCAYAAADFw8lbAAAAAXNSR0IArs4c6QAAAY1JREFUWAndmd2SwiAMhTvO7AP6lnqzD7g33RNs3FgB8wfaZQahkOR8BrRMuyyirOt6Rr2gfonhqV3S3hjOVWFMEuQPKpVv1OmwpLlpoyksj7AYlJBkRGUqLPQkZAHAByXuBkudbQDNU5kCC9UaJMPcYHF15ZFGOxQWmj1IRrosSsMhsGZts0P152gbdGu6HW18xTqsFQ6ggE7TSAtUgU6PnR4Q0CNi5uwjkdFhkKyRIZARg3m6bUQo4tuFak16BD0+LX3TuEXYYmuC0BobAOiW2ytDbskP3wPqmkPEeyGZOAA7PpMMya0Ddj6kAzYMeWLRf9seYukdkHApJbwF1CsPuc//e1JCUtao9sq4zEJVk8kCYLFVL6XG0CPs8dGwNG0ighHfJlBtIkMoI0aN7T6WKZAZ6w5InRGB02OmBxQpSIudFkjA7bthjXCAPVHn2q3lduzAvJoya5odXhEY5k3aMD7Mg9xjPBqnlUJWa7DjTjiV7dHYBn8vG9hnBzsVUjDIE9ozpDCkzH7kC7Ff3A9D7M5G9BsAAAAASUVORK5CYII=";
             Assets.dropDownTick = "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAABPBJREFUaAXVWltoHFUY/ibbSzYaYYtFrVpbTLVCX6xKFTVNtKn6oDUopdLog6UICgo+CL4FBB8qxAcRQRBBW8EomiI0mqBtY1rRFqogEjFQW2hrqzViarrVxvH79uy6M7Ozc9udzeaHszNzLv/5/vNfzm0t1IMG7SwuoAc2usluNVMHU46pnUk0zTTFNMk0AQt7sRij2Gyd53dNZCVuvcvOYRab2H4TgW/ksy0mrxkKMsI2u5Fh2mpJwNgUX4BP7DaO5fME/QJ7K41w7I49DaYpzA7qbAAPWjOessDP6AIM2hmayTYC72e6KpBr0kILpyhIP83rLZrXbBQ20QQYtK9GHkMEfmsUpjXXsXAYrXiYQpwI4xUuwDv2OjL5OLVRr4ZQ2gB68YT1dbUqym8JKsROu4/A9zUcvEDJTNW3MARQdQ2o4SzeDWjbuKIMHkeftdOvQ38BZDaSHrTE5qA8nbvLz5wqBTAOe2hOzCZosOQTrbjN69huH1CoNNEmnTAZBDCsTD4hbMLoILcAJs43JlQ6QER+VRgXRgeVTcjMsJNNZzoOsIVXmVKOa63ijF3WgFkeNJ/peAWQKQlrkYwGtDC7iGPMq9fapsQ/rec0FuA6LQCNBsyqcr6A16C0F1fC/8/EWhY3nBZx+LasSNxtAbPFsJTFefxGNnHX84l7VsNLFgAfdQEblwGvTwDPfgP8G4/jDLK4vKWwk2ow+CWLgM97DHhhfoZ7uF13AwvLMTGKKG3C3sKw2R2ldr3qXEM9j98PrFvq5rhlJbVwkzsv9IvYqcjCHja0bj0q3HgZMLIBWH5pJbc3fgRe/aEyPyRntaJQR0iluhTfsgT4kiPvB/6l74CnueqP6QPC1SEN6PQgVbrnSmCIhtq+0N2NbQPPHQJeoxMnpJw0kCj+5+iI73cCN9AsguiR5cCeeyvB/8Ph7huvCby6bTcTWRACn7JlWWDsPmDzCuOQa2kefrR9lRFysWv9CMxc5FnMF8B7R/1axcuTADp0ikyrqK8DDwBrioa3lFuefRSm+wo3ixfXAG/eAWQ8QzR1AdgwCgyfdNdP+DUt9rEOlG7maCsUOkm2Pczo0nstuHECBrggf3mts4Z5P8kTn87PgK9+rSxLmDMlJ9ZxX0dUBoPHgHM0gQ/XA1m1LpLM5APmjZ8B1tNpvfTTn5y4OPI//+Utqel7UhqIHQP2nAB6COaPv92dy1z8wB85C9z1ad3Bq/OJFup8rxtGtK8DNINOgjoVchC4/xegiyegZ/LR+MaqRew1L+ZWclYd7QGu9wnGQ8eBx8aAPENmClRczOmI25wSJ+rj6DngzmHg29/dzd+mZz26PzXwihYjOp6XD4h2m0ey39M0jy5Gl7HTpv0r3wNPHgRm7WT8IrYqYFbU41q2PlvKVg7HQwylilQpk2dLqcsFnc/XSLL1BoCX+ewoXYiUTEhLugEW6ES4uckcqwyUQJYF0DmLhf5SQdM+hdFxi1MWQIh1M6LLhWYlYRNGBxkndmRwk6/bmHl6uCtBzLVOL9/SmDudQxXnXVh6vSfTYuA2oRJLXetksL30OedPYaly1eQvgBDrRkQ3I3OriXwBQ5XbGcGs9AHlOqnJL/nCBZAwTXzNWt2EnFqQY7fidnrMU6lOdpqk1If6inBHLIjRNOAUZt7+1cAphN7n7Z89vILoew7/bvMfy2FbsoAtOD4AAAAASUVORK5CYII=";
-            Assets.excelIcon = "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJrSURBVGhD7Zi/S1tRGIbzP/gHqDg7OnVwFHHrkklwKm1X7eQkiFOrdKiSoVRoq4MgJYvE5YIgggRKKYUOQoYSsEMpsVDIdHrf6/ns5/VLPm/OObm5eB94MOa7uXnf+yMnpFIy6kyNTzwJ6FLsmH2rMOCNTCBeb259D14iZIH9j3vmqtP5GbRE6AIgaIlhFADBSqQL1Gq1vmbZ5vnTZ8ljIkiJYRYA3ksMuwDwWiKPAsBbibwKAC8l0gV8gk8hTVrsbJzsDHIGPnw+MhvRbk+B9DyXgww2TnZ6FajX6yaKItNsNk2r1TLtdttucY0UitTmkOO1QLfbTf6eXXwxja+nZqvx3izvvzTV7RdmevWxmVieS+ZSKFKbQ87ABeIws5MLM2+kkP0EUihSm0POvQvEb/4uNor9TWEGEUihSG0OOVkKiIGy6ptcCkhHldTmkFMWyCqQQpHaHHIeboH5V/+/qxycH988j8fEo/XFW6+BQApFanPIcToDWLAIhMU6QPBSXN84Fahur9jdmGTVhaDz90/PRQ1IR5XU5pDjfA/QWfjx6zIJDlBE2hYCKRSpzSHHuQA/C6Df0YdACkVqc8hxLgC/tS/s7npf+ySQQpHaHHKcC/BPI1C4M8DvAUK7B3ziVIBf//hKTWtAYT6F6NrH0cf//HJ6e3J4Z3sIpFCkNoecgQvgiBNrn3Zunk8vbvw1EEihSG0OOc73QFqExqUFpcsISKFIbQ453gtoAikUqc0hJ5cCPinPQFaBFIrU5pCTpUCxf5VIE4cp1u9CEnix3U9CoX6ZA+kCeVAWsPvJDecCo6CNUzJiVCr/AJGHWH/5xCpHAAAAAElFTkSuQmCC";
+            Assets.excelIcon = "iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAMAAADVRocKAAABO1BMVEUAAAAhc0Yhc0YgckUid0kgcUUhc0YgcUUhdEchdEYgc0Uhdkchc0UhdEYid0gid0ggckYieEkhckYfbUMhdEcgbkMidkggcEQgcUUfbUMhdEcgbkMhc0YhdEcjeEkgb0MidkggcEQidUchdEYhc0YhdUcgcUQgcUX///8hc0YfbkMhckUieEkhdUcgb0QgcEQid0gidkcfbUMjeUkjeUrn8OvT5NrT49rQ4ti/18pTk3Azf1YldEn3+vn1+Pbe6+Ta6ODI3dJ8q5JhnX1cmXcldUn8/f3N4NXG28/C2cyhxbGBsJZ/rpRln39im3xZlnQse1ApeEzu9fHq8u7l7+nl7um61Ma00MCnybeYv6mSuqSGs5p5qY9yqItLj2old0qxzr6Mt6BvpYhem3pQkG1NjWlDiGI/h18+hV4W4wn1AAAAKHRSTlMAxFpnzJhSMyasj3VhSD8XD/Xv6eTe2tTMv7mzpZ+ZiYN8bzkuHgf5UPCBkAAAAlJJREFUaN7tmmdT6kAUhgXsXsu91967WWEVWyJGQKUpKsXee/v/v8D1nMUZJx/Q8ZzRaN4vkOFln5wk2+ZNhSc3arwmUN/1v4JFo/6BnrZJpdlZ6qZrq4d6O6aUVOvEgObG4arOieC0EjWgZSRQ5fsXBFEDav7Ud7dKoRSkBtRWD9a1SxA1YKyxoa8yHJ5RogY0NwX6K/+GQqFwmAcwPzcXAn0AIMrJ52cEoPzcAN+nAEY5qf96AA/wvscU2nojD+ABvg3ARR0tF7GsFcO4JwPYG6YZN4zjEmAF7BHCClbh990UApJovyO8yQk0JBBwAAcbpE8RXpQDADyl4WCJFHAOhrT9AjjWBZACLvfAcaoAxRgWQNzRNsERV4Az+LZO3ZMLO3jeQuDtyJMPFSdgORJ5+Fyl78l29MUSK16BNUkPkFnwbMOlWuQYix7T0DQ4cxwAeQgmoPDMBxevgBwPQEa0z+Ka0c6174QLsK59C0UeQN4oaZMFgAVgCSkOQBLnSSyBox/AtBld0iXQA7CAQxGHzy16QEYP11tYwjI14BYcGSkKMSyB+ibjIHcjhcjqEmgBCVwYXSrAA5rXaAFYwDUsWyKlEsgXXlEbANu6BEqAiROyBEAKn9T9ZTqAPucLBIhTXQIdIGuae2olITWgENMlsO0P1jKWFTWMM+4dju3eLdSP3cZ6gF8AcH9H8wBfD3hPfuDyBKRMhkMdcw1zxFzODLChlyGoc0bG9FGjU+McYalTLU1Mca8zQ+10ADgi9zqGyN2ZY/O8NOBM4tVrD55co2etzmYR6uGwSQAAAABJRU5ErkJggg==";
             Assets.pdfIcon = "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAABlBJREFUaN7tWVtsVFUUXefcx7xnmA5TSqEUKKJWChHBNtpKHzwCQohRI+iHr5io+EMkPrAmGCUhNQqUDzUhRhQkBkJCKRgFFUQlRIFYCUWU0iKMFKHMdNqZuWfuvduPQsvQTt8MbcL+vHc/Zp2z1zr7ngFu220bkLGeHCorKz/Pzs7OMU1z4MUYQyAQiAeDwYqVK1fuSQnC6urqWhpEO3z4MO3evTuycePGxwfj9/GeHIhIDOaCxONxlJSU2CZNmvTp+vXrH7npAAbbiAgAMGvWLGdeXt5na9asWTSsAADANT6VlJS48/PzN61evXr+sAJwvRUXF3sLCgq+WLVq1dxhCQAASktLfUVFRZvLy8tn9zVWHip6Xlpa6ieiLUKIJRUVFT8MOwAAUFZWlk5EW4UQS9atW7d/2AEAgNmzZ49ijG01DGPJhg0bDgw5AIZhIBaLQZaTly4sLMyIRqNbZVleunbt2gNDCoDf70dNTU23ABhjSEtLG52Tk/MBgBlDCkBubi5yc3N75RsKhdQhJaOR2mOInqpJeBY78ycu7/4S2vn6rtqNhhQHgj9UgVussE2eCgBoOfYzLn71ESxjc2CfnNevnCkFwBQVTOnoiuD+arjzyzDykWdTPQsRSGgds00sCtLjXXvGBcxY9CqCjnKmFoMpNHC7E6YWA8hM3Q4Y0QjOffg6fPOXInz0IKJ/HQdXLUh7+Cm4C0qvjZ24sm8Hgge/BgkNjrz7YbSEwP0ZoLjA+cq3ET1TCxGoR/Mve5H5YjnU0eNSswOMCHrTf2j6djtcM4sx7q0N8BQtQOMXaxE7U9vWHgeq0fTNNqQ/8SLGvVkJZWQGIiePgXEZTFaQ+VI5bOPvhHfOo8h6tQJK+pjUTqNEBE/hPDinFUB2e+Gd+yhsd+Sh+dB3ABGC3++Eb+FTcNwzA7LHi7R5j8N+170gXQCMQXJ6wGQV3OaA5B4BJkmpA0AAuKzAMmZCwnPFNwpGaxhmtAV6OATr+DsT3ksuD0CUmIloQMLQ/3OACGQaidxoaQa32cFkpY3oce0GQsd7c4+QAg4AMI04wr/92P5M/HsWkT9/hzMvH0y1Qk0fg9ChfR3vG88jcuIomKIMKoB+nwNctUIE6hH46F1whxORE0fgmv4g7FNmAgBGLn4agU/ew7krl6Ck+WGEQ5A83jbJvLYjQgMZeuoB0NUW8i1+BvrlC9ACDUhfugzOqQUAa2sRe+50jHtzPcJHfgKTOHwLnoS4eO5qcJt55z0GxZ95a3YARGBcgmtmMVxJXNSMLPgeXtpRzJee8N5130O3roVgmm1EbeNEownofeQRY8AIAPabDaCTQEuKAqs/A6rVBiKACa3on/dX6JKs9ErMLRZAc2c1ZT6/vIIDz/eldp8BEJMaTMCZKPgWZL72oUGMcYMQF3UnROTv4/tkhrG66OEijzGQ046mf/e+4H56ecApo6G72r1RxKR28rk5mbJnhN3icLCul1GDJkvkvth84VJL46kR0wpGO/JLEybOG3mjhy4jumsTwq3Rl93Zk7bJEvNqmtalu9baSnooGLnr072B/u0Ao52sJTS1NXQlKXoCYo2yMp3rum6deDcsWRMRPLCns96bBO5wwVu2GJE9W2Ayam0+W7fCLkvLI7rRZX5F4gCjGgAz+weASGGAyhi6A0DcMNs9onUncanqc3CrvRPpZV86PA/MuT6BxFj3+UGk9J8DjBEhQbqTHgvtIZIEbrGBW6ydAHDV0mUwdZeYMRryV4s3TUYJpCicd6sAwjRVZpjty0SG0fYFxjqfG6aI3RgvKZxD4V0vssI5hGn0v4UY8VpdjwuhxynpUAcmYnFJWECMTBPu6YXIfqsSuHG+J4CrFnC782os44bQzgoyj4ok8xCTFcaIn+63jALA9l277li0cKEtqYMANW+uqL908OvTnqwJfiV7cvs43VVTG5EwcPIIgqGWZb6P9+902eBLlnpXdXX0sUWL/hrQQWYBdqjAlKRtpiDumLUgp/H7nYfCZ06N0k/90eME73I4EK6v/XusijdU4JVuah8HkDfQUcLs4WCFLWfKlAmbf36n18yLAxkAUySMHkjtwboXUgDssfc1IlVfZIwx9VZJZG9q97gDdXV1v1ZVVTUNxh/dfVpZztHQ0HAat+223Vz7HwL8sXv5FT6mAAAAAElFTkSuQmCC";
-            Assets.pptIcon = "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJiSURBVGhD7ZhPSxtBGMbzHfwALbTQL+C9R48Fzy30JNgeemmxB7G99BZaihEhQWoVNaftXQ+eSukt/UNjqYkoC2kLRaOoBAuv+6wz7bi+2d1Z3zF72B88h2Qn2ee3md2dbKkg79y4dn3MYe4HGVK7cgN2RI54/fLVhnMJlwIrS8u03+3+cirhWgA4lbgKAeBMQlLgcHUuzPGHd3Sy/ZWWFxfUljOcSLgQ0FmYeqS2/Edcwlag1+tRo9Gger1OlUoljCYq8HbyodpyHlEJG4F2u021Wu1f8awCQEwirUCz2bxQXEdjIwBEJNII4MhzxXU0nICZpelyeGUyo292qo49SQKY8+a0qVar5HleKoFocHXiQAdVx54kgU6nQ61Wi3zfV++ckUUA4XAicPDpI+29X6PO4jRtl5/Sjyf36PPoMDVGboXbcyEQlLn9bPjmDFcyLoATyEpqgWDnb4KsB9nVZbIEDEqALWQbYAqkSRyFgG0AV7JfsOyII/cCWDvFkWsB3ARxM4zj0gJRej99+u3Ns2MRwJXlgmVIEuICmn4SgCsbDRaAaRAT8Gdf0NbzB+EvAP4edPuO5wrrYNqkOfIaMYHNx3fD17gza6JjEWD+odHBezhhk+Z8FHEBrIFA3C8giZjA0ea3MJo/q17seCmcnMRYjX7ps7CTRkwAR3ynPEHfx++w43QAt1S2iYn4OZAUwJWyiclABCQpBGwDuGlhE5NCwDbSFAK2Ady0sImJjYDYUwmulE1MUgtECcpkfi4kSWYBgA+r7zlH0pM5SZwIXCWFgPqegXFpgTxE1SnIGaXSKZBJ6C438mAmAAAAAElFTkSuQmCC";
-            Assets.wordIcon = "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJOSURBVGhD7Zi/SgNBEIfzDj6AgoWFD6CNWPkCNpYmjfgHW4t0VhaCYpFAbAyCWohYiIUgJJVFsJOgVjYqKIIk2Fit90t24uRYTWadTQLeB78im+zdfHuzd+FSCYPO6PDIQsCkowzZU4UBJzKB2NnavgsuEVLg6ODQ1Gu1l6ASoQVAUIleCIBgEr0SAEEkeikA1CXiAoVCQS3Li0v2qO2oSvRDAKhJxAU0cbUQR0UitECn0MPOliMnpEC3oAZbjhxfAVfPS8IJIlCpPpnLyoPJHV+bbL5k0utnZjJTNONzu43vXUVJwvEWiIqZHpvK5FxF/hZtuhaITr4XpRTlnYrxiTYSAWdB0mjTFwFXX0vCSQSk0eb/CWTzZTvVmPno1knj9Y/Pxlil+twawy0WPL7WW2PaiAVmVr7/ZEEGY7NrJ3akCf0WMuC0fN8aA66+loTj1UK02vvnN43P/KoACGEcKw82iletucBVlCQcLwH8TQDULlhhDgqeiJ7KBAkh2ngJUG/jSuAzrTRvGewPgs/VxkuAF0f9DxlqpduHt8ZVAHxTI9p4CfBCsA8ACuUbnMZxteLzXH0tCcdbAKvMoUJpgxP8VosAV1GScLwFaIUJKpT2AYHNzOdp4y2wunlhD9GExmmDA1wlPgfRxluA9zsvlG9w/gCjaOMt8FPQMpBAIBn/Hrj6WhKOukCnAFdRknD6IqBJIiCNNhIBtbcSrr6WhNO1QJyoGO/3Qq6iJOF4CwBMtsdpo9ObOU2CCPSSRMAep2/8WWAQYstJGDBSqS89Hvofttp6MwAAAABJRU5ErkJggg==";
+            Assets.pptIcon = "iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAMAAADVRocKAAABHVBMVEUAAAC3Ryq2Rim3Rim5SCu4Ryq2Rim2RSm3Ryq4Ryq5SSu2Rim5SSu6SSu1RSm2Rim4SCq2RimzQyi4SCq0RCi5SSu1RSm6Siy2Rim6SiyzRCi4SCu0RCi5SSu3Riq6Siy3Ryq0RCi5SSu1RSm6Siy2Rim7Siy4SCu3Ryq5SSu2Riq7Syz///+3Ryq0RCi2RSm6Siy5SSu2Riq7Syy4SSy8UzjBYEb+/Pu5Sy/89vXGbFS5TTL04t3x2tTqyMDnwbfhsaXeqJrPhXHMe2XKdF7EZk6+WD7z39rv1c7ry8Pow7nboZLZn4/XmYn68/H57+z36uf25+P15uLcpZfTjXrRiXbOf2vKd2LCYkq/W0G7Ujbx29XmvrPeq57TkX/f2JYOAAAALHRSTlMAw1oE8KCJZlMi+vZKQzYwEQvq5N/b1tDMx725s66om5eRg3x3dG5gPSkbFTvvlIoAAAINSURBVGje7dpna+NAEIBhy04vl+R67zW3k1xs+VTce0/v7f//jDgTEWwTZ9arXdDCvp8WBHpAgpXEKGbSsbUns1/ePo2pKLESn3n/fAOLSW5+7tvHl4ubG5hcYH35x/TrxU1MMrD6e/azNZXEJANrK79m3j0DTDKQ+DP39cOLBbsfyAbml75Pv1rYwiQDf5d/fnoz9e+2LSVAKpXqnztiAFBZcZUAFlcNWKEARgUABjBANAC3XintqwTgtuOsAmC3WK6dBQC4B/IBPBwA/cqObAAGABRUA1ASAOx0hh9ws/xAqXiZbzZ2PcaYk7s65QPgmB9gwxVdLgD2RAGWt7mAkjDAulxARRzwznmAswmBnVbhggVd8wDuhAD0q2UZ1h4DDCcAwKmD631lAORx7TwM/B+oJggE+2SGfC+qCwI9XqAqCHSCS0QCXUGggOs9GsiJAWkP1wUS8JkQ4LYZdkgCrcmBw+pJr8Gw7QwFHLGJgNF6SQKoeaGApk0A/g4LAzTSxAfIkcfCAO3z5KOA32JMHHDyJw8/9HOdat2269VuTniz8yvlip8hXh3D76YGiC4AYzLAfenhbAjS5yaHAjrFQjO7HY3vZI0BGJMBSECfm2wAA2gAAJ2l+fzAikd8hhOtMRcxqFMwarRpIOzQe3RYqtu4d7D1JWJgLaUEjtyTo4BOPw0MtHr324NJm24AUs+j6lq9JIEAAAAASUVORK5CYII=";
+            Assets.wordIcon = "iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAMAAADVRocKAAACFlBMVEUAAAAkWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJwlWJz///8jV5sZUJfCyN8bUZhDYqP9/P7IzOMiVpsUTpb+/f44ZaQkWJwYT5fKzuQgVZoUTJW8w95EbalDbKlGbqo4XJ8dU5nL0OW0utiqs9NDaKc6ZqUzYqK/xt8wYaHQ0+e3v9vN0OVNc61JbKnf5vDF0+W7wNxZdrBKZ6ZEY6MqWp4eVJnz8/n5+PzS1eg+ZqXw8Pfr7PTV1+koWZ2SnsguXZ8wWZ329fpuhLg/aacgUJj6+v3JzuQ7ZaQ/YaLu7/bn6vPg4e7EyeGnrtKaqc6eqM6Yo8uBncZyi71oibplg7dkfLRSeLA7YKEyW5/l5vHd3+3X2euBkL97jL1cfrNac64pWJ0pVJokU5kJRZDj5PDP0uajtNSkrdGWosl+msWNmcVqgLVheLFSdK5Sb6slVZvd4u/Z3ezU3OvP2OjEz+O6xt61vtuss9WbpcyJnsded7BFZ6YSSpTN1eewwtuvvNivtdabrM+Urc6TrM6UqMyOo8qJnMWFl8N7lMFzk79Oca1NaqlBZaXAxuBhZct4AAAALXRSTlMA40jdM7tGEDmSBfVM+cn96NiqaywL7tTEYyYgFIp0Pxrlzb2zr6Wfg3laVkecfjRlAAAGVklEQVRo3u2Z91cTQRDHwUSKgCKg9Govy54nnMmFCyVHL3ZNIJGQ0AWk994Updt77/0/NDdHIrDkDuHyfD75/BKWS/a7u7Mzs3vjtcUWf4kdexKifL08RozPkZDd+9ReHiHsaOz2naq9CHn7Kd63b3yo/4EIVQACdisrEBUY5x+yMxgBCgv4qo/F+R8ID0IrCQ9TYrNE+x0L9d/ujdbAO9RHguM+UbIDj/ILjDuUFITcEJSokiRELTHwmCh14OH9KiQF5mkJTCzav7aj7ImJ9ov037l3F5KGrSjQuie/oAKp1KR7+ibEx4WoAgKCkCz81Sfp7mm29WHv4yt73xF9LHafKjgAhi4PlZGq0aS4Q1N4Entv8/pNQuShiPBE0YXWK5CWLMGJVQLxScTA5WfwJwKBwcizAtu8/z8BXZbVswJ8/tvzBA/ulyojADAkp7JOKyeAaR3B9Zo0xQTYCnsRAeotVkyArnl9jqSpTLltmmX+F/2A5RisnADLcA54jhVbOr3+Ra3BUInEtm4jS8RyPM/TFI2hgSodGPKuVoitro6OmY+5bT1GZinhtJ0gKMy+4l4AsqDFYslbyDAKCqYCW/v0dFuOrUFoMYb78MOqYSMnzsjYcJnA0GOWEsDjc29yc3OmWvJ4R6P2mbjlpsYYFrF40QqtpkWnFTBNEVyvyZYUqP0CD6+NnkKIGx8WBQarORZhXH0NWvfsvNPRtPkE9lHJGSD9aDk8/aoXVuhJHTSuPOVZxKDP8KjsppFDAG9pK/xZuIr0NOlgR50RQ8mnWoyomuZkQPOKxohj31YJjfJhxCxL+iTSu4i3PIan7ZUc0vc6egQeGDDLofMaWL15hCWTvrQAVzkLT3PyTLi22vld6xjGzI87ogkaGHYTjubsNXWB5vptzune6GQ4PAY21jxCjCsWFW/A0XS9YMqhUZqG1QJKPzImVD0gGhw7BUza2VyClpJy6VBBZTZrhH6+6nVnYICilU200VYKJqh2CbAVBpKJizL5gNe2pAiPP1C6bugRuN9PGx/B/83fMUZLYOoUgWxG4/pnwbtyKyc/C58poqs9o+0v4a+HlZh19m/MOEOQ2TUkLcDcrgbvetTX3yYszhAsafkI97wJ3KyVd02Ar8ktNhev4vRQlZQABGEIh2ln89IdH3XtJwSTVLWOz5eL+4ljfyec+o3kA1pbqIFo1HtXWKGRadB7aB+BT/MYs1kBU1GbYITGrq46YQa984PgXnntMPX0Pow2KcAZh0uFobd+ghFnNkD4vTOXA7a/SSNgo6ECrNzTCEa4IMg81k4+hLW33dAIxv5CLb9C2XII3hQ2ygiwtZnwlVJhzctm7bqb0DLDfrX28MgFNlryCPp6rBICAF300hVyy+YmqRnQEym8xKHfYN0ajpYve3Q02VsFewJN32jOOSQwwQRePoPnZwks3UNyAlzFiDNeaeq1FPcd0g5Q1qFfcY1tv0BQ0ixxqnBa+dmAs8NbRSY88dolMNhNrTjZZW/o4MVykFrAtMIJRf8e7AtecNaE0Kb8ADAZHyxZuXH+NoOoTmFCwK1+Bm3WD8AITisPaGmH3oIrMz6tZZU4/DJopAm+UlciHIG4hpxkkfIuHVoGb2lJy05bRapZ/o6G8digaAKbcATCk63JIqnfKLQMbKzJIsjvtsoKsEzfXfHAVQ0JXj+zZOWWPhNaDqPTE8g7GpxQuzpmOj7kTj+HI5Cu2zrQJIRW2wSzYgb2xYsEi513ZQXgJvBCP2HoHxeNfrW7s7Pj/bt3C5Psyjtay2mCNOu678mYc+YWhqYoYTVMq+9oU//iHY1wNM/OIGUNlBKAaFpCkNN8RcFXCUUFBBW9ZgUEJF7MvsjMVkwAGy9fImiYsypnA8utbIJ6q3IvpHT/5suQTbyY3ethgXh4n+9BAd/AIwfDg/cGeSoWQfEgxi/UUZgICNql/AxcIr4Jjjrcfu9d6/OD1PpUd0w9aXAKkPWb6DDHeiUFyHqyJTMj0x1Z+UYosbhjT7R6m6O8lSipQFMS8BgdlKumJqgDQ2MPhLtbr4Cd2yXYt91/XYW8PWE+oYdDkoIRiSpSLUmM17qJ9omMDYlQrdrD4WplK7F+Rw+HROwOJoqlSpdkD0XsTgwiBJQtKjvqhI5yG1J5SAAKhmEOkQi11xZbiPwCUCn0Bis071YAAAAASUVORK5CYII=";
             Assets.documentIcon = "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADOSURBVGhD7dLBCQMxDERRN5TU6JMbci1uJCkgQWBBEDoskkcLYR7o6t2P1IjAeu8fwDz283jywZPkvTHGuywCEbDWkohXSQQiQJRFoAJESQQyQMAj0AECGlERIH4invvTZ1QFCEhEZYA4HuF9cM55eSx57+rsX8iRh+7AAPWXAd6tZ8fiBhQDgqAB3g1nx+IGFAOCoAHeDWfH4gYUA4KgAd4NZ8fiBhQDgqAB3g1nx+IGFAOCoAHeDWfH4gYUA4IYoBgQdDTgrtm/QITT2heochvXFQEVrQAAAABJRU5ErkJggg==";
             Assets.crossButtonBlack = "iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtCAMAAAANxBKoAAAAeFBMVEUAAAAAAAAAAAD09PR5eXkAAABKSkoODg79/f3V1dUAAADCwsIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQ0NC8vLwAAAAAAAAAAAAAAAAAAABhYWFCQkLw8PDb29unp6cyMjL5+fnn5+evr68jIyP///95Va5FAAAAJ3RSTlOAAAX0p3eVg/zaV84dDEdkPjIQJBd618ptUU83Kp2S8d+9jvjpwonujrEgAAABeklEQVRIx63V6XKCMBSG4WNstKZJgIDK5tqF+7/DBgn5hAZoZ/r+Y3xGzoThQKu/9B9aZak07BeapTqnLi4SNatNuadBUTqplYaFl2Fdww4qWEDHNFWkxpoJmo7LkQYOcgONMSbL2ZOuaSkBrfZT6Ou0pa7Ka02u++5y3BJ6eW/WZzc6c9pQ36Fpmt0W+NVeH91F7HRJfR9Nx4GhOXtohqlvjePA6zu5kodOCb05DrzBsTy0pgAH9nHW6pwCHBjJVhMCbzxGidWKQhwYxVZnFOLASBOOBL10+rqlYcJqSQjnjHNHpdUmgMHHk7AQXh8CvLJ6xQN4g8eE6laLEKYAV61OcL3x2PMDXv1VqxX0zWPwk384VtsiDNJjcOis0yn5Pi/XM6Hj0ySify8jmuqMG2W9lrRcgX1SLGJuoFm0pOXzZlN8HifDrSlnuR7vb5Mv/DM0Nnh4e0OjKjhNYSa+aSz+4UU2871kieCgUQwLPYjJJNai1FWtxj99A9QhJkgUTQV3AAAAAElFTkSuQmCC";
             Assets.tapToDownload = "iVBORw0KGgoAAAANSUhEUgAAAE8AAABPCAYAAACqNJiGAAAAAXNSR0IArs4c6QAABp1JREFUeAHtnM1rFVcYh00sJsRlFEOgLcUSstBNEavbLKINLRRcdSnUrLJx0f+h0EU3ulHBpSuhUFBxka1tKC1FFzZEii1cItqlIbG1t79nemYyc++Ze+frzJl7My/8Ml/n631y7vmYOTMThzxZt9udUNbzRnPanpCOSzPSlDQtHZHeSLvSnrQjvZReSNtSB01MTHS1rd1woDYTsGPK7JS0KC1IR6Wy9loJbEpPpScC+apsglnjO4cnYNSkM9LH0odZC1Yi3Jbi/ij9JJDUVGfmDJ6pZRdV8vPSO848SE/4H116JD1wVRsrhydotF0r0llpUvJt/6oAG9I9QaStrMwqgydoNO5AW5YOV1bC6hJ6q6QeSkCkEyptlcATuNMqyRfSbOkSuU/gL2VxRwAfl82qFDxBoy27JC2VLYiH+OvK864g0jYWssLwBI4x2RXp/UI5NyPScxXjpgAydsxtheAJ3EnltCYxDBl1YzhzTQCf5XUkNzzTvq0qIzqIcTE6kBt528Fc8ASO4cdlqQlDkKr/cQxpbgsgw5pMlhmCqXHjCg5YsLhs/KwOnhKkjeOnmhl2ptybFwj/Vo2/Q0s3FIYSolelcxinNm4QGPxcM34PCje4JikBxnEMR8ahVx0Iouci/l4x/vdc2j8cVvMYAI/yOG7f0/x7+I3/qZYKT9SZci2lxjwYF5YMB6u3VniKwO+euWpr4mB49LGwwlOoFWm2L3S9J5hz/i4VnntWVFw4wKPP+uCJMvfjlvtC1n/iugasXyvb6/Vn3ZfjsuGSuNAHT1eh3IT7cb+ZkvJ8wrfBo6/2JeCJLg9omII1yboNKcxZwycqTgKezvLMofdcFPiA78AFPpFFoER1Rmd5WNNaOoHzhlMQIoKnIx4P+njKlV7U5l2BD5wCi8M7F55stwMJRJwCeKYh5M5Ja8MJnAw7jrDmsQSitewEAl4hvMXs8dqQIhDwmlQV5Fb8QoskF4EFuFHz5qUqVivlyn3EA8NrPoQ34r54KX4Ab85L1qOf6Rw1j7soreUncAJ4POBpLT+B48BjTttafgIzwGPxdGv5CUwBbzp/vDYG3IDHw57W8hM4ArxKlpjmz3vkY7wB3q5DN1gH/KtUaPFgiXKRH/mSvyvb5ebenqvUle59PQH7XvNAHqB8KX3kMK8w6Z+1c0v5vlW+n2n/0/BCxds9ah4rI13Z3ySMI9rcknDMpUXgTCZB/o4y3AGey5/UBf3336PwNQBMgDP5XnAEjmRfAq/SFzt6CssA/KoF4C894coe2sBdVaIuJwAvgLddtuRD4tsA3lScqgCSTtDGUQ7zj3INjqy2gddhz7GlASzbBhKfVwGCXrVGcODqhPBeO4ZH8jaAdCJFa6CvGocv8OpM6r/Gcoa61oPYABb5CQPOV41T1oc24UbNw57+v6nlb1mAvsFFvEJ4T2rBtp9JUYBNAIcXAa8AnqrgK53Y2vetlr28AJsCbsvwSqyI4tXyui0rwKaAg0/EKXp9St08jnwj+VjswxTxW/1H/9CWsdph7YfDD8pIxxYeM2OpYxxHUXqNJb5fqSzBlDZs85g+cYJ38n2YrQYG5VC5ug0BR3keheA4iOBxIHsg8QKbD0sA7C1AzQPg3uw5hgt8IkvAE1U6jo3oav07VoANAAeJDcMnopKAZ87e0zZoX6JQ9e6EAHkDh/aPra82LvQcHnBJWNRhxM+qwJ/r+JP4OQ/7NM5/Su9KPjqxuMvc1P0ufoJ9W83jPJT5CoRPA9gHkm9wcOirdYCxwhNlHgrdIUBrwWdErA/JrPAAJoCPtVk/4PDWDQcrhlR4JvRdbZ9bY47/SfzG/1QbCE/UabS5ZbSTmsJ4XsBfbnnhf6oNhEcsJcADomuS9XdPmDEz/OQ7K0MfjA2FBxgl9EybG5Kv2QfFqMPwj++r4O9QywSPVJQgHchtaVwB4hffVcHPTGYdJA+KqQH0aV1flcZpgRA/Vbdf9AmhCiBvC61JTKVG3egc6vmWVEhKAFmO237FLASSdyuATJ0uSUt54zYg/LrK4Of7eXHnTTvI1zBm4+cbus9c1f+XG+NwBJAOZEVallhS1jTjttJDqVnfDI1TEsT2a7VxIEX2BfGY4l2UePXex20lplY8kxmd7ySrsAkTRIYzZ6RzEkMc18bs4AdpdL/QbSNkauMpXVuUFqSjtnA5z7HoZlNiych4fRs+DYRAMruZN5rTlraSsSM1dUqaluiEGP3vSqydZkDLhJ0FmdtSB2lKxWKl2u0/DXoSvtgwZE4AAAAASUVORK5CYII=";
@@ -8920,6 +9429,8 @@ var KASClient;
             KASFormAccessibilityRole.Checkbox = "checkbox";
             KASFormAccessibilityRole.Radio = "radio";
             KASFormAccessibilityRole.TextBox = "textbox";
+            KASFormAccessibilityRole.Option = "option";
+            KASFormAccessibilityRole.ListBox = "listbox";
             return KASFormAccessibilityRole;
         }());
         UI.KASFormAccessibilityRole = KASFormAccessibilityRole;
@@ -8932,6 +9443,7 @@ var KASClient;
             KASFormAccessibilityKey.RoleDescription = "aria-roledescription";
             KASFormAccessibilityKey.Disabled = "aria-disabled";
             KASFormAccessibilityKey.Checked = "aria-checked";
+            KASFormAccessibilityKey.Selected = "aria-selected";
             KASFormAccessibilityKey.LabelledBy = "aria-labelledby";
             return KASFormAccessibilityKey;
         }());
@@ -8978,6 +9490,7 @@ var KASClient;
                     var moduleContent = UI.getVerticalDiv(this.getChildViews(), this.getModuleContentAttributes());
                     var leftBar = UI.getDiv(this.getModuleLeftBarAttributes());
                     this.view = UI.getHorizontalDiv([leftBar, moduleContent], this.getModuleAttributes());
+                    UI.setAccessibilityAttribute(this.view, UI.KASFormAccessibilityKey.Role, UI.KASFormAccessibilityRole.None);
                 }
                 if (this.customizations && this.customizations.length > 0) {
                     KASClient.Customise.register(this.view, this.customizations);
@@ -9100,6 +9613,7 @@ var KASClient;
                 _this.showChevron = true;
                 _this.showChevrons = null;
                 _this.showEditOptions = null;
+                _this.rowAttributes = [];
                 _this.rowViews = null;
                 //Accessibility
                 _this.accessibilityAttributes = {};
@@ -9154,14 +9668,21 @@ var KASClient;
                     UI.addCSS(rowView, this.getRowAttributeForFooterView());
                     rowView = UI.getVerticalDiv([rowView, this.footerViews[i]], this.getFooterViewAttributes());
                 }
+                //if there is no row action implemented, by default show min profile
+                if (this.rowActions[i] == null) {
+                    rowView.onclick = function (rowIndex) {
+                        this.implementDefaultRowViewClick(rowIndex);
+                    }.bind(this, i);
+                }
                 // Add row action
                 if (this.rowActions && this.rowActions.length > i && this.rowActions[i]) {
                     UI.addClickEvent(rowView, (function (rowAction, rowIndex) {
                         rowAction(rowIndex);
-                    }).bind(null, this.rowActions[i], i));
+                    }).bind(this, this.rowActions[i], i));
                 }
                 // Add line separator
                 UI.addCSS(rowView, this.getRowAttributes(i));
+                UI.setAccessibilityAttribute(rowView, UI.KASFormAccessibilityKey.Role, UI.KASFormAccessibilityRole.None);
                 if (this.accessibilityAttributes[i] != undefined && this.accessibilityAttributes[i] != null) {
                     for (var index = 0; index < rowView.children.length; index++) {
                         UI.setAccessibilityBasic(rowView.children.item(index), true);
@@ -9171,6 +9692,9 @@ var KASClient;
                     }
                 }
                 return rowView;
+            };
+            // implemented by derived class
+            KASFormRowsModule.prototype.implementDefaultRowViewClick = function (i) {
             };
             KASFormRowsModule.prototype.setAccessibilityAttribute = function (index, key, value) {
                 if (this.rowViews != null && this.rowViews.length > index) {
@@ -9202,7 +9726,7 @@ var KASClient;
                 if (this.getNumberOfRows() > i + 1) {
                     attributes["border-bottom"] = LINE_SEPARATOR_ATTRIBUTE;
                 }
-                return attributes;
+                return Object.assign(attributes, this.rowAttributes[i]);
             };
             KASFormRowsModule.prototype.getFooterViewAttributes = function () {
                 var attributes = {};
@@ -9420,19 +9944,39 @@ var KASClient;
             KASFormDetailsModule.prototype.getCreatorDetailsRow = function () {
                 var userProfilePicDiv = UI.getProfilePic(this.creator);
                 UI.setAccessibilityAttribute(userProfilePicDiv, UI.KASFormAccessibilityKey.Hidden, "true");
-                var userNameLabel = UI.getLabel((this.useOriginalName ? this.creator.originalName : this.creator.name), this.getUserNameAttributes());
+                if (KASClient.Version.clientSupports(KASClient.Version.VERSION_26)) {
+                    UI.setAccessibilityBasic(userProfilePicDiv, false, UI.KASFormAccessibilityRole.Button, KASClient.Internal.getKASClientString("ProfilePhotoHint"));
+                    userProfilePicDiv.onclick = function (event) {
+                        KASClient.App.showUserProfileAsync(this.creator.id, true, null);
+                        event.stopPropagation();
+                    }.bind(this);
+                }
+                var userName = this.useOriginalName ? this.creator.originalName : this.creator.name;
+                var userNameLabel = UI.getLabel(userName, this.getUserNameAttributes());
+                if (KASClient.Version.clientSupports(KASClient.Version.VERSION_26)) {
+                    userNameLabel.onclick = function (event) {
+                        KASClient.App.showUserProfileAsync(this.creator.id, true, null);
+                        event.stopPropagation();
+                    }.bind(this);
+                }
                 var assignedToLabel = UI.getLabel(this.assignedToLabel, this.getSentToAttributes());
-                UI.setAccessibilityBasic(assignedToLabel, false, UI.KASFormAccessibilityRole.None, "");
+                UI.setAccessibilityBasic(assignedToLabel, true);
                 var assigneesLabel = UI.getLabel(this.assignees, this.getAssigneesAttributes());
-                UI.setAccessibilityBasic(assigneesLabel, false, UI.KASFormAccessibilityRole.None, "");
+                UI.setAccessibilityBasic(assigneesLabel, true);
                 var assigneesActionLabel = null;
                 if (this.assigneesActionTitle) {
                     assigneesActionLabel = UI.getLabel(this.assigneesActionTitle, this.getAssigneesActionAttributes());
-                    UI.setAccessibilityBasic(assigneesActionLabel, false, UI.KASFormAccessibilityRole.None, "");
-                    UI.addClickEvent(assigneesActionLabel, this.assigneesAction);
                 }
                 var sentToAssigneesLabel = UI.getHorizontalDiv([assignedToLabel, UI.getSpace("2pt"), assigneesLabel, UI.getSpace("2pt"), assigneesActionLabel, UI.getFlexibleSpace()]);
-                UI.setAccessibilityAttribute(sentToAssigneesLabel, UI.KASFormAccessibilityKey.Role, this.assigneesActionTitle ? UI.KASFormAccessibilityRole.Button : UI.KASFormAccessibilityRole.Text);
+                if (this.assigneesAction) {
+                    UI.addClickEvent(sentToAssigneesLabel, this.assigneesAction);
+                    UI.setAccessibilityBasic(sentToAssigneesLabel, false, UI.KASFormAccessibilityRole.Button, this.assignedToLabel + " " + this.assigneesActionTitle);
+                    UI.setAccessibilityAttribute(sentToAssigneesLabel, UI.KASFormAccessibilityKey.Role, UI.KASFormAccessibilityRole.Button);
+                }
+                else {
+                    UI.setAccessibilityBasic(sentToAssigneesLabel, false, UI.KASFormAccessibilityRole.Text, this.assignedToLabel + "" + this.assignees);
+                    UI.setAccessibilityAttribute(sentToAssigneesLabel, UI.KASFormAccessibilityKey.Role, UI.KASFormAccessibilityRole.Text);
+                }
                 var verticalSpace = (KASClient.getPlatform() == KASClient.Platform.Android ? UI.getSpace("2pt") : null);
                 var userNameSentToConversationLabel = UI.getVerticalDiv([userNameLabel, verticalSpace, sentToAssigneesLabel], UI.getCoverRestOfTheSpaceAttributes());
                 var creatorDetailsRow = UI.getHorizontalDiv([userProfilePicDiv, UI.getSpace("8pt"), userNameSentToConversationLabel]);
@@ -9632,39 +10176,28 @@ var KASClient;
                 }
             };
             KASFormDetailsModule.prototype.getLikesOrCommentsCountString = function (likesOrCommentsCount, type) {
-                var suffix = "";
-                var divider = 1;
                 if (likesOrCommentsCount == 0) {
                     return type == "like" ? KASClient.Internal.getKASClientString("KASFormPageNoLikes") : KASClient.Internal.getKASClientString("KASFormPageNoComments");
                 }
                 else if (likesOrCommentsCount < 1000) {
-                    return likesOrCommentsCount.toString();
-                }
-                else if (likesOrCommentsCount >= 10000 && likesOrCommentsCount < 1000000) {
-                    /* 10K, 11K ... 999K */
-                    return (likesOrCommentsCount / 1000).toString() + "K";
+                    return likesOrCommentsCount.toLocaleString();
                 }
                 else if (likesOrCommentsCount >= 1000 && likesOrCommentsCount < 10000) {
                     /* 1K, 1.1K ... 9.9K */
-                    divider = 100;
-                    suffix = "K";
+                    return ((likesOrCommentsCount / 100) / 10.0).toLocaleString() + KASClient.Internal.getKASClientString("Thousand");
+                }
+                else if (likesOrCommentsCount >= 10000 && likesOrCommentsCount < 1000000) {
+                    /* 10K, 11K ... 999K */
+                    return (likesOrCommentsCount / 1000).toLocaleString() + KASClient.Internal.getKASClientString("Thousand");
                 }
                 else if (likesOrCommentsCount >= 1000000 && likesOrCommentsCount < 1000000000) {
                     /* 1M, 1.1M, 1.2M ... */
-                    divider = 100000;
-                    suffix = "M";
+                    return ((likesOrCommentsCount / 100000) / 10.0).toLocaleString() + KASClient.Internal.getKASClientString("Million");
                 }
                 else if (likesOrCommentsCount >= 1000000000) {
                     /* 1B, 1.1B, ... */
-                    divider = 10000000;
-                    suffix = "B";
+                    return ((likesOrCommentsCount / 100000000) / 10.0).toLocaleString() + KASClient.Internal.getKASClientString("Billion");
                 }
-                var truncatedCount = (likesOrCommentsCount / divider).toString();
-                var firstDigit = truncatedCount.substring(0, truncatedCount.length - 1);
-                var secondDigit = truncatedCount.charAt(truncatedCount.length - 1);
-                var countString = secondDigit == "0" ? firstDigit : firstDigit + "." + secondDigit;
-                countString += suffix;
-                return countString;
             };
             KASFormDetailsModule.prototype.getCommentBackgroundAttributes = function () {
                 var attributes = {};
@@ -10198,7 +10731,7 @@ var KASClient;
                 }
                 var indexLabel = null;
                 if (this.showIndex) {
-                    indexLabel = UI.getLabel((i + 1) + ".", this.getIndexAttributes(i));
+                    indexLabel = UI.getLabel((i + 1).toLocaleString() + ".", this.getIndexAttributes(i));
                 }
                 var rowItems = [];
                 var titleLabel = UI.getLabel(this.titles[i], this.getTitleAttributes(i));
@@ -10693,12 +11226,12 @@ var KASClient;
                         UI.setAccessibilityAttribute(iconDiv, UI.KASFormAccessibilityKey.Hidden, "true");
                     }
                     if (this.title) {
-                        this.titleDiv = UI.getLabel(this.title, this.getTitleAttributes());
+                        this.titleDiv = UI.getLabel(this.title, this.getTitleAttributes(), false);
                         UI.setAccessibilityBasic(this.titleDiv, false, UI.KASFormAccessibilityRole.Text);
                         UI.addClickEvent(this.titleDiv, this.titleAction);
                     }
                     if (this.subtitle) {
-                        this.subtitleDiv = UI.getLabel(this.subtitle, this.getSubtitleAttributes());
+                        this.subtitleDiv = UI.getLabel(this.subtitle, this.getSubtitleAttributes(), false);
                         UI.setAccessibilityBasic(this.subtitleDiv, false, UI.KASFormAccessibilityRole.Text);
                     }
                     else {
@@ -10706,7 +11239,7 @@ var KASClient;
                     }
                     var rightButton = null;
                     if (this.rightButtonTitle != null) {
-                        rightButton = UI.getLabel(this.rightButtonTitle, this.getRightButtonAttributes());
+                        rightButton = UI.getLabel(this.rightButtonTitle, KASFormPageNavigationBar.getRightButtonAttributes(), false);
                         UI.setAccessibilityBasic(rightButton, false, UI.KASFormAccessibilityRole.Button);
                         UI.addClickEvent(rightButton, this.rightButtonAction);
                     }
@@ -10739,6 +11272,12 @@ var KASClient;
                     UI.setText(this.titleDiv, this.title);
                 }
                 // Else view is not yet inflated
+            };
+            KASFormPageNavigationBar.getNavBarButton = function (buttonTitle, buttonAction) {
+                var button = UI.getLabel(buttonTitle, KASFormPageNavigationBar.getRightButtonAttributes(), false);
+                UI.setAccessibilityBasic(button, false, UI.KASFormAccessibilityRole.Button);
+                UI.addClickEvent(button, buttonAction);
+                return button;
             };
             KASFormPageNavigationBar.prototype.getNavigationBarAttributes = function () {
                 var attributes = {};
@@ -10827,18 +11366,17 @@ var KASClient;
                 attributes["text-overflow"] = "ellipsis";
                 return attributes;
             };
-            KASFormPageNavigationBar.prototype.getRightButtonAttributes = function () {
+            KASFormPageNavigationBar.getRightButtonAttributes = function () {
                 var attributes = {};
                 attributes["font-size"] = UI.getScaledFontSize("14pt");
                 attributes["padding-bottom"] = "5pt";
-                attributes["padding-right"] = "8pt";
+                attributes["padding-right"] = "12pt";
                 attributes["padding-left"] = "8pt";
                 attributes["font-weight"] = MEDIUM_FONT_WEIGHT;
                 attributes["color"] = BLUE_COLOR;
                 attributes["max-width"] = "210pt";
                 attributes["white-space"] = "nowrap";
                 attributes["overflow"] = "hidden";
-                attributes["text-overflow"] = "ellipsis";
                 return attributes;
             };
             return KASFormPageNavigationBar;
@@ -11193,7 +11731,8 @@ var KASClient;
                 var profilePicDiv = UI.getProfilePic(this.users[i]);
                 UI.setAccessibilityAttribute(profilePicDiv, UI.KASFormAccessibilityKey.Hidden, "true");
                 var rowItems = [];
-                var profileNameDiv = UI.getLabel(this.users[i].name, this.getUserNameAttributes(i));
+                var profileName = this.users[i].name;
+                var profileNameDiv = UI.getLabel(profileName, this.getUserNameAttributes(i));
                 rowItems.push(profileNameDiv);
                 if (this.titles && this.titles.length > i && this.titles[i]) {
                     var titleLabel = UI.getLabel(this.titles[i], this.getTitleAttributes(i));
@@ -11204,7 +11743,19 @@ var KASClient;
                     rowItems.push(subtitleLabel);
                 }
                 var textDiv = UI.getVerticalDiv(rowItems, UI.getCoverRestOfTheSpaceAttributes());
+                if (KASClient.Version.clientSupports(KASClient.Version.VERSION_26)) {
+                    UI.setAccessibilityBasic(profilePicDiv, false, UI.KASFormAccessibilityRole.Button, KASClient.Internal.getKASClientString("ProfilePhotoHint"));
+                    profilePicDiv.onclick = function (event) {
+                        KASClient.App.showUserProfileAsync(this.users[i].id, true, null);
+                        event.stopPropagation();
+                    }.bind(this);
+                }
                 return UI.getHorizontalDiv([profilePicDiv, UI.getSpace(), textDiv]);
+            };
+            KASFormUserTitleSubtitleActionModule.prototype.implementDefaultRowViewClick = function (i) {
+                if (KASClient.Version.clientSupports(KASClient.Version.VERSION_26)) {
+                    KASClient.App.showUserProfileAsync(this.users[i].id, true, null);
+                }
             };
             KASFormUserTitleSubtitleActionModule.prototype.getUserNameAttributes = function (i) {
                 var attributes = {};
@@ -11215,7 +11766,7 @@ var KASClient;
                 }
                 else {
                     attributes["font-size"] = UI.getScaledFontSize("12pt");
-                    attributes["font-weight"] = REGULAR_FONT_WEIGHT;
+                    attributes["font-weight"] = MEDIUM_FONT_WEIGHT;
                     attributes["color"] = TEXT_PRIMARY_COLOR;
                 }
                 return attributes;
@@ -11247,7 +11798,7 @@ var KASClient;
     })(UI = KASClient.UI || (KASClient.UI = {}));
 })(KASClient || (KASClient = {}));
 // Uncomment below to start compiling KASClientUI.js
-//// <reference path="../../../js/declarations/KASClientCore.d.ts"/>
+/// <reference path="../../../js/declarations/KASClientCore.d.ts"/>
 var KASClient;
 (function (KASClient) {
     var UI;
@@ -11289,14 +11840,18 @@ var KASClient;
             if (text === void 0) { text = null; }
             if (attributes === void 0) { attributes = null; }
             if (showLinks === void 0) { showLinks = true; }
-            return KASClient.getLabel(text, attributes, showLinks);
+            var label = KASClient.getLabel(text, attributes, showLinks);
+            UI.setAccessibilityAttribute(label, UI.KASFormAccessibilityKey.Role, UI.KASFormAccessibilityRole.Text);
+            return label;
         }
         UI.getLabel = getLabel;
         function getButton(title, clickEvent, attributes) {
             if (title === void 0) { title = null; }
             if (clickEvent === void 0) { clickEvent = null; }
             if (attributes === void 0) { attributes = null; }
-            return KASClient.getButton(title, clickEvent, attributes);
+            var button = KASClient.getButton(title, clickEvent, attributes);
+            UI.setAccessibilityAttribute(button, UI.KASFormAccessibilityKey.Role, UI.KASFormAccessibilityRole.Button);
+            return button;
         }
         UI.getButton = getButton;
         function setText(element, text, asHTML, showLinks) {
@@ -11598,7 +12153,7 @@ var KASClient;
             addElement(alertView, alertDiv);
             var alertTitleView = getLabel(title, { "color": "#32485f", "font-size": getScaledFontSize("20px"), "font-weight": "600" });
             addElement(alertTitleView, alertView);
-            var alertMessageView = getLabel(message, { "margin-top": "20px", "margin-bottom": "20px", "color": "#6f7e8f", "font-size": getScaledFontSize("16px") });
+            var alertMessageView = getLabel(message, { "margin-top": "20px", "margin-bottom": "20px", "color": "#6f7e8f", "font-size": getScaledFontSize("16px"), "overflow": "auto" });
             addElement(alertMessageView, alertView);
             var alertBottomView = getElement("div", { "display": "flex", "justify-content": "flex-end" });
             addElement(alertBottomView, alertView);
@@ -11755,6 +12310,10 @@ var KASClient;
             return KASClient.getStyle(element, styleName);
         }
         UI.getStyle = getStyle;
+        function isPDFDocument(localPath) {
+            return KASClient.isPDFDocument(localPath);
+        }
+        UI.isPDFDocument = isPDFDocument;
     })(UI = KASClient.UI || (KASClient.UI = {}));
 })(KASClient || (KASClient = {}));
 var KASClient;
@@ -11832,6 +12391,575 @@ var KASClient;
         }
         Customise.getAsset = getAsset;
     })(Customise = KASClient.Customise || (KASClient.Customise = {}));
+})(KASClient || (KASClient = {}));
+var KASClient;
+(function (KASClient) {
+    var UI;
+    (function (UI) {
+        var KASInputView = /** @class */ (function () {
+            function KASInputView(header) {
+                this.header = null;
+                this.headerAttributes = {};
+                this.header = header;
+            }
+            KASInputView.prototype.setHeaderAttributes = function (headerAttributes) {
+                this.headerAttributes = headerAttributes;
+            };
+            KASInputView.prototype.getView = function () {
+                if (KASClient.isEmptyString(this.header)) {
+                    return UI.getVerticalDiv([this.getInputView()]);
+                }
+                else {
+                    var headerAttributes = Object.assign({
+                        "font-size": KASClient.UI.getScaledFontSize("12px"),
+                        "font-weight": "600",
+                        "color": "#32485f",
+                    }, KASClient.UI.getMediumFontAttributes());
+                    headerAttributes = Object.assign(headerAttributes, this.headerAttributes);
+                    var headerDiv = UI.getLabel(this.header, headerAttributes);
+                    UI.setAccessibilityBasic(headerDiv, false /*isHidden*/);
+                    return UI.getVerticalDiv([headerDiv, UI.getSpace("12px"), this.getInputView()]);
+                }
+            };
+            return KASInputView;
+        }());
+        UI.KASInputView = KASInputView;
+    })(UI = KASClient.UI || (KASClient.UI = {}));
+})(KASClient || (KASClient = {}));
+/// <reference path="./KASInputView.ts" />
+var KASClient;
+(function (KASClient) {
+    var UI;
+    (function (UI) {
+        var KASAttachmentsPreviewViewRenderStyle;
+        (function (KASAttachmentsPreviewViewRenderStyle) {
+            KASAttachmentsPreviewViewRenderStyle[KASAttachmentsPreviewViewRenderStyle["GRID"] = 0] = "GRID";
+            KASAttachmentsPreviewViewRenderStyle[KASAttachmentsPreviewViewRenderStyle["CAROUSEL"] = 1] = "CAROUSEL";
+        })(KASAttachmentsPreviewViewRenderStyle = UI.KASAttachmentsPreviewViewRenderStyle || (UI.KASAttachmentsPreviewViewRenderStyle = {}));
+        /**
+         * KASImageGridAlbumView provides an album like view for a given set of
+         * image attachments. It can be configured to render an album as a simple
+         * grid of images or as a carousel which can be scrolled horizontally.
+         *
+         * To render the album as a carousel, set the GRID_ALBUM_VIEW_RENDER_STYLE
+         * property to KASImageGridAlbumViewRenderStyle.CAROUSEL in props dictionary
+         * when initializing.
+         *
+         * The album can be rendered in preview mode where a list of images are
+         * expected as input. If preview mode is set to false, there will be an option
+         * to pick images from camera or gallery (which can be further controlled using
+         * ImagePickerSource).
+         *
+         * Any changes(add/remove) to the image attachments provided to during initialization
+         * will fire the onChangeCallback handler.
+         */
+        var KASAttachmentsPreviewView = /** @class */ (function (_super) {
+            __extends(KASAttachmentsPreviewView, _super);
+            function KASAttachmentsPreviewView(header, attachments, supportedTypes, previewMode, props, onChangeCallback) {
+                var _this = _super.call(this, header) || this;
+                _this.attachments = [];
+                _this.previewMode = false;
+                _this.supportedTypes = [KASClient.KASAttachmentType.Image, KASClient.KASAttachmentType.Document];
+                _this.showAddImageButtonBeforePreviews = false;
+                _this.DEFAULT_MAX_ATTACHMENT_COUNT = 10;
+                _this.maxAttachmentCount = _this.DEFAULT_MAX_ATTACHMENT_COUNT;
+                _this.imagePickerSource = KASClient.ImagePickerSource.All;
+                _this.props = JSON.parse("{}");
+                _this.attachmentsPreviewViewRenderStyle = KASAttachmentsPreviewViewRenderStyle.GRID;
+                _this.imagesPendingLoad = [];
+                /*
+                 * The scroll end detection timeout is the maximum interval we will wait
+                 * for between two scroll events before we interpret that scrolling has
+                 * stopped. This value of 100ms is a fair estimate because scroll events
+                 * are fired at intervals of around 50ms.
+                 */
+                _this.DEFAULT_SCROLL_END_DETECTION_TIMEOUT_IN_MS = 100;
+                /*
+                 * Lazy loading prevents loading of remote images when they are not in
+                 * the viewport. When these images come into view, then the image is
+                 * loaded. This helps in improving data usage and performance.
+                 *
+                 * This property is for internal use for development/testing purposes
+                 * and should always true for all users.
+                 */
+                _this.enableLazyLoading = true;
+                _this.albumContainsRemoteImages = false;
+                if (attachments != null) {
+                    _this.attachments = attachments;
+                }
+                _this.supportedTypes = supportedTypes;
+                _this.previewMode = previewMode;
+                if (props == null) {
+                    _this.props[KASClient.KASAttachmentListQuestionConfig.MAX_IMAGE_COUNT_KEY] = _this.maxAttachmentCount;
+                }
+                else {
+                    _this.props = props;
+                }
+                _this.onChangeCallback = onChangeCallback;
+                _this.attachmentsPreviewViewRenderStyle = _this.getGridAlbumViewRenderStyle(props);
+                _this.container = UI.getElement("div", _this.getContainerStyleAttributes());
+                return _this;
+            }
+            KASAttachmentsPreviewView.prototype.getGridAlbumViewRenderStyle = function (props) {
+                if (!props || !props[KASAttachmentsPreviewView.ATTACHMENTS_PREVIEW_VIEW_RENDER_STYLE]) {
+                    return KASAttachmentsPreviewViewRenderStyle.GRID;
+                }
+                var viewRenderStyle = props[KASAttachmentsPreviewView.ATTACHMENTS_PREVIEW_VIEW_RENDER_STYLE];
+                if (viewRenderStyle == 1) {
+                    return KASAttachmentsPreviewViewRenderStyle.CAROUSEL;
+                }
+                else {
+                    return KASAttachmentsPreviewViewRenderStyle.GRID;
+                }
+            };
+            KASAttachmentsPreviewView.prototype.getInputView = function () {
+                UI.clearElement(this.container);
+                switch (this.attachmentsPreviewViewRenderStyle) {
+                    case KASAttachmentsPreviewViewRenderStyle.CAROUSEL:
+                        this.populateCarousel();
+                        break;
+                    case KASAttachmentsPreviewViewRenderStyle.GRID:
+                    default:
+                        this.populateGrid();
+                        break;
+                }
+                if (this.previewMode && this.enableLazyLoading && this.albumContainsRemoteImages) {
+                    this.scrollHandler = this.reloadImages.bind(this);
+                    if (this.attachmentsPreviewViewRenderStyle == KASAttachmentsPreviewViewRenderStyle.CAROUSEL) {
+                        this.container.addEventListener('scroll', this.scrollHandler);
+                    }
+                    document.addEventListener('scroll', this.scrollHandler);
+                    this.reloadImages();
+                }
+                return this.container;
+            };
+            KASAttachmentsPreviewView.prototype.prepareForDOMRemoval = function () {
+                if (this.scrollHandler) {
+                    document.removeEventListener('scroll', this.scrollHandler);
+                }
+            };
+            KASAttachmentsPreviewView.prototype.populateGrid = function () {
+                UI.addCSS(this.container, this.getContainerStyleAttributes());
+                if (this.shouldShowAddImageButton() && this.showAddImageButtonBeforePreviews) {
+                    var addImageButtonView = UI.getElement("div");
+                    UI.addElement(this.getAddImageButtonView((this.imagePickerSource == KASClient.ImagePickerSource.CameraBack) || (this.imagePickerSource == KASClient.ImagePickerSource.CameraFront)), addImageButtonView);
+                    UI.addElement(addImageButtonView, this.container);
+                }
+                for (var attachmentIndex = 0; attachmentIndex < this.attachments.length; attachmentIndex++) {
+                    var cellView = UI.getElement("div");
+                    var attachment = this.attachments[attachmentIndex];
+                    if (attachment.type == KASClient.KASAttachmentType.Image) {
+                        var image = this.getImageViewForGrid(attachmentIndex, attachment);
+                        UI.addElement(image, cellView);
+                    }
+                    else if (attachment.type == KASClient.KASAttachmentType.Document) {
+                        var docPreview = this.getDocumentPreviewView(attachmentIndex, attachment);
+                        UI.addElement(docPreview, cellView);
+                    }
+                    UI.addElement(cellView, this.container);
+                }
+                if (this.shouldShowAddImageButton() && !this.showAddImageButtonBeforePreviews) {
+                    var addImageButtonView = UI.getElement("div");
+                    UI.addElement(this.getAddImageButtonView((this.imagePickerSource == KASClient.ImagePickerSource.CameraBack) || (this.imagePickerSource == KASClient.ImagePickerSource.CameraFront)), addImageButtonView);
+                    UI.addElement(addImageButtonView, this.container);
+                }
+            };
+            KASAttachmentsPreviewView.prototype.populateCarousel = function () {
+                UI.addCSS(this.container, this.getContainerStyleAttributes());
+                var cellCount = this.attachments.length + (this.shouldShowAddImageButton() ? 1 : 0);
+                var tableView = UI.getTable();
+                var tableRow = UI.getTableRow();
+                for (var attachmentIndex = 0; attachmentIndex < cellCount; attachmentIndex++) {
+                    var tableData = UI.getTableDataCell();
+                    if (attachmentIndex < this.attachments.length) {
+                        var attachment = this.attachments[attachmentIndex];
+                        if (attachment.type == KASClient.KASAttachmentType.Image) {
+                            var image = this.getImageViewForGrid(attachmentIndex, attachment);
+                            UI.addElement(image, tableData);
+                        }
+                        else if (attachment.type == KASClient.KASAttachmentType.Document) {
+                            var docPreview = this.getDocumentPreviewView(attachmentIndex, attachment);
+                            UI.addElement(docPreview, tableData);
+                        }
+                    }
+                    else if (attachmentIndex == this.attachments.length && this.shouldShowAddImageButton()) {
+                        UI.addElement(this.getAddImageButtonView((this.imagePickerSource == KASClient.ImagePickerSource.CameraBack) || (this.imagePickerSource == KASClient.ImagePickerSource.CameraFront)), tableData);
+                    }
+                    UI.addElement(tableData, tableRow);
+                }
+                UI.addElement(tableRow, tableView);
+                UI.addElement(tableView, this.container);
+            };
+            KASAttachmentsPreviewView.prototype.setMaxAttachmentCount = function (maxAttachmentCount) {
+                this.maxAttachmentCount = maxAttachmentCount;
+            };
+            KASAttachmentsPreviewView.prototype.setImagePickerSource = function (imagePickerSource) {
+                this.imagePickerSource = imagePickerSource;
+            };
+            KASAttachmentsPreviewView.prototype.getSelectedAttachments = function () {
+                return this.attachments;
+            };
+            KASAttachmentsPreviewView.prototype.shouldShowAddImageButton = function () {
+                if (this.previewMode) {
+                    return false;
+                }
+                else {
+                    if (this.attachments.length < this.maxAttachmentCount) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            };
+            KASAttachmentsPreviewView.prototype.getAddImageButtonView = function (cameraOnly) {
+                if (cameraOnly === void 0) { cameraOnly = false; }
+                var addImageButtonContainer = UI.getElement("div");
+                var addImageButton;
+                if (this.attachments.length > 0) {
+                    addImageButton = UI.getBase64Image(UI.Assets.addImageGridAlbum, this.getAddImageButtonStyleAttributes());
+                    KASClient.UI.setAccessibilityBasic(addImageButton, false, KASClient.UI.KASFormAccessibilityRole.Button, KASClient.Internal.getKASClientString("AddMoreImages"));
+                }
+                else {
+                    if (cameraOnly) {
+                        addImageButton = UI.getBase64Image(UI.Assets.addImageGridAlbum);
+                        KASClient.UI.setAccessibilityBasic(addImageButton, false, KASClient.UI.KASFormAccessibilityRole.Button, KASClient.Internal.getKASClientString("CameraPicker"));
+                    }
+                    else {
+                        addImageButton = UI.getBase64Image(UI.Assets.addImageGridAlbum);
+                        KASClient.UI.setAccessibilityBasic(addImageButton, false, KASClient.UI.KASFormAccessibilityRole.Button, KASClient.Internal.getKASClientString("ImagePicker"));
+                    }
+                    UI.addCSS(addImageButton, this.getEmptyGridAddImageButtonStyleAttributes());
+                }
+                var self = this;
+                UI.addClickEvent(addImageButton, function () {
+                    self.props[KASClient.KASAttachmentListQuestionConfig.MAX_IMAGE_COUNT_KEY] = self.maxAttachmentCount - self.attachments.length;
+                    KASClient.App.showAttachmentPickerAsync(self.supportedTypes, self.props, function (selectedAttachments, error) {
+                        if (error != null) {
+                            return;
+                        }
+                        if (selectedAttachments.length == 1 && selectedAttachments[0].type == KASClient.KASAttachmentType.Document) {
+                            if (KASClient.UI.isPDFDocument(selectedAttachments[0].localPath)) {
+                                KASClient.Internal.generateThumbnailForPDFAsync(selectedAttachments[0].localPath, function (thumbnail, error) {
+                                    if (error == null && thumbnail != null) {
+                                        selectedAttachments[0].thumbnail = thumbnail;
+                                        selectedAttachments[0].hasSetThumbnail = true;
+                                    }
+                                    self.attachments = self.attachments.concat(selectedAttachments);
+                                    self.imagePickerSource = self.props[KASClient.KASAttachmentListQuestionConfig.IMAGE_SOURCE_KEY];
+                                    self.getInputView();
+                                    if (self.onChangeCallback) {
+                                        self.onChangeCallback(self.attachments);
+                                    }
+                                }.bind(this), true /* withHighRes */);
+                            }
+                            else {
+                                self.attachments = self.attachments.concat(selectedAttachments);
+                                self.imagePickerSource = self.props[KASClient.KASAttachmentListQuestionConfig.IMAGE_SOURCE_KEY];
+                                self.getInputView();
+                                if (self.onChangeCallback) {
+                                    self.onChangeCallback(self.attachments);
+                                }
+                            }
+                        }
+                        else {
+                            self.attachments = self.attachments.concat(selectedAttachments);
+                            self.imagePickerSource = self.props[KASClient.KASAttachmentListQuestionConfig.IMAGE_SOURCE_KEY];
+                            self.getInputView();
+                            if (self.onChangeCallback) {
+                                self.onChangeCallback(self.attachments);
+                            }
+                        }
+                    });
+                });
+                UI.addElement(addImageButton, addImageButtonContainer);
+                return addImageButtonContainer;
+            };
+            KASAttachmentsPreviewView.prototype.getImageViewForGrid = function (attachmentIndex, attachment) {
+                var path = this.getPreviewImagePath(attachment);
+                var image;
+                if (this.previewMode) {
+                    if (KASClient.isRemoteURL(path) && this.enableLazyLoading) {
+                        this.albumContainsRemoteImages = true;
+                        image = UI.getBase64Image(UI.Assets.gridAlbumImagePlaceHolder, this.getImageStyleAttributes());
+                        UI.addCSS(image, this.getPlaceHolderBorderStyleAttributes());
+                        image.setAttribute("data-src", path);
+                        this.imagesPendingLoad.push(image);
+                    }
+                    else {
+                        image = UI.getImage(path, this.getImageStyleAttributes());
+                        UI.addCSS(image, this.getImageBorderStyleAttributes());
+                    }
+                }
+                else {
+                    image = UI.getImage(path, this.getImageStyleAttributes());
+                    UI.addCSS(image, this.getImageBorderStyleAttributes());
+                }
+                image.onclick = function (index, e) {
+                    // var urlList = [];
+                    // for(var i=0; i < this.attachments.length; i++) {
+                    //     var path = this.attachments[i].localPath;
+                    //     if(KASClient.isEmptyString(path)){
+                    //         path = this.attachments[i].serverPath;
+                    //     }
+                    //     urlList.push(path);
+                    // }
+                    // App.showImageImmersiveView(urlList, index);
+                    KASClient.App.openImmersiveViewForAttachmentList(this.attachments, index);
+                }.bind(this, attachmentIndex);
+                if (!this.previewMode) {
+                    var removeImageIcon = UI.getBase64Image(UI.Assets.removeImageGridAlbum, this.getRemoveImageIconStyleAttributes());
+                    removeImageIcon.onclick = function (attachmentIndex, e) {
+                        KASClient.removeElementFromArray(this.attachments, attachmentIndex);
+                        this.getInputView();
+                        if (this.onChangeCallback) {
+                            this.onChangeCallback(this.attachments);
+                        }
+                    }.bind(this, attachmentIndex);
+                    KASClient.UI.setAccessibilityBasic(removeImageIcon, false, KASClient.UI.KASFormAccessibilityRole.Button, KASClient.Internal.getKASClientString("RemoveImage") + (attachmentIndex + 1));
+                    var imageContainer = UI.getElement("div", this.getEditModeImageContainerAttributes());
+                    UI.addElement(image, imageContainer);
+                    KASClient.UI.setAccessibilityBasic(image, false, KASClient.UI.KASFormAccessibilityRole.Image, KASClient.Internal.getKASClientString("Image") + (attachmentIndex + 1));
+                    UI.addElement(removeImageIcon, imageContainer);
+                    return imageContainer;
+                }
+                else {
+                    KASClient.UI.setAccessibilityBasic(image, false, KASClient.UI.KASFormAccessibilityRole.Image, KASClient.Internal.getKASClientString("Image") + (attachmentIndex + 1));
+                    return image;
+                }
+            };
+            KASAttachmentsPreviewView.prototype.getDocumentPreviewView = function (attachmentIndex, documentAttachment) {
+                var path = this.getPreviewImagePath(documentAttachment);
+                var docPreview;
+                var docTypeIcon = null;
+                if (!KASClient.isEmptyString(path)) {
+                    if (this.previewMode) {
+                        if (KASClient.isRemoteURL(path) && this.enableLazyLoading) {
+                            this.albumContainsRemoteImages = true;
+                            docPreview = UI.getBase64Image(UI.Assets.gridAlbumImagePlaceHolder, this.getImageStyleAttributes());
+                            UI.addCSS(docPreview, this.getPlaceHolderBorderStyleAttributes());
+                            docPreview.setAttribute("data-src", path);
+                            this.imagesPendingLoad.push(docPreview);
+                        }
+                        else {
+                            docPreview = UI.getBase64Image(path, this.getImageStyleAttributes());
+                            UI.addCSS(docPreview, this.getImageBorderStyleAttributes());
+                        }
+                    }
+                    else {
+                        docPreview = UI.getBase64Image(path, this.getImageStyleAttributes());
+                        UI.addCSS(docPreview, this.getImageBorderStyleAttributes());
+                    }
+                    var docTypeIcon = UI.getBase64Image(this.getDocTypeIcon(documentAttachment), this.getDocTypeIconStyleAttributes());
+                }
+                else {
+                    docPreview = UI.getBase64Image(this.getDocTypeIcon(documentAttachment), this.getUnsupportedDocumentStyleAttributes());
+                }
+                docPreview.onclick = function (index, e) {
+                    // App.openAttachmentImmersiveView(this.attachments[index]);
+                    KASClient.App.openImmersiveViewForAttachmentList(this.attachments, index);
+                }.bind(this, attachmentIndex);
+                KASClient.UI.setAccessibilityBasic(docPreview, false, KASClient.UI.KASFormAccessibilityRole.Image, KASClient.Internal.getKASClientString("Image") + (attachmentIndex + 1));
+                var docPreviewContainer = UI.getElement("div", this.getEditModeImageContainerAttributes());
+                UI.addElement(docPreview, docPreviewContainer);
+                if (docTypeIcon != null) {
+                    UI.addElement(docTypeIcon, docPreviewContainer);
+                }
+                if (!this.previewMode) {
+                    var removeImageIcon = UI.getBase64Image(UI.Assets.removeImageGridAlbum, this.getRemoveImageIconStyleAttributes());
+                    removeImageIcon.onclick = function (attachmentIndex, e) {
+                        KASClient.removeElementFromArray(this.attachments, attachmentIndex);
+                        this.getInputView();
+                        if (this.onChangeCallback) {
+                            this.onChangeCallback(this.attachments);
+                        }
+                    }.bind(this, attachmentIndex);
+                    KASClient.UI.setAccessibilityBasic(removeImageIcon, false, KASClient.UI.KASFormAccessibilityRole.Button, KASClient.Internal.getKASClientString("RemoveImage") + (attachmentIndex + 1));
+                    UI.addElement(removeImageIcon, docPreviewContainer);
+                }
+                return docPreviewContainer;
+            };
+            KASAttachmentsPreviewView.prototype.getPreviewImagePath = function (attachment) {
+                if (attachment.type == KASClient.KASAttachmentType.Image) {
+                    if (!KASClient.isEmptyString(attachment.localPath)) {
+                        return attachment.localPath;
+                    }
+                    else if (!KASClient.isEmptyString(attachment.thumbnail)) {
+                        return attachment.thumbnail;
+                    }
+                    else if (!KASClient.isEmptyString(attachment.thumbnailServerUrl)) {
+                        return attachment.thumbnailServerUrl;
+                    }
+                    else if (!KASClient.isEmptyString(attachment.serverPath)) {
+                        return attachment.serverPath;
+                    }
+                }
+                else if (attachment.type == KASClient.KASAttachmentType.Document) {
+                    if (!KASClient.isEmptyString(attachment.thumbnail)) {
+                        return attachment.thumbnail;
+                    }
+                    else if (!KASClient.isEmptyString(attachment.thumbnailServerUrl)) {
+                        return attachment.thumbnailServerUrl;
+                    }
+                }
+                return null; //TODO: return default attachment icon or handle null in caller
+            };
+            KASAttachmentsPreviewView.prototype.getDocTypeIcon = function (documentAttachment) {
+                var fileName = documentAttachment.fileName;
+                if (!KASClient.isEmptyString(fileName)) {
+                    var fileExt = fileName.split('.').pop().toLowerCase();
+                    return KASClient.UI.getAttachmentIconBase64(fileExt);
+                }
+                return UI.Assets.documentIcon;
+            };
+            KASAttachmentsPreviewView.prototype.reloadImages = function () {
+                if (this.scrollEndDetectionTimer) {
+                    clearTimeout(this.scrollEndDetectionTimer);
+                }
+                if (this.imagesPendingLoad.length == 0 && this.scrollHandler) {
+                    if (this.attachmentsPreviewViewRenderStyle == KASAttachmentsPreviewViewRenderStyle.CAROUSEL) {
+                        this.container.removeEventListener('scroll', this.scrollHandler);
+                    }
+                    document.removeEventListener('scroll', this.scrollHandler);
+                    return;
+                }
+                this.scrollEndDetectionTimer = setTimeout(function () {
+                    if (this.isViewInViewPort(this.container)) {
+                        var processedImages = [];
+                        for (var loadIndex = 0; loadIndex < this.imagesPendingLoad.length; loadIndex++) {
+                            var image = this.imagesPendingLoad[loadIndex];
+                            if (this.isViewInViewPort(image)) {
+                                image.setAttribute('src', image.getAttribute('data-src'));
+                                UI.addCSS(image, this.getImageBorderStyleAttributes());
+                                image.removeAttribute('data-src');
+                                processedImages.push(image);
+                            }
+                        }
+                        for (var removeIndex = 0; removeIndex < processedImages.length; removeIndex++) {
+                            var refIndex = this.imagesPendingLoad.indexOf(processedImages[removeIndex]);
+                            KASClient.removeElementFromArray(this.imagesPendingLoad, refIndex);
+                        }
+                    }
+                }.bind(this), this.DEFAULT_SCROLL_END_DETECTION_TIMEOUT_IN_MS);
+            };
+            KASAttachmentsPreviewView.prototype.isViewInViewPort = function (view) {
+                if (!view) {
+                    return false;
+                }
+                var rect = view.getBoundingClientRect(), vWidth = window.innerWidth || document.documentElement.clientWidth, vHeight = window.innerHeight || document.documentElement.clientHeight, efp = function (x, y) { return document.elementFromPoint(x, y); };
+                // Return false if it's not in the viewport
+                if (rect.right < 0 || rect.bottom < 0
+                    || rect.left > vWidth || rect.top > vHeight)
+                    return false;
+                if (!view.parentElement) {
+                    return false;
+                }
+                // Return true if any of its four corners are visible
+                return (view.parentElement.contains(efp(rect.left, rect.top))
+                    || view.parentElement.contains(efp(rect.right, rect.top))
+                    || view.parentElement.contains(efp(rect.right, rect.bottom))
+                    || view.parentElement.contains(efp(rect.left, rect.bottom)));
+            };
+            KASAttachmentsPreviewView.prototype.getContainerStyleAttributes = function () {
+                if (this.attachmentsPreviewViewRenderStyle == KASAttachmentsPreviewViewRenderStyle.CAROUSEL) {
+                    return {
+                        "display": "grid",
+                        "grid-template-columns": "10px",
+                        "overflow": "scroll",
+                        "-webkit-overflow-scrolling": "touch"
+                    };
+                }
+                else {
+                    return {
+                        "display": "flex",
+                        "align-items": "flex-start",
+                        "flex-wrap": "wrap"
+                    };
+                }
+            };
+            KASAttachmentsPreviewView.prototype.getImageStyleAttributes = function () {
+                return {
+                    "width": "80px",
+                    "height": "80px",
+                    "object-fit": "cover",
+                    "border-radius": "4px",
+                    "margin-left": "4px",
+                    "margin-top": "4px",
+                    "box-sizing": "border-box",
+                    "-webkit-box-sizing": "border-box",
+                    "-moz-border-box": "border-box"
+                };
+            };
+            KASAttachmentsPreviewView.prototype.getImageBorderStyleAttributes = function () {
+                return {
+                    "border": "1.5px solid #e0e3e7"
+                };
+            };
+            KASAttachmentsPreviewView.prototype.getPlaceHolderBorderStyleAttributes = function () {
+                return {
+                    "border": "none"
+                };
+            };
+            KASAttachmentsPreviewView.prototype.getEditModeImageContainerAttributes = function () {
+                return {
+                    "position": "relative",
+                    "height": "84px",
+                    "width": "84px"
+                };
+            };
+            KASAttachmentsPreviewView.prototype.getRemoveImageIconStyleAttributes = function () {
+                return {
+                    "position": "absolute",
+                    "right": "0px",
+                    "top": "2px",
+                    "height": "20px",
+                    "width": "20px"
+                };
+            };
+            KASAttachmentsPreviewView.prototype.getDocTypeIconStyleAttributes = function () {
+                return {
+                    "position": "absolute",
+                    "right": "2px",
+                    "bottom": "2px",
+                    "height": "14px",
+                    "width": "14px"
+                };
+            };
+            KASAttachmentsPreviewView.prototype.getEmptyGridAddImageButtonStyleAttributes = function () {
+                return {
+                    "width": "92px",
+                    "height": "92px",
+                    "object-fit": "cover"
+                };
+            };
+            KASAttachmentsPreviewView.prototype.getAddImageButtonStyleAttributes = function () {
+                return {
+                    "width": "80px",
+                    "height": "80px",
+                    "object-fit": "cover",
+                    "margin-left": "4px",
+                    "margin-top": "4px"
+                };
+            };
+            KASAttachmentsPreviewView.prototype.getUnsupportedDocumentStyleAttributes = function () {
+                return {
+                    "width": "80px",
+                    "height": "80px",
+                    "object-fit": "cover",
+                    "margin-left": "4px",
+                    "margin-top": "4px",
+                    "border": "1.5px solid #e0e3e7",
+                    "border-radius": "4px",
+                    "box-sizing": "border-box",
+                    "-webkit-box-sizing": "border-box",
+                    "-moz-border-box": "border-box"
+                };
+            };
+            KASAttachmentsPreviewView.ATTACHMENTS_PREVIEW_VIEW_RENDER_STYLE = "ATTACHMENTS_PREVIEW_VIEW_RENDER_STYLE";
+            return KASAttachmentsPreviewView;
+        }(UI.KASInputView));
+        UI.KASAttachmentsPreviewView = KASAttachmentsPreviewView;
+    })(UI = KASClient.UI || (KASClient.UI = {}));
 })(KASClient || (KASClient = {}));
 var KASClient;
 (function (KASClient) {
@@ -12120,6 +13248,7 @@ var KASClient;
                 }.bind(this, settingView);
                 KASClient.UI.setAccessibilityBasic(settingView, false, KASClient.UI.KASFormAccessibilityRole.Checkbox);
                 KASClient.UI.setAccessibilityAttribute(settingView, KASClient.UI.KASFormAccessibilityKey.Checked, "" + this.checkboxDefaultValue);
+                KASClient.UI.setAccessibilityAttribute(settingView, KASClient.UI.KASFormAccessibilityKey.Label, this.title);
                 var titleLabelAttributes = {
                     "flex": "1",
                     "color": "#32485f",
@@ -12159,34 +13288,6 @@ var KASClient;
             return KASCheckboxView;
         }());
         UI.KASCheckboxView = KASCheckboxView;
-    })(UI = KASClient.UI || (KASClient.UI = {}));
-})(KASClient || (KASClient = {}));
-var KASClient;
-(function (KASClient) {
-    var UI;
-    (function (UI) {
-        var KASInputView = /** @class */ (function () {
-            function KASInputView(header) {
-                this.header = null;
-                this.header = header;
-            }
-            KASInputView.prototype.getView = function () {
-                if (KASClient.isEmptyString(this.header)) {
-                    return UI.getVerticalDiv([this.getInputView()]);
-                }
-                else {
-                    var headerDiv = UI.getLabel(this.header, Object.assign({
-                        "font-size": KASClient.UI.getScaledFontSize("12px"),
-                        "font-weight": "600",
-                        "color": "#32485f",
-                    }, KASClient.UI.getMediumFontAttributes()));
-                    UI.setAccessibilityBasic(headerDiv, false /*isHidden*/);
-                    return UI.getVerticalDiv([headerDiv, UI.getSpace("12px"), this.getInputView()]);
-                }
-            };
-            return KASInputView;
-        }());
-        UI.KASInputView = KASInputView;
     })(UI = KASClient.UI || (KASClient.UI = {}));
 })(KASClient || (KASClient = {}));
 /// <reference path="./KASInputView.ts" />
@@ -12230,7 +13331,7 @@ var KASClient;
                     "color": "#006ff1",
                 });
                 this.setDate(this.date);
-                KASClient.UI.setAccessibilityBasic(this.dateTextLabel, false, KASClient.UI.KASFormAccessibilityRole.Text);
+                KASClient.UI.setAccessibilityBasic(this.dateTextLabel, false, KASClient.UI.KASFormAccessibilityRole.Button);
                 this.datePicker = KASClient.UI.getElement("input", {
                     "-webkit-appearance": "none",
                     "border": "none",
@@ -12466,21 +13567,19 @@ var KASClient;
                 var addImageButton;
                 if (this.imageAttachments.length > 0) {
                     addImageButton = UI.getBase64Image(UI.Assets.addImageGridAlbum, this.getAddImageButtonStyleAttributes());
-                    UI.setAccessibilityBasic(addImageButton, true);
-                    KASClient.UI.setAccessibilityBasic(addImageButtonContainer, false, KASClient.UI.KASFormAccessibilityRole.Button, KASClient.Internal.getKASClientString("AddMoreImages"));
+                    KASClient.UI.setAccessibilityBasic(addImageButton, false, KASClient.UI.KASFormAccessibilityRole.Button, KASClient.Internal.getKASClientString("AddMoreImages"));
                 }
                 else {
                     if (cameraOnly) {
                         addImageButton = UI.getBase64Image(UI.Assets.addCameraImageEmptyGridAlbum);
-                        KASClient.UI.setAccessibilityBasic(addImageButtonContainer, false, KASClient.UI.KASFormAccessibilityRole.Button, KASClient.Internal.getKASClientString("CameraPicker"));
+                        KASClient.UI.setAccessibilityBasic(addImageButton, false, KASClient.UI.KASFormAccessibilityRole.Button, KASClient.Internal.getKASClientString("CameraPicker"));
                     }
                     else {
                         addImageButton = UI.getBase64Image(UI.Assets.addImageEmptyGridAlbum);
-                        KASClient.UI.setAccessibilityBasic(addImageButtonContainer, false, KASClient.UI.KASFormAccessibilityRole.Button, KASClient.Internal.getKASClientString("ImagePicker"));
+                        KASClient.UI.setAccessibilityBasic(addImageButton, false, KASClient.UI.KASFormAccessibilityRole.Button, KASClient.Internal.getKASClientString("ImagePicker"));
                     }
                     UI.addCSS(addImageButton, this.getEmptyGridAddImageButtonStyleAttributes());
                 }
-                UI.setAccessibilityBasic(addImageButton, true);
                 var self = this;
                 UI.addClickEvent(addImageButton, function () {
                     self.props[KASClient.KASAttachmentListQuestionConfig.MAX_IMAGE_COUNT_KEY] = self.maxImageCount - self.imageAttachments.length;
@@ -12987,7 +14086,7 @@ var KASClient;
                     "font-size": KASClient.UI.getScaledFontSize("16px"),
                     "color": "#006ff1",
                 });
-                KASClient.UI.setAccessibilityBasic(timeTextLabel, false, KASClient.UI.KASFormAccessibilityRole.Text);
+                KASClient.UI.setAccessibilityBasic(timeTextLabel, false, KASClient.UI.KASFormAccessibilityRole.Button);
                 this.timePicker = KASClient.UI.getElement("input", {
                     "-webkit-appearance": "none",
                     "border": "none",
@@ -13033,15 +14132,7 @@ var KASClient;
                     hour = defaultHour;
                     minute = defaultMin;
                 }
-                var min = (minute < 10 ? "0" : "") + minute;
-                if (this.use24HourFormat) {
-                    return hour + ":" + min;
-                }
-                else {
-                    var hr = hour % 12;
-                    hr = (hr == 0 ? 12 : hr);
-                    return hr + ":" + min + " " + (parseInt("" + hour / 12) ? "pm" : "am");
-                }
+                return KASClient.toStringTimeObject(hour + ":" + minute);
             };
             KASTimeInputView.prototype.getTime = function () {
                 var selectedTime = this.defaultTime;
@@ -13064,24 +14155,72 @@ var KASClient;
             function KASAlbumView() {
                 var _this = _super.call(this) || this;
                 _this.imageLocalPaths = null;
+                _this.attachments = [];
+                _this.containsDocumentAttachments = false;
                 _this.albumViewDiv = null;
                 _this.slides = [];
                 _this.photoIndexLabel = null;
+                _this.openDocumentButtonContainer = null;
+                _this.docTypeIcon = null;
                 _this.currentIndex = 0;
                 _this.gradientView = null;
                 _this.showingThumbnail = false;
                 _this.swipeCallBack = function (direction) { this.onSwipe(direction); }.bind(_this);
                 _this.view.style.position = "relative";
+                if (KASClient.isRenderedForWebApp()) {
+                    _this.view.style.height = "inherit";
+                }
                 _this.albumViewDiv = KASClient.UI.getElement("div", _this.getAlbumViewDivAttributes());
                 _this.gradientView = KASClient.UI.getDiv({
                     "background": "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.6))",
-                    "height": "40px",
+                    "height": _this.getGradientViewHeight(),
                     "bottom": "0px",
                     "left": "0px",
                     "width": "100%",
                     "position": "absolute"
                 });
                 KASClient.UI.addSwipeGesture(_this.albumViewDiv, _this.swipeCallBack);
+                _this.openDocumentButtonContainer = KASClient.UI.getDiv({
+                    "height": "64px",
+                    "bottom": "0px",
+                    "left": "0px",
+                    "width": "100%",
+                    "position": "absolute",
+                    "display": "none"
+                });
+                var openDocumentButton = KASClient.UI.getDiv({
+                    "border": "1px solid #0078d4",
+                    "border-radius": "9999px",
+                    "padding": "8px 16px 8px 16px",
+                    "background-color": "#FFFFFF",
+                    "position": "absolute",
+                    "bottom": "12px",
+                    "left": "calc(50% - 60px)",
+                    "align-items": "center",
+                    "justify-content": "center"
+                });
+                var openDocumentLabel = KASClient.UI.getLabel(KASClient.Internal.getKASClientString("Open Document"), {
+                    "color": "#0078d4",
+                    "text-align": "center",
+                    "font-size": KASClient.UI.getScaledFontSize("14px"),
+                    "font-weight": MEDIUM_FONT_WEIGHT
+                });
+                KASClient.UI.addElement(openDocumentLabel, openDocumentButton);
+                openDocumentButton.onclick = function () {
+                    if (this.attachments != null && this.attachments.length > 0 && this.currentIndex < this.attachments.length) {
+                        KASClient.App.openAttachmentImmersiveView(this.attachments[this.currentIndex]);
+                    }
+                    event.stopPropagation();
+                }.bind(_this);
+                KASClient.UI.addElement(openDocumentButton, _this.openDocumentButtonContainer);
+                _this.docTypeIcon = KASClient.UI.getBase64Image(KASClient.UI.getAttachmentIconBase64("pdf"), {
+                    "height": "36px",
+                    "bottom": "12px",
+                    "left": "12px",
+                    "width": "36px",
+                    "position": "absolute",
+                    "display": "none"
+                });
                 KASClient.UI.addElement(_this.albumViewDiv, _this.view);
                 return _this;
             }
@@ -13100,7 +14239,7 @@ var KASClient;
             KASAlbumView.prototype.showThumbnail = function () {
                 if (!KASClient.isEmptyString(this.thumbnailBase64)) {
                     this.showingThumbnail = true;
-                    var slide = this.getSlideWithImageSrc(KASClient.UI.getBase64Src(this.thumbnailBase64));
+                    var slide = this.getSlideWithImageSrc(KASClient.UI.getBase64Src(this.thumbnailBase64), this.getSlideImageProperties());
                     KASClient.UI.setAccessibilityBasic(slide, true);
                     KASClient.UI.addElement(slide, this.albumViewDiv);
                 }
@@ -13114,8 +14253,8 @@ var KASClient;
             KASAlbumView.prototype.popualatePhotoIndexLabel = function () {
                 if (this.slides.length > 1) {
                     this.photoIndexLabel.style.display = "block";
-                    this.photoIndexLabel.innerText = (this.currentIndex + 1) + " / " + this.slides.length;
-                    KASClient.UI.setAccessibilityBasic(this.photoIndexLabel, false, KASClient.UI.KASFormAccessibilityRole.Text, KASClient.Internal.getKASClientString("X_of_Y_Images", (this.currentIndex + 1), this.slides.length));
+                    this.photoIndexLabel.innerText = (this.currentIndex + 1).toLocaleString() + " / " + this.slides.length.toLocaleString();
+                    KASClient.UI.setAccessibilityBasic(this.photoIndexLabel, false, KASClient.UI.KASFormAccessibilityRole.Text, KASClient.Internal.getKASClientString("X_of_Y_Images", (this.currentIndex + 1).toLocaleString(), this.slides.length.toLocaleString()));
                 }
                 else {
                     this.photoIndexLabel.style.display = "none";
@@ -13125,6 +14264,7 @@ var KASClient;
             KASAlbumView.prototype.populateImagesForLocalPaths = function (localPaths) {
                 this.showingThumbnail = false;
                 KASClient.UI.clearElement(this.albumViewDiv);
+                KASClient.addCSS(this.gradientView, { "height": this.getGradientViewHeight() });
                 this.photoIndexLabel = KASClient.UI.getDiv({
                     "font-size": KASClient.UI.getScaledFontSize("14px"),
                     "bottom": "10px",
@@ -13133,7 +14273,18 @@ var KASClient;
                     "color": "white"
                 });
                 for (var i = 0; i < localPaths.length; i++) {
-                    var slide = this.getSlideWithImageSrc(localPaths[i]);
+                    var imageProperties = this.getSlideImageProperties();
+                    if (this.attachments != null && this.attachments.length > 0) {
+                        if (this.attachments[i].type == KASClient.KASAttachmentType.Document) {
+                            if (KASClient.isEmptyString(this.attachments[i].thumbnail)) {
+                                imageProperties = this.getSlideThumbnailImageProperties();
+                            }
+                            else {
+                                imageProperties = this.getDocumentSlideImageProperties();
+                            }
+                        }
+                    }
+                    var slide = this.getSlideWithImageSrc(localPaths[i], imageProperties);
                     this.slides.push(slide);
                     KASClient.UI.addElement(slide, this.albumViewDiv);
                 }
@@ -13148,6 +14299,10 @@ var KASClient;
                     KASClient.UI.addElement(next, this.albumViewDiv);
                     KASClient.UI.addElement(this.gradientView, this.albumViewDiv);
                 }
+                else if (localPaths.length == 1 && this.attachments != null && this.attachments.length > 0 &&
+                    this.attachments[0].type == KASClient.KASAttachmentType.Document) {
+                    KASClient.UI.addElement(this.gradientView, this.albumViewDiv);
+                }
                 if (this.tapEnabled) {
                     this.view.onclick = function () {
                         if (this.onImageTappedCallback)
@@ -13158,6 +14313,8 @@ var KASClient;
                     this.addRemoveImageButton();
                 }
                 KASClient.UI.addElement(this.photoIndexLabel, this.albumViewDiv);
+                KASClient.UI.addElement(this.openDocumentButtonContainer, this.albumViewDiv);
+                KASClient.UI.addElement(this.docTypeIcon, this.albumViewDiv);
                 KASClient.UI.addElement(this.albumViewDiv, this.view);
                 this.showSlide(this.currentIndex);
             };
@@ -13169,9 +14326,9 @@ var KASClient;
                     shiftBy = 1;
                 this.plusSlides(shiftBy);
             };
-            KASAlbumView.prototype.getSlideWithImageSrc = function (src) {
-                var slide = KASClient.UI.getElement("div", { "display": "block", "width": "100%", "overflow": "hidden" });
-                var image = KASClient.UI.getElement("img", { "width": "100%", "height": "100%", "object-fit": "cover" });
+            KASAlbumView.prototype.getSlideWithImageSrc = function (src, imageAttributes) {
+                var slide = KASClient.UI.getElement("div", { "display": "flex", "width": "100%", "overflow": "hidden", "align-items": "center", "justify-content": "center" });
+                var image = KASClient.UI.getElement("img", imageAttributes);
                 image.src = src;
                 if (this.tapEnabled && this.onImageTappedCallback && !this.showingThumbnail) {
                     KASClient.UI.setAccessibilityBasic(image, false, UI.KASFormAccessibilityRole.Image, KASClient.Internal.getKASClientString("TapToOpenText"));
@@ -13194,10 +14351,29 @@ var KASClient;
                     this.slides[i].style.display = "none";
                 }
                 if (slideIndex < this.slides.length) {
-                    this.slides[slideIndex].style.display = "block";
+                    this.slides[slideIndex].style.display = "flex";
                     this.currentIndex = slideIndex;
                 }
                 this.popualatePhotoIndexLabel();
+                if (this.attachments != null && this.attachments.length > 0) {
+                    if (this.attachments[this.currentIndex].type == KASClient.KASAttachmentType.Document) {
+                        this.openDocumentButtonContainer.style.display = "flex";
+                        KASClient.addCSS(this.gradientView, { "height": "64px" });
+                        var localPath = this.attachments[this.currentIndex].localPath;
+                        var thumbnail = this.attachments[this.currentIndex].thumbnail;
+                        if (!KASClient.isEmptyString(localPath) && KASClient.UI.isPDFDocument(localPath) && !KASClient.isEmptyString(thumbnail)) {
+                            this.docTypeIcon.src = KASClient.UI.getBase64Src(KASClient.UI.getAttachmentIconBase64("pdf"));
+                            KASClient.UI.addCSS(this.docTypeIcon, { "display": "block" });
+                        }
+                        else {
+                            KASClient.UI.addCSS(this.docTypeIcon, { "display": "none" });
+                        }
+                    }
+                    else {
+                        this.openDocumentButtonContainer.style.display = "none";
+                        KASClient.UI.addCSS(this.docTypeIcon, { "display": "none" });
+                    }
+                }
             };
             KASAlbumView.prototype.plusSlides = function (n) {
                 this.showSlide(this.currentIndex + n);
@@ -13241,6 +14417,26 @@ var KASClient;
                     "height": "100%"
                 };
             };
+            KASAlbumView.prototype.getSlideImageProperties = function () {
+                return {
+                    "width": "100%",
+                    "height": "100%",
+                    "object-fit": "cover"
+                };
+            };
+            KASAlbumView.prototype.getDocumentSlideImageProperties = function () {
+                return {
+                    "width": "100%",
+                    "height": "100%",
+                    "object-fit": "contain"
+                };
+            };
+            KASAlbumView.prototype.getSlideThumbnailImageProperties = function () {
+                return {
+                    "width": "72px",
+                    "height": "72px"
+                };
+            };
             KASAlbumView.prototype.addRemoveImageButton = function () {
                 var removeImgBtn = KASClient.UI.getBase64Image(UI.Assets.crossButtonBlack, {
                     "position": "absolute",
@@ -13258,6 +14454,12 @@ var KASClient;
                         this.removeImageCallback(indexToRemove);
                 }.bind(this);
             };
+            KASAlbumView.prototype.getGradientViewHeight = function () {
+                if (this.containsDocumentAttachments) {
+                    return "64px";
+                }
+                return "40px";
+            };
             return KASAlbumView;
         }(UI.KASAttachmentView));
         UI.KASAlbumView = KASAlbumView;
@@ -13271,6 +14473,7 @@ var KASClient;
             function KASAlbumViewHandler(albumViewModel) {
                 this.model = albumViewModel;
                 this.view = new UI.KASAlbumView();
+                this.view.containsDocumentAttachments = this.model.containsDocumentAttachments;
                 this.view.retryButtonCallback = function () { this.retryButtonTapped(); }.bind(this);
                 this.view.removeImageCallback = function (i) { this.imageRemoved(i); }.bind(this);
                 this.view.tapEnabled = this.model.enableOnTap;
@@ -13287,11 +14490,16 @@ var KASClient;
                 this.refreshAlbumView();
             };
             KASAlbumViewHandler.prototype.removeLocalPaths = function (indices) {
-                if (!this.model.hasStaticContent) {
-                    this.model.imageObjects = this.model.imageObjects.filter(function (el, i) { return indices.indexOf(i) < 0; });
+                if (this.shouldProcessGenericAttachments()) {
+                    this.model.attachments = this.model.attachments.filter(function (el, i) { return indices.indexOf(i) < 0; });
                 }
                 else {
-                    this.model.imageObjects = this.model.imageObjects.filter(function (el, i) { return indices.indexOf(i) < 0; });
+                    if (!this.model.hasStaticContent) {
+                        this.model.imageObjects = this.model.imageObjects.filter(function (el, i) { return indices.indexOf(i) < 0; });
+                    }
+                    else {
+                        this.model.imageObjects = this.model.imageObjects.filter(function (el, i) { return indices.indexOf(i) < 0; });
+                    }
                 }
                 this.refreshData(this.model);
                 this.refreshAlbumView();
@@ -13303,14 +14511,35 @@ var KASClient;
             KASAlbumViewHandler.prototype.populateLocalImagePathsInModel = function (albumViewModel) {
                 if (!this.model.hasStaticContent) {
                     this.model.imageLocalPaths = [];
-                    for (var i = 0; i < albumViewModel.imageObjects.length; i++) {
-                        this.model.imageLocalPaths.push(this.model.imageObjects[i].localPath);
+                    if ((albumViewModel.imageObjects == null || albumViewModel.imageObjects.length == 0) &&
+                        albumViewModel.attachments != null && albumViewModel.attachments.length > 0) {
+                        for (var i = 0; i < albumViewModel.attachments.length; i++) {
+                            var attachment = albumViewModel.attachments[i];
+                            if (attachment.type == KASClient.KASAttachmentType.Document) {
+                                if (!KASClient.isEmptyString(attachment.thumbnail)) {
+                                    this.model.imageLocalPaths.push(KASClient.UI.getBase64Src(attachment.thumbnail));
+                                }
+                                else if (!KASClient.isEmptyString(attachment.localPath)) {
+                                    var fileExt = attachment.localPath.split('.').pop().toLowerCase();
+                                    this.model.imageLocalPaths.push(KASClient.UI.getBase64Src(KASClient.UI.getAttachmentIconBase64(fileExt)));
+                                }
+                            }
+                            else {
+                                this.model.imageLocalPaths.push(this.model.attachments[i].localPath);
+                            }
+                        }
+                    }
+                    else {
+                        for (var i = 0; i < albumViewModel.imageObjects.length; i++) {
+                            this.model.imageLocalPaths.push(this.model.imageObjects[i].localPath);
+                        }
                     }
                 }
             };
             KASAlbumViewHandler.prototype.refreshData = function (model) {
                 this.populateLocalImagePathsInModel(model);
                 this.view.imageLocalPaths = this.model.imageLocalPaths;
+                this.view.attachments = this.model.attachments;
             };
             KASAlbumViewHandler.prototype.getAlbumView = function () {
                 this.refreshData(this.model);
@@ -13384,11 +14613,22 @@ var KASClient;
             };
             KASAlbumViewHandler.prototype.allLocalPathsExist = function () {
                 var allExists = true;
-                for (var i = 0; i < this.model.imageObjects.length; i++) {
-                    var imageObject = this.model.imageObjects[i];
-                    if (imageObject.localPath == "") {
-                        allExists = false;
-                        break;
+                if (this.shouldProcessGenericAttachments()) {
+                    for (var i = 0; i < this.model.attachments.length; i++) {
+                        var attachment = this.model.attachments[i];
+                        if (attachment.localPath == "") {
+                            allExists = false;
+                            break;
+                        }
+                    }
+                }
+                else {
+                    for (var i = 0; i < this.model.imageObjects.length; i++) {
+                        var imageObject = this.model.imageObjects[i];
+                        if (imageObject.localPath == "") {
+                            allExists = false;
+                            break;
+                        }
                     }
                 }
                 return allExists;
@@ -13398,9 +14638,16 @@ var KASClient;
             KASAlbumViewHandler.prototype.onUploadFailed = function () {
             };
             KASAlbumViewHandler.prototype.onDownloadStopped = function () {
-                this.model.imageObjects.forEach(function (element) {
-                    KASClient.App.cancelAttachmentDownloadAsync(element, null);
-                });
+                if (this.shouldProcessGenericAttachments()) {
+                    this.model.attachments.forEach(function (attachment) {
+                        KASClient.App.cancelAttachmentDownloadAsync(attachment, null);
+                    });
+                }
+                else {
+                    this.model.imageObjects.forEach(function (element) {
+                        KASClient.App.cancelAttachmentDownloadAsync(element, null);
+                    });
+                }
             };
             KASAlbumViewHandler.prototype.onDownloadFailed = function () {
                 this.view.showRetryButton();
@@ -13425,7 +14672,12 @@ var KASClient;
                 }.bind(this));
             };
             KASAlbumViewHandler.prototype.onImageTappedAtIndex = function (imgIndex) {
-                KASClient.App.showImageImmersiveView(this.view.imageLocalPaths, imgIndex);
+                if (this.shouldProcessGenericAttachments()) {
+                    KASClient.App.openImmersiveViewForAttachmentList(this.view.attachments, imgIndex);
+                }
+                else {
+                    KASClient.App.showImageImmersiveView(this.view.imageLocalPaths, imgIndex);
+                }
             };
             KASAlbumViewHandler.prototype.startDownloadForImagesForAttachment = function (callback) {
                 var downloadCallBack = callback;
@@ -13434,11 +14686,27 @@ var KASClient;
                         this.onDownloadFinished(downloadedAttachment, error);
                     }.bind(this);
                 }
-                this.model.imageObjects.forEach(function (element) {
-                    if (element.localPath == "" && element.serverPath != "") {
-                        KASClient.App.downloadAttachmentAsync(element, downloadCallBack);
-                    }
-                });
+                if (this.shouldProcessGenericAttachments()) {
+                    this.model.attachments.forEach(function (attachment) {
+                        if (attachment.localPath == "" && attachment.serverPath != "") {
+                            KASClient.App.downloadAttachmentAsync(attachment, downloadCallBack);
+                        }
+                    });
+                }
+                else {
+                    this.model.imageObjects.forEach(function (element) {
+                        if (element.localPath == "" && element.serverPath != "") {
+                            KASClient.App.downloadAttachmentAsync(element, downloadCallBack);
+                        }
+                    });
+                }
+            };
+            KASAlbumViewHandler.prototype.shouldProcessGenericAttachments = function () {
+                // KASAlbumView's datasource can be either imageObjects or attachments(images+documents).
+                // If imageObjects is initialized then we give priority to that so that
+                // existing flows are unaffected. 
+                return ((this.model.imageObjects == null || this.model.imageObjects.length == 0) &&
+                    this.model.attachments != null && this.model.attachments.length > 0);
             };
             return KASAlbumViewHandler;
         }());
@@ -13458,6 +14726,10 @@ var KASClient;
                 _this.imageObjects = [];
                 _this.thumbnailBase64 = "";
                 _this.shouldBlurThumbnail = false;
+                // If attachments are provided then the imageObjects parameter above will not be processed. 
+                // Should eventually setup a more clearer interface for this widget.
+                _this.attachments = [];
+                _this.containsDocumentAttachments = false;
                 return _this;
             }
             return KASAlbumViewModel;
@@ -13547,9 +14819,12 @@ var KASClient;
                 return attr;
             };
             KASAudioView.prototype.getAudioPlayerView = function () {
-                var player = KASClient.UI.getElement("audio", { "width": "100%", "height": "40px" });
+                var player = KASClient.UI.getElement("audio", { "width": "100%" });
                 player.controls = true;
                 player.src = this.audioObj.localPath;
+                player.onclick = function () {
+                    event.stopPropagation();
+                };
                 return player;
             };
             KASAudioView.prototype.showAudioPlayer = function () {
@@ -13795,11 +15070,11 @@ var KASClient;
                 this.view.refreshView();
             };
             KASDocumentViewHandler.prototype.documentRemoved = function () {
+                if (this.documentRemovedCallback) {
+                    this.documentRemovedCallback(this.model.documentObj);
+                }
                 this.model.documentObj = null;
                 this.view.documentObj = null;
-                if (this.documentRemovedCallback) {
-                    this.documentRemovedCallback();
-                }
             };
             KASDocumentViewHandler.prototype.getDocumentView = function () {
                 this.view.documentObj = this.model.documentObj;
@@ -13976,6 +15251,7 @@ var KASClient;
                     "color": "#98a3af",
                     "font-size": KASClient.UI.getScaledFontSize("15px")
                 });
+                UI.setAccessibilityBasic(this.placeHolderLabel, false, UI.KASFormAccessibilityRole.TextBox);
                 UI.addElement(this.placeHolderLabel, this.containerView);
             };
             KASDropDownOptionsInputView.prototype.onContainerViewTapped = function () {
@@ -13989,21 +15265,20 @@ var KASClient;
                 this.optionsListOL = UI.getElement('ol', { "-webkit-user-select": "text", "min-height": "150px" });
                 this.optionsListOL.contentEditable = "true";
                 // Fix for Bug 2008611 - contenteditable=true is not editable in Oreo in talkbalk mode
+                UI.addElement(this.optionsListOL, this.containerView);
                 UI.addClickEvent(this.optionsListOL, function () {
                     this.focus();
                 });
-                UI.addElement(this.optionsListOL, this.containerView);
             };
             KASDropDownOptionsInputView.prototype.showEmptyOptionsList = function () {
                 this.optionsListLI = [];
                 this.appendOptionRowForText(" ");
                 setTimeout(function () {
-                    this.optionsListLI[0].focus();
+                    this.optionsListOL.focus();
                 }.bind(this), 100);
             };
             KASDropDownOptionsInputView.prototype.appendOptionRowForText = function (option) {
                 var li = UI.getElement('li', { "font-size": KASClient.UI.getScaledFontSize("16px"), "color": "#32485f" });
-                li.tabIndex = this.optionsListLI.length + 1;
                 li.innerText = option;
                 this.optionsListLI.push(li);
                 UI.addElement(li, this.optionsListOL);
@@ -14048,7 +15323,7 @@ var KASClient;
                 var textLabel = UI.getDiv({
                     "padding-left": "16px",
                     "width": "80%",
-                    "font-size": "16px",
+                    "font-size": KASClient.getScaledFontSize("16px"),
                     "color": "#32485f",
                     "padding-top": "14px",
                     "padding-bottom": "15px"
@@ -14063,6 +15338,7 @@ var KASClient;
                 this.optionView.onclick = function () {
                     this.onOptionTapped();
                 }.bind(this);
+                this.setRowAccessibility();
                 this.view = this.optionView;
             }
             KASDropDownRow.prototype.onOptionTapped = function () {
@@ -14087,6 +15363,7 @@ var KASClient;
                 if (!this.isSelected) {
                     this.isSelected = !this.isSelected;
                     this.optionView.style.background = "#f2f9ff";
+                    this.setRowAccessibility();
                     UI.addElement(this.selectImage, this.optionView);
                 }
             };
@@ -14094,8 +15371,13 @@ var KASClient;
                 if (this.isSelected) {
                     this.isSelected = !this.isSelected;
                     this.optionView.style.background = "white";
+                    this.setRowAccessibility();
                     UI.removeElement(this.selectImage, this.view);
                 }
+            };
+            KASDropDownRow.prototype.setRowAccessibility = function () {
+                UI.setAccessibilityBasic(this.optionView, false, UI.KASFormAccessibilityRole.Option);
+                UI.setAccessibilityAttribute(this.optionView, UI.KASFormAccessibilityKey.Selected, "" + this.isSelected);
             };
             KASDropDownRow.prototype.populateSelectImage = function () {
                 this.selectImage = UI.getBase64Image(UI.Assets.dropDownTick, { "height": "18px", "width": "18px", "object-fit": "contain", "padding-right": "15px", "margin": "0" });
@@ -14114,6 +15396,7 @@ var KASClient;
                 if (headerView === void 0) { headerView = null; }
                 if (footerView === void 0) { footerView = null; }
                 this.dropDownModel = null;
+                this.rowSelectCallBack = null;
                 this.dropDownOptionsContainerView = null;
                 this.view = null;
                 this.headerView = null;
@@ -14143,11 +15426,11 @@ var KASClient;
                 return this.view;
             };
             KASFormDropDown.prototype.getHeaderView = function () {
-                var headerView = UI.getLabel("SELECT", {
+                var headerView = UI.getLabel(KASClient.Internal.getKASClientString("KASDropDownSelectText"), {
                     "padding-bottom": "9px",
                     "padding-left": "12px",
                     "padding-top": "8px",
-                    "font-size": "12px",
+                    "font-size": KASClient.getScaledFontSize("12px"),
                     "color": "#727d88",
                     "height": "14px"
                 });
@@ -14162,6 +15445,7 @@ var KASClient;
                 var selectedOptions = this.dropDownModel.selectedOptionIndexes;
                 this.listElements = [];
                 this.dropDownOptionsContainerView = UI.getDiv({ "height": "120px", "overflow-y": "scroll", "flex": "1 1 auto" });
+                KASClient.UI.setAccessibilityBasic(this.dropDownOptionsContainerView, false, UI.KASFormAccessibilityRole.ListBox);
                 for (var i = 0; i < options.length; i++) {
                     var row = new UI.KASDropDownRow(options[i], i, selectedOptions.indexOf(i) >= 0);
                     row.onSelectCallBack = function (i) { this.onOptionSelected(i); }.bind(this);
@@ -14187,6 +15471,7 @@ var KASClient;
                 if (selectedRow.isSelected) {
                     this.dropDownModel.selectedOptionIndexes.splice(this.dropDownModel.selectedOptionIndexes.indexOf(index), 1);
                     selectedRow.showUnselectedState();
+                    KASClient.App.readTalkBackMessage(selectedRow.getView().textContent + "." + KASClient.Internal.getKASClientString("Unselected"));
                 }
                 else {
                     if (!this.dropDownModel.isMutliSelect) {
@@ -14195,9 +15480,12 @@ var KASClient;
                     }
                     this.dropDownModel.selectedOptionIndexes.push(index);
                     selectedRow.showSelectedState();
+                    KASClient.App.readTalkBackMessage(selectedRow.getView().textContent + "." + KASClient.Internal.getKASClientString("Selected"));
                 }
                 this.refreshFooter();
-                this.rowSelectCallBack(index, this.dropDownModel.optionsAsStrings[index], !selectedRow.isSelected);
+                if (this.rowSelectCallBack) {
+                    this.rowSelectCallBack(index, this.dropDownModel.optionsAsStrings[index], !selectedRow.isSelected);
+                }
             };
             KASFormDropDown.prototype.resetSelections = function () {
                 this.unselectRows(this.dropDownModel.selectedOptionIndexes);
@@ -14218,9 +15506,11 @@ var KASClient;
                 }
                 if (!this.dropDownModel.selectedOptionIndexes || this.dropDownModel.selectedOptionIndexes.length === 0) {
                     this.footerView.style.display = "none";
+                    KASClient.UI.setAccessibilityAttribute(this.footerView, UI.KASFormAccessibilityKey.Hidden, "true");
                 }
                 else {
                     this.footerView.style.display = "block";
+                    KASClient.UI.setAccessibilityAttribute(this.footerView, UI.KASFormAccessibilityKey.Hidden, "false");
                 }
             };
             return KASFormDropDown;
@@ -14439,3 +15729,5 @@ var KASClient;
 KASClient.Internal.setDocumentDomain();
 KASClient.Internal.setFontSizeMultiplier();
 KASClient.Internal.initialiseKASClientStrings();
+KASClient.Internal.setTimeFormat();
+KASClient.Internal.setCalendarName();

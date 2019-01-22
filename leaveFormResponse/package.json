@@ -1,8 +1,8 @@
 {
     "id": "com.ict.interns.report",
     "schemaVersion": 1,
-    "version": "15",
-    "minorVersion": 18,
+    "version": "19",
+    "minorVersion": 38,
     "providerName": "ICTAfrica",
     "displayName": "Leave Application & Approval",
     "description": "Leave Application & Approval",
@@ -23,8 +23,8 @@
             "showLikes": false,
             "showComments": false,
             "labelResponseSending": "Submitting your details",
-            "labelResponded": "Livestock alert provided",
-            "labelResponseFailed": "Livestock alert submission failed",
+            "labelResponded": "Leave Application & Approval",
+            "labelResponseFailed": "Leave Application & Approval submission failed",
             "isResponseEditable": false
         },
         "ResponseResultsView": {

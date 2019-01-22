@@ -211,6 +211,7 @@ input[type=radio]:checked {
     font-weight: normal;
     color: rgb(50, 72, 95);
 }
+
 .continue{
     background-color: #428bca;
     border: none;
@@ -220,10 +221,10 @@ input[type=radio]:checked {
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    margin: 4px 2px;
+    /* margin: 4px 2px; */
     cursor: pointer;
     width:100%;
-    margin-top: 70%;
+    margin-top: 100%;
 }
 
 .option-div {

@@ -64,6 +64,12 @@
                 },
                 {
                     "title": "Maternity"
+                },
+                {
+                    "title": "Study leave"
+                },
+                {
+                    "title": "Paternity"
                 }
             ]
         },
@@ -137,6 +143,18 @@
         {
             "title": "Comments(if any)",
             "type": "Text"
+        },
+        {
+            "title": "Name",
+            "type": "Text"
+        },
+        {
+            "title": "Phone",
+            "type": "Text"
+        },
+        {
+          "title": "Location",
+          "type": "Location"
         },
         {
           "title": "Response Time",
