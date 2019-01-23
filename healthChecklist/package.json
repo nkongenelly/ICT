@@ -1,52 +1,35 @@
 {
-  "id": "ict.plexus.healthchecklist",
+  "id": "com.nelly.serious.incident.alert",
   "schemaVersion": 1,
-  "displayName": "Plant Housekeeping Inspection Checklist 1",
-  "description": "Ramco Plexus Plant  Housekeeping Inspection Checklist 1",
-  "icon": "SurveyIcon.png",
   "version": "1",
-  "minorVersion": "5",
+  "minorVersion": 3,
+  "providerName": "ICTAfrica",
+  "displayName": "Plant Housekeeping Inspection Checklist 1",
+  "description": "Plant Housekeeping Inspection Checklist 1",
+  "icon": "SurveyIcon.png",
   "appModel": "CardData.json",
-  "parentTemplateId": "Form",
   "dials": {
-    "isLocalised": true
+      "isLocalised": false,
+      "isPinned": false
   },
   "actionScope": "Group",
   "views": {
-    "ChatCanvasCardView": {
-      "showResponseCount": false,
-      "showExpiry": false,
-      "showHeader": true,
-      "showFooter": true,
-      "showLikes": false,
-      "showComments": false,
-      "sourceLocation": "chartCard.json",
-      "showReceipts": false,
-      "isResponseEditable": false,
-      "labelResponseSending": "Sending response",
-      "labelResponseFailed": "Response could not be sent",
-      "labelResponded": "Thank you for submitting health checklist"
-    },
-    "CreationView": {
-      "sourceLocation": "SurveyResponse.html",
-      "showNativeToolbar": false,
-	  "backDialogVisibility": true
-    },
-    "ResponseResultsView": {
-      "sourceLocation": "SurveyResponse.html",
-      "showNativeToolbar": false,
-      "labelPageHeader": "Plant Housekeeping Inspection Checklist",
-      "labelCloseInfo": "LabelCloseInfoPlaceHolder {0}",
-      "labelActionExpired": "LabelActionExpiredPlaceHolder",
-      "labelNotResponded": "LabelNotRespondedPlaceHolder",
-      "labelRespondNow": "LabelRespondNowPlaceHolder",
-      "labelAddResponse": "LabelAddResponsePlaceHolder",
-      "labelQuestions": "LabelQuestionsPlaceHolder",
-      "labelCloseAction": "LabelCloseActionPlaceHolder",
-      "labelShareActionResults": "LabelShareActionResultsPlaceHolder",
-      "labelDuplicateAction": "LabelDuplicateActionPlaceHolder",
-      "labelDuplicateActionSubText": "LabelDuplicateActionSubTextPlaceHolder",
-      "labelCloseActionConfirmation": "LabelCloseActionConfirmationPlaceHolder"
+      "CreationView": {
+          "sourceLocation": "SurveyResponse.html",
+          "showNativeToolbar": false
+      },
+      "ChatCanvasCardView": {
+          "showReceipts": false,
+          "showLikes": false,
+          "showComments": false,
+          "labelResponseSending": "Your details is being submitted",
+          "labelResponded": "Incident provided",
+          "labelResponseFailed": "Incident submission failed",
+          "isResponseEditable": false
+      },
+      "ResponseResultsView": {
+          "sourceLocation": "SurveySummary.html",
+          "showNativeToolbar": false
+      }
     }
   }
-}

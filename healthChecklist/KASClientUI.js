@@ -126,6 +126,7 @@ var KASClient;
                     var moduleContent = UI.getVerticalDiv(this.getChildViews(), this.getModuleContentAttributes());
                     var leftBar = UI.getDiv(this.getModuleLeftBarAttributes());
                     this.view = UI.getHorizontalDiv([leftBar, moduleContent], this.getModuleAttributes());
+                    UI.setAccessibilityAttribute(this.view, UI.KASFormAccessibilityKey.Role, UI.KASFormAccessibilityRole.None);
                 }
                 if (this.customizations && this.customizations.length > 0) {
                     KASClient.Customise.register(this.view, this.customizations);
@@ -317,6 +318,7 @@ var KASClient;
                 }
                 // Add line separator
                 UI.addCSS(rowView, this.getRowAttributes(i));
+                UI.setAccessibilityAttribute(rowView, UI.KASFormAccessibilityKey.Role, UI.KASFormAccessibilityRole.None);
                 if (this.accessibilityAttributes[i] != undefined && this.accessibilityAttributes[i] != null) {
                     for (var index = 0; index < rowView.children.length; index++) {
                         UI.setAccessibilityBasic(rowView.children.item(index), true);
@@ -403,7 +405,7 @@ var KASClient;
             KASFormCountImageTitleActionModule.prototype.getRowView = function (i) {
                 var rowItems = [];
                 if (this.showCounts && this.counts && this.counts.length > i && this.counts[i] != -1) {
-                    var countLabel = UI.getLabel("" + this.counts[i], this.getCountAttributes(i));
+                    var countLabel = UI.getLabel("" + this.counts[i].toLocaleString(), this.getCountAttributes(i));
                     rowItems.push(countLabel);
                 }
                 if (this.imageUrls && this.imageUrls.length > i && this.imageUrls[i]) {
@@ -594,9 +596,9 @@ var KASClient;
                     }.bind(this);
                 }
                 var assignedToLabel = UI.getLabel(this.assignedToLabel, this.getSentToAttributes());
-                UI.setAccessibilityBasic(assignedToLabel, false, UI.KASFormAccessibilityRole.None, "");
+                UI.setAccessibilityBasic(assignedToLabel, true);
                 var assigneesLabel = UI.getLabel(this.assignees, this.getAssigneesAttributes());
-                UI.setAccessibilityBasic(assigneesLabel, false, UI.KASFormAccessibilityRole.None, "");
+                UI.setAccessibilityBasic(assigneesLabel, true);
                 var assigneesActionLabel = null;
                 if (this.assigneesActionTitle) {
                     assigneesActionLabel = UI.getLabel(this.assigneesActionTitle, this.getAssigneesActionAttributes());
@@ -604,9 +606,11 @@ var KASClient;
                 var sentToAssigneesLabel = UI.getHorizontalDiv([assignedToLabel, UI.getSpace("2pt"), assigneesLabel, UI.getSpace("2pt"), assigneesActionLabel, UI.getFlexibleSpace()]);
                 if (this.assigneesAction) {
                     UI.addClickEvent(sentToAssigneesLabel, this.assigneesAction);
+                    UI.setAccessibilityBasic(sentToAssigneesLabel, false, UI.KASFormAccessibilityRole.Button, this.assignedToLabel + " " + this.assigneesActionTitle);
                     UI.setAccessibilityAttribute(sentToAssigneesLabel, UI.KASFormAccessibilityKey.Role, UI.KASFormAccessibilityRole.Button);
                 }
                 else {
+                    UI.setAccessibilityBasic(sentToAssigneesLabel, false, UI.KASFormAccessibilityRole.Text, this.assignedToLabel + "" + this.assignees);
                     UI.setAccessibilityAttribute(sentToAssigneesLabel, UI.KASFormAccessibilityKey.Role, UI.KASFormAccessibilityRole.Text);
                 }
                 var verticalSpace = (KASClient.getPlatform() == KASClient.Platform.Android ? UI.getSpace("2pt") : null);
@@ -1871,7 +1875,7 @@ var KASClient;
                     }
                     var rightButton = null;
                     if (this.rightButtonTitle != null) {
-                        rightButton = UI.getLabel(this.rightButtonTitle, this.getRightButtonAttributes(), false);
+                        rightButton = UI.getLabel(this.rightButtonTitle, KASFormPageNavigationBar.getRightButtonAttributes(), false);
                         UI.setAccessibilityBasic(rightButton, false, UI.KASFormAccessibilityRole.Button);
                         UI.addClickEvent(rightButton, this.rightButtonAction);
                     }
@@ -1904,6 +1908,12 @@ var KASClient;
                     UI.setText(this.titleDiv, this.title);
                 }
                 // Else view is not yet inflated
+            };
+            KASFormPageNavigationBar.getNavBarButton = function (buttonTitle, buttonAction) {
+                var button = UI.getLabel(buttonTitle, KASFormPageNavigationBar.getRightButtonAttributes(), false);
+                UI.setAccessibilityBasic(button, false, UI.KASFormAccessibilityRole.Button);
+                UI.addClickEvent(button, buttonAction);
+                return button;
             };
             KASFormPageNavigationBar.prototype.getNavigationBarAttributes = function () {
                 var attributes = {};
@@ -1992,7 +2002,7 @@ var KASClient;
                 attributes["text-overflow"] = "ellipsis";
                 return attributes;
             };
-            KASFormPageNavigationBar.prototype.getRightButtonAttributes = function () {
+            KASFormPageNavigationBar.getRightButtonAttributes = function () {
                 var attributes = {};
                 attributes["font-size"] = UI.getScaledFontSize("14pt");
                 attributes["padding-bottom"] = "5pt";
@@ -2779,7 +2789,7 @@ var KASClient;
             addElement(alertView, alertDiv);
             var alertTitleView = getLabel(title, { "color": "#32485f", "font-size": getScaledFontSize("20px"), "font-weight": "600" });
             addElement(alertTitleView, alertView);
-            var alertMessageView = getLabel(message, { "margin-top": "20px", "margin-bottom": "20px", "color": "#6f7e8f", "font-size": getScaledFontSize("16px"), "overflow": "scroll" });
+            var alertMessageView = getLabel(message, { "margin-top": "20px", "margin-bottom": "20px", "color": "#6f7e8f", "font-size": getScaledFontSize("16px"), "overflow": "auto" });
             addElement(alertMessageView, alertView);
             var alertBottomView = getElement("div", { "display": "flex", "justify-content": "flex-end" });
             addElement(alertBottomView, alertView);
@@ -3087,8 +3097,8 @@ var KASClient;
                 _this.previewMode = false;
                 _this.supportedTypes = [KASClient.KASAttachmentType.Image, KASClient.KASAttachmentType.Document];
                 _this.showAddImageButtonBeforePreviews = false;
-                _this.DEFAULT_MAX_IMAGE_COUNT = 10;
-                _this.maxImageCount = _this.DEFAULT_MAX_IMAGE_COUNT;
+                _this.DEFAULT_MAX_ATTACHMENT_COUNT = 10;
+                _this.maxAttachmentCount = _this.DEFAULT_MAX_ATTACHMENT_COUNT;
                 _this.imagePickerSource = KASClient.ImagePickerSource.All;
                 _this.props = JSON.parse("{}");
                 _this.attachmentsPreviewViewRenderStyle = KASAttachmentsPreviewViewRenderStyle.GRID;
@@ -3116,7 +3126,7 @@ var KASClient;
                 _this.supportedTypes = supportedTypes;
                 _this.previewMode = previewMode;
                 if (props == null) {
-                    _this.props[KASClient.KASAttachmentListQuestionConfig.MAX_IMAGE_COUNT_KEY] = _this.maxImageCount;
+                    _this.props[KASClient.KASAttachmentListQuestionConfig.MAX_IMAGE_COUNT_KEY] = _this.maxAttachmentCount;
                 }
                 else {
                     _this.props = props;
@@ -3216,8 +3226,8 @@ var KASClient;
                 UI.addElement(tableRow, tableView);
                 UI.addElement(tableView, this.container);
             };
-            KASAttachmentsPreviewView.prototype.setMaxImageCount = function (maxImageCount) {
-                this.maxImageCount = maxImageCount;
+            KASAttachmentsPreviewView.prototype.setMaxAttachmentCount = function (maxAttachmentCount) {
+                this.maxAttachmentCount = maxAttachmentCount;
             };
             KASAttachmentsPreviewView.prototype.setImagePickerSource = function (imagePickerSource) {
                 this.imagePickerSource = imagePickerSource;
@@ -3230,7 +3240,7 @@ var KASClient;
                     return false;
                 }
                 else {
-                    if (this.attachments.length < this.maxImageCount) {
+                    if (this.attachments.length < this.maxAttachmentCount) {
                         return true;
                     }
                     else {
@@ -3259,7 +3269,7 @@ var KASClient;
                 }
                 var self = this;
                 UI.addClickEvent(addImageButton, function () {
-                    self.props[KASClient.KASAttachmentListQuestionConfig.MAX_IMAGE_COUNT_KEY] = self.maxImageCount - self.attachments.length;
+                    self.props[KASClient.KASAttachmentListQuestionConfig.MAX_IMAGE_COUNT_KEY] = self.maxAttachmentCount - self.attachments.length;
                     KASClient.App.showAttachmentPickerAsync(self.supportedTypes, self.props, function (selectedAttachments, error) {
                         if (error != null) {
                             return;
@@ -4758,15 +4768,7 @@ var KASClient;
                     hour = defaultHour;
                     minute = defaultMin;
                 }
-                var min = (minute < 10 ? "0" : "") + minute;
-                if (this.use24HourFormat) {
-                    return hour + ":" + min;
-                }
-                else {
-                    var hr = hour % 12;
-                    hr = (hr == 0 ? 12 : hr);
-                    return hr + ":" + min + " " + (parseInt("" + hour / 12) ? "pm" : "am");
-                }
+                return KASClient.toStringTimeObject(hour + ":" + minute);
             };
             KASTimeInputView.prototype.getTime = function () {
                 var selectedTime = this.defaultTime;
@@ -4790,6 +4792,7 @@ var KASClient;
                 var _this = _super.call(this) || this;
                 _this.imageLocalPaths = null;
                 _this.attachments = [];
+                _this.containsDocumentAttachments = false;
                 _this.albumViewDiv = null;
                 _this.slides = [];
                 _this.photoIndexLabel = null;
@@ -4806,7 +4809,7 @@ var KASClient;
                 _this.albumViewDiv = KASClient.UI.getElement("div", _this.getAlbumViewDivAttributes());
                 _this.gradientView = KASClient.UI.getDiv({
                     "background": "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.6))",
-                    "height": "40px",
+                    "height": _this.getGradientViewHeight(),
                     "bottom": "0px",
                     "left": "0px",
                     "width": "100%",
@@ -4814,7 +4817,7 @@ var KASClient;
                 });
                 KASClient.UI.addSwipeGesture(_this.albumViewDiv, _this.swipeCallBack);
                 _this.openDocumentButtonContainer = KASClient.UI.getDiv({
-                    "height": "40px",
+                    "height": "64px",
                     "bottom": "0px",
                     "left": "0px",
                     "width": "100%",
@@ -4824,28 +4827,31 @@ var KASClient;
                 var openDocumentButton = KASClient.UI.getDiv({
                     "border": "1px solid #0078d4",
                     "border-radius": "9999px",
-                    "padding": "4px 10px 4px 10px",
+                    "padding": "8px 16px 8px 16px",
                     "background-color": "#FFFFFF",
                     "position": "absolute",
-                    "bottom": "2px",
+                    "bottom": "12px",
                     "left": "calc(50% - 60px)",
                     "align-items": "center",
                     "justify-content": "center"
                 });
-                var openDocumentLabel = KASClient.UI.getLabel("Open Document", {
+                var openDocumentLabel = KASClient.UI.getLabel(KASClient.Internal.getKASClientString("Open Document"), {
                     "color": "#0078d4",
-                    "text-align": "center"
+                    "text-align": "center",
+                    "font-size": KASClient.UI.getScaledFontSize("14px"),
+                    "font-weight": MEDIUM_FONT_WEIGHT
                 });
                 KASClient.UI.addElement(openDocumentLabel, openDocumentButton);
                 openDocumentButton.onclick = function () {
                     if (this.attachments != null && this.attachments.length > 0 && this.currentIndex < this.attachments.length) {
                         KASClient.App.openAttachmentImmersiveView(this.attachments[this.currentIndex]);
                     }
+                    event.stopPropagation();
                 }.bind(_this);
                 KASClient.UI.addElement(openDocumentButton, _this.openDocumentButtonContainer);
                 _this.docTypeIcon = KASClient.UI.getBase64Image(KASClient.UI.getAttachmentIconBase64("pdf"), {
                     "height": "36px",
-                    "bottom": "2px",
+                    "bottom": "12px",
                     "left": "12px",
                     "width": "36px",
                     "position": "absolute",
@@ -4894,6 +4900,7 @@ var KASClient;
             KASAlbumView.prototype.populateImagesForLocalPaths = function (localPaths) {
                 this.showingThumbnail = false;
                 KASClient.UI.clearElement(this.albumViewDiv);
+                KASClient.addCSS(this.gradientView, { "height": this.getGradientViewHeight() });
                 this.photoIndexLabel = KASClient.UI.getDiv({
                     "font-size": KASClient.UI.getScaledFontSize("14px"),
                     "bottom": "10px",
@@ -4904,8 +4911,13 @@ var KASClient;
                 for (var i = 0; i < localPaths.length; i++) {
                     var imageProperties = this.getSlideImageProperties();
                     if (this.attachments != null && this.attachments.length > 0) {
-                        if (this.attachments[i].type == KASClient.KASAttachmentType.Document && KASClient.isEmptyString(this.attachments[i].thumbnail)) {
-                            imageProperties = this.getSlideThumbnailImageProperties();
+                        if (this.attachments[i].type == KASClient.KASAttachmentType.Document) {
+                            if (KASClient.isEmptyString(this.attachments[i].thumbnail)) {
+                                imageProperties = this.getSlideThumbnailImageProperties();
+                            }
+                            else {
+                                imageProperties = this.getDocumentSlideImageProperties();
+                            }
                         }
                     }
                     var slide = this.getSlideWithImageSrc(localPaths[i], imageProperties);
@@ -4982,6 +4994,7 @@ var KASClient;
                 if (this.attachments != null && this.attachments.length > 0) {
                     if (this.attachments[this.currentIndex].type == KASClient.KASAttachmentType.Document) {
                         this.openDocumentButtonContainer.style.display = "flex";
+                        KASClient.addCSS(this.gradientView, { "height": "64px" });
                         var localPath = this.attachments[this.currentIndex].localPath;
                         var thumbnail = this.attachments[this.currentIndex].thumbnail;
                         if (!KASClient.isEmptyString(localPath) && KASClient.UI.isPDFDocument(localPath) && !KASClient.isEmptyString(thumbnail)) {
@@ -5047,6 +5060,13 @@ var KASClient;
                     "object-fit": "cover"
                 };
             };
+            KASAlbumView.prototype.getDocumentSlideImageProperties = function () {
+                return {
+                    "width": "100%",
+                    "height": "100%",
+                    "object-fit": "contain"
+                };
+            };
             KASAlbumView.prototype.getSlideThumbnailImageProperties = function () {
                 return {
                     "width": "72px",
@@ -5070,6 +5090,12 @@ var KASClient;
                         this.removeImageCallback(indexToRemove);
                 }.bind(this);
             };
+            KASAlbumView.prototype.getGradientViewHeight = function () {
+                if (this.containsDocumentAttachments) {
+                    return "64px";
+                }
+                return "40px";
+            };
             return KASAlbumView;
         }(UI.KASAttachmentView));
         UI.KASAlbumView = KASAlbumView;
@@ -5083,6 +5109,7 @@ var KASClient;
             function KASAlbumViewHandler(albumViewModel) {
                 this.model = albumViewModel;
                 this.view = new UI.KASAlbumView();
+                this.view.containsDocumentAttachments = this.model.containsDocumentAttachments;
                 this.view.retryButtonCallback = function () { this.retryButtonTapped(); }.bind(this);
                 this.view.removeImageCallback = function (i) { this.imageRemoved(i); }.bind(this);
                 this.view.tapEnabled = this.model.enableOnTap;
@@ -5099,11 +5126,16 @@ var KASClient;
                 this.refreshAlbumView();
             };
             KASAlbumViewHandler.prototype.removeLocalPaths = function (indices) {
-                if (!this.model.hasStaticContent) {
-                    this.model.imageObjects = this.model.imageObjects.filter(function (el, i) { return indices.indexOf(i) < 0; });
+                if (this.shouldProcessGenericAttachments()) {
+                    this.model.attachments = this.model.attachments.filter(function (el, i) { return indices.indexOf(i) < 0; });
                 }
                 else {
-                    this.model.imageObjects = this.model.imageObjects.filter(function (el, i) { return indices.indexOf(i) < 0; });
+                    if (!this.model.hasStaticContent) {
+                        this.model.imageObjects = this.model.imageObjects.filter(function (el, i) { return indices.indexOf(i) < 0; });
+                    }
+                    else {
+                        this.model.imageObjects = this.model.imageObjects.filter(function (el, i) { return indices.indexOf(i) < 0; });
+                    }
                 }
                 this.refreshData(this.model);
                 this.refreshAlbumView();
@@ -5217,11 +5249,22 @@ var KASClient;
             };
             KASAlbumViewHandler.prototype.allLocalPathsExist = function () {
                 var allExists = true;
-                for (var i = 0; i < this.model.imageObjects.length; i++) {
-                    var imageObject = this.model.imageObjects[i];
-                    if (imageObject.localPath == "") {
-                        allExists = false;
-                        break;
+                if (this.shouldProcessGenericAttachments()) {
+                    for (var i = 0; i < this.model.attachments.length; i++) {
+                        var attachment = this.model.attachments[i];
+                        if (attachment.localPath == "") {
+                            allExists = false;
+                            break;
+                        }
+                    }
+                }
+                else {
+                    for (var i = 0; i < this.model.imageObjects.length; i++) {
+                        var imageObject = this.model.imageObjects[i];
+                        if (imageObject.localPath == "") {
+                            allExists = false;
+                            break;
+                        }
                     }
                 }
                 return allExists;
@@ -5231,9 +5274,16 @@ var KASClient;
             KASAlbumViewHandler.prototype.onUploadFailed = function () {
             };
             KASAlbumViewHandler.prototype.onDownloadStopped = function () {
-                this.model.imageObjects.forEach(function (element) {
-                    KASClient.App.cancelAttachmentDownloadAsync(element, null);
-                });
+                if (this.shouldProcessGenericAttachments()) {
+                    this.model.attachments.forEach(function (attachment) {
+                        KASClient.App.cancelAttachmentDownloadAsync(attachment, null);
+                    });
+                }
+                else {
+                    this.model.imageObjects.forEach(function (element) {
+                        KASClient.App.cancelAttachmentDownloadAsync(element, null);
+                    });
+                }
             };
             KASAlbumViewHandler.prototype.onDownloadFailed = function () {
                 this.view.showRetryButton();
@@ -5258,8 +5308,7 @@ var KASClient;
                 }.bind(this));
             };
             KASAlbumViewHandler.prototype.onImageTappedAtIndex = function (imgIndex) {
-                if ((this.model.imageObjects == null || this.model.imageObjects.length == 0) &&
-                    this.model.attachments != null && this.model.attachments.length > 0) {
+                if (this.shouldProcessGenericAttachments()) {
                     KASClient.App.openImmersiveViewForAttachmentList(this.view.attachments, imgIndex);
                 }
                 else {
@@ -5273,11 +5322,27 @@ var KASClient;
                         this.onDownloadFinished(downloadedAttachment, error);
                     }.bind(this);
                 }
-                this.model.imageObjects.forEach(function (element) {
-                    if (element.localPath == "" && element.serverPath != "") {
-                        KASClient.App.downloadAttachmentAsync(element, downloadCallBack);
-                    }
-                });
+                if (this.shouldProcessGenericAttachments()) {
+                    this.model.attachments.forEach(function (attachment) {
+                        if (attachment.localPath == "" && attachment.serverPath != "") {
+                            KASClient.App.downloadAttachmentAsync(attachment, downloadCallBack);
+                        }
+                    });
+                }
+                else {
+                    this.model.imageObjects.forEach(function (element) {
+                        if (element.localPath == "" && element.serverPath != "") {
+                            KASClient.App.downloadAttachmentAsync(element, downloadCallBack);
+                        }
+                    });
+                }
+            };
+            KASAlbumViewHandler.prototype.shouldProcessGenericAttachments = function () {
+                // KASAlbumView's datasource can be either imageObjects or attachments(images+documents).
+                // If imageObjects is initialized then we give priority to that so that
+                // existing flows are unaffected. 
+                return ((this.model.imageObjects == null || this.model.imageObjects.length == 0) &&
+                    this.model.attachments != null && this.model.attachments.length > 0);
             };
             return KASAlbumViewHandler;
         }());
@@ -5297,7 +5362,10 @@ var KASClient;
                 _this.imageObjects = [];
                 _this.thumbnailBase64 = "";
                 _this.shouldBlurThumbnail = false;
+                // If attachments are provided then the imageObjects parameter above will not be processed. 
+                // Should eventually setup a more clearer interface for this widget.
                 _this.attachments = [];
+                _this.containsDocumentAttachments = false;
                 return _this;
             }
             return KASAlbumViewModel;
@@ -5387,9 +5455,12 @@ var KASClient;
                 return attr;
             };
             KASAudioView.prototype.getAudioPlayerView = function () {
-                var player = KASClient.UI.getElement("audio", { "width": "100%", "height": "40px" });
+                var player = KASClient.UI.getElement("audio", { "width": "100%" });
                 player.controls = true;
                 player.src = this.audioObj.localPath;
+                player.onclick = function () {
+                    event.stopPropagation();
+                };
                 return player;
             };
             KASAudioView.prototype.showAudioPlayer = function () {
@@ -5991,7 +6062,7 @@ var KASClient;
                 return this.view;
             };
             KASFormDropDown.prototype.getHeaderView = function () {
-                var headerView = UI.getLabel("SELECT", {
+                var headerView = UI.getLabel(KASClient.Internal.getKASClientString("KASDropDownSelectText"), {
                     "padding-bottom": "9px",
                     "padding-left": "12px",
                     "padding-top": "8px",

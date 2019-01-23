@@ -181,26 +181,6 @@ var KASClient;
         }
         App.getIntegerationServiceTokenAsync = getIntegerationServiceTokenAsync;
         /**
-        * Sets a key-value pair in secured app storage, should be used to store sensitive data like tokens
-        * @param {string} key got from integeration service
-        * @param {string} value got from integeration service
-        */
-        function setSecuredData(key, value) {
-            KASClient.setSecuredValue(key, value);
-        }
-        App.setSecuredData = setSecuredData;
-        /**
-        * Gets the data stored against a key from the secured app storage
-        * @param {string} key key for the data
-        * @param {Callback} callback with below parameters:
-        * * * * @param {string} value got from secured storage against the key
-        * * * * @param {string} error message in case of error, null otherwise
-        */
-        function getSecuredData(key, callback) {
-            KASClient.getSecuredValue(key, callback);
-        }
-        App.getSecuredData = getSecuredData;
-        /**
         * Gets deviceId
         * @param {Callback} callback with below parameters:
         * * * * @param {string} deviceId got from integeration service
@@ -305,6 +285,32 @@ var KASClient;
         }
         App.showAttachmentPickerAsync = showAttachmentPickerAsync;
         /**
+         * Download the base 64 image of map for the coordinates specified
+         * @param params KASLocationStaticMapImageParams
+         * @param callback callback on download completion
+         */
+        function getMapImageAsBase64Async(params, callback) {
+            KASClient.getStaticMapImage(params.toJSON(), function (downloadedAttachmentString, error) {
+                if (callback) {
+                    callback(downloadedAttachmentString, error);
+                }
+            });
+        }
+        App.getMapImageAsBase64Async = getMapImageAsBase64Async;
+        /**
+         * Get address string for specified coordinates
+         * @param params KASLocationAddressParams
+         * @param callback callback on address fetch
+         */
+        function getLocationAddressAsync(params, callback) {
+            KASClient.getLocationAddress(params.toJSON(), function (json, error) {
+                if (callback) {
+                    callback(json, error);
+                }
+            });
+        }
+        App.getLocationAddressAsync = getLocationAddressAsync;
+        /**
          * Download the attachment specified
          * @param attachment attachment with a valid server path to download
          * @param callback callback on download completion
@@ -357,6 +363,34 @@ var KASClient;
             });
         }
         App.showPlacePickerAsync = showPlacePickerAsync;
+        /**
+        * Launches the barcode scanner and returns the scanned object
+        * @param {Callback} callback with below parameters:
+        * * * * @param {string} barcodeInfo can be null in case of error
+        * * * * @param {string} error message in case of error, null otherwise
+        */
+        function showBarcodeScannerAsync(callback) {
+            KASClient.showBarcodeScanner(function (barcodeInfo, error) {
+                if (callback) {
+                    callback(barcodeInfo, error);
+                }
+            });
+        }
+        App.showBarcodeScannerAsync = showBarcodeScannerAsync;
+        /**
+          * Launches the QR code scanner and returns the scanned object
+          * @param {Callback} callback with below parameters:
+          * * * * @param {string} qrCodeInfo can be null in case of error
+          * * * * @param {string} error message in case of error, null otherwise
+          */
+        function showQRcodeScannerAsync(callback) {
+            KASClient.showQRcodeScanner(function (qrCodeInfo, error) {
+                if (callback) {
+                    callback(qrCodeInfo, error);
+                }
+            });
+        }
+        App.showQRcodeScannerAsync = showQRcodeScannerAsync;
         /**
         * Shows a native duration picker with day/hour/minute
         * @param {number} defaultDurationInMinutes the default duration to be shown on picker
@@ -1416,6 +1450,26 @@ var KASClient;
         }
         Form.getFormSummaryAsync = getFormSummaryAsync;
         /**
+        * Fetches action results and aggregated summary associated with an action instance for which aggregation at subgroup level was
+        * enabled at form creation.
+        * @param {string} resultGroupId id of group whose results need to be fetched
+        * @param {string} onlyAggregatedSummary specifies if only aggregated summary needs to be returned and not the individual responses
+        * @param {string} cursor specifies the cursor from which to fetch the next set of results
+        *
+        * @param {Callback} callback callback with below parameters:
+        * * * * @param {KASFormSummaryForGroup} result result json fetched from server
+        * * * * @param {string} errorStr json string for the KASError object containing error code and/or description.
+        */
+        function getFormSummaryForGroupAsync(resultGroupId, onlyAggregatedSummary, cursor, callback) {
+            KASClient.getFormSummaryForGroup(resultGroupId, onlyAggregatedSummary, cursor, function (result, errorStr) {
+                if (callback) {
+                    var summary = KASClient.KASFormSummaryForGroup.fromJSON(result);
+                    callback(summary, errorStr);
+                }
+            });
+        }
+        Form.getFormSummaryForGroupAsync = getFormSummaryForGroupAsync;
+        /**
         * Gets flat responses by all the users associated with the form (It is advised to use getFormSummary() instead of this)
         * @param {Callback} callback with below parameters:
         * * * * @param {KASFormFlatSummary} flatSummary can be null in case of error
@@ -1675,47 +1729,6 @@ var KASClient;
         }
         Form.updateFormPropertiesAsync = updateFormPropertiesAsync;
         /**
-        * Requests to get local properties of an action, if it exists
-        * @param {Callback} callback with below parameters:
-        * * * * @param {KASActionProperties} actionProperties local properties
-        * * * * @param {string} error message in case of error, null otherwise
-        */
-        function getLocalActionPropertiesAsync(callback) {
-            //////////// MOCK ////////////
-            if (KASClient.shouldMockData()) {
-                alert("getLocalProperties");
-                return;
-            }
-            //////////// ACTUAL ////////////
-            KASClient.getLocalProperties(function (propertiesJson, error) {
-                if (callback) {
-                    callback(KASClient.KASActionProperties.fromJSON(propertiesJson), error);
-                }
-            });
-        }
-        Form.getLocalActionPropertiesAsync = getLocalActionPropertiesAsync;
-        /**
-        * Requests to update local properties of an action, if it exists
-        * @param {KASActionProperties} actionProperties properties to update
-        * @param {Callback} callback with below parameters:
-        * * * * @param {boolean} success indicates if the update is successful or not
-        * * * * @param {string} error message in case of error, null otherwise
-        */
-        function updateLocalActionPropertiesAsync(actionProperties, callback) {
-            //////////// MOCK ////////////
-            if (KASClient.shouldMockData()) {
-                alert("updateLocalProperties");
-                return;
-            }
-            //////////// ACTUAL ////////////
-            KASClient.updateLocalProperties(actionProperties.properties, function (success, error) {
-                if (callback) {
-                    callback(success, error);
-                }
-            });
-        }
-        Form.updateLocalActionPropertiesAsync = updateLocalActionPropertiesAsync;
-        /**
           * Requests to send push notification to a particular set of users with a custom message
           * @param {CustomNotificationMessage} customNotificationMessage list of userIds to whom the notification has to be sent
           * @param {Callback} callback with below parameters:
@@ -1736,47 +1749,6 @@ var KASClient;
             });
         }
         Form.sendNotificationToUsers = sendNotificationToUsers;
-        /**
-        * Requests to get custom storage properties of a package, if it exists
-        * @param {Callback} callback with below parameters:
-        * * * * @param {KASActionPackageProperties} packageProperties package custom properties
-        * * * * @param {string} error message in case of error, null otherwise
-        */
-        function getPackageCustomPropertiesAsync(callback) {
-            //////////// MOCK ////////////
-            if (KASClient.shouldMockData()) {
-                alert("getPackageCustomProperties");
-                return;
-            }
-            //////////// ACTUAL ////////////
-            KASClient.getPackageCustomProperties(function (propertiesJson, error) {
-                if (callback) {
-                    callback(KASClient.KASActionPackageProperties.fromJSON(propertiesJson), error);
-                }
-            });
-        }
-        Form.getPackageCustomPropertiesAsync = getPackageCustomPropertiesAsync;
-        /**
-        * Requests to update custom storage properties of a package, if it exists
-        * @param {KASActionPackageProperties} packageProperties package custom properties to update
-        * @param {Callback} callback with below parameters:
-        * * * * @param {boolean} success indicates if the update is successful or not
-        * * * * @param {string} error message in case of error, null otherwise
-        */
-        function updatePackageCustomPropertiesAsync(packageProperties, callback) {
-            //////////// MOCK ////////////
-            if (KASClient.shouldMockData()) {
-                alert("updatePackageCustomProperties");
-                return;
-            }
-            //////////// ACTUAL ////////////
-            KASClient.updatePackageCustomProperties(packageProperties.properties, function (success, error) {
-                if (callback) {
-                    callback(success, error);
-                }
-            });
-        }
-        Form.updatePackageCustomPropertiesAsync = updatePackageCustomPropertiesAsync;
     })(Form = KASClient.Form || (KASClient.Form = {}));
 })(KASClient || (KASClient = {}));
 var iOSFontSizeScaleMultiplier = 1.0;
@@ -1869,11 +1841,7 @@ var KASClient;
         // this is used by webapp to render immersive views.
         // reference -> https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy#Changing_origin
         function setDocumentDomain() {
-            if (document.domain === 'cdn-alpha.kaiza.la'
-                || document.domain === 'cdn.kaiza.la'
-                || document.domain === 'webapp-alpha.kaiza.la'
-                || document.domain === 'webapp.kaiza.la'
-                || document.domain === 'webapp-local.kaiza.la') {
+            if (/cdn.*\.kaiza\.la/.test(document.domain) || /webapp.*\.kaiza\.la/.test(document.domain)) {
                 document.domain = 'kaiza.la';
                 KASClient.setPlatformAsWebApp();
             }
@@ -1898,6 +1866,78 @@ var KASClient;
         return Assets;
     }());
     KASClient.Assets = Assets;
+})(KASClient || (KASClient = {}));
+var KASClient;
+(function (KASClient) {
+    var KASError = /** @class */ (function () {
+        function KASError() {
+            this.errorCode = KASClient.KASErrorCode.NONE;
+            this.description = "";
+        }
+        KASError.fromString = function (stringifyError) {
+            var error = new KASError();
+            var code = parseInt(stringifyError);
+            if (!isNaN(code)) {
+                error.errorCode = code;
+            }
+            else {
+                try {
+                    var object = JSON.parse(stringifyError);
+                    if (object.hasOwnProperty("ec")) {
+                        error.errorCode = object["ec"];
+                    }
+                    if (object.hasOwnProperty("ed")) {
+                        error.description = object["ed"];
+                    }
+                }
+                catch (_a) {
+                    error.description = stringifyError;
+                }
+            }
+            return error;
+        };
+        return KASError;
+    }());
+    KASClient.KASError = KASError;
+})(KASClient || (KASClient = {}));
+var KASClient;
+(function (KASClient) {
+    var KASErrorCode;
+    (function (KASErrorCode) {
+        KASErrorCode[KASErrorCode["NONE"] = -1] = "NONE";
+        // Device Authentication Errors start
+        /// Authentication was not successful, because user failed to provide valid credentials.
+        KASErrorCode[KASErrorCode["AUTHENTICATION_FAILED"] = 500] = "AUTHENTICATION_FAILED";
+        /// Authentication was canceled by user (e.g. tapped Cancel button).
+        KASErrorCode[KASErrorCode["AUTHENTICATION_CANCELLED"] = 501] = "AUTHENTICATION_CANCELLED";
+        /// Authentication could not start, because selected authentication type is not available on the device.
+        KASErrorCode[KASErrorCode["AUTHENTICATION_NOT_AVAILABLE"] = 502] = "AUTHENTICATION_NOT_AVAILABLE";
+        /// OS doesn't support selected authentication type
+        KASErrorCode[KASErrorCode["AUTHENTICATION_OS_INCOMPATIBLE"] = 503] = "AUTHENTICATION_OS_INCOMPATIBLE";
+        /// Authentication could not start, because selected authentication type has no enrolled in device.
+        KASErrorCode[KASErrorCode["AUTHENTICATION_NOT_ENROLLED"] = 504] = "AUTHENTICATION_NOT_ENROLLED";
+        /// Authentication error because of some internal error.
+        KASErrorCode[KASErrorCode["AUTHENTICATION_INTERNAL_ERROR"] = 505] = "AUTHENTICATION_INTERNAL_ERROR";
+        // iOS Specific authentication error
+        /// Authentication was not successful, because there were too many failed attempts
+        KASErrorCode[KASErrorCode["AUTHENTICATION_LOCKOUT"] = 520] = "AUTHENTICATION_LOCKOUT";
+        /// Authentication was canceled, because the user tapped the fallback button.
+        KASErrorCode[KASErrorCode["AUTHENTICATION_FALLBACK_SELECTED"] = 521] = "AUTHENTICATION_FALLBACK_SELECTED";
+        // Device Authentication Errors end
+        // Location Error
+        KASErrorCode[KASErrorCode["LOCATION_ERROR"] = 600] = "LOCATION_ERROR";
+        // Server Errors
+        /// Generic Server Error
+        KASErrorCode[KASErrorCode["SERVER_GENERIC_ERROR"] = 700] = "SERVER_GENERIC_ERROR";
+        /// Permission check fails, because of the requested user is not authorized to get the requested data.
+        KASErrorCode[KASErrorCode["UNAUTHORIZED_USER_OPERATION"] = 701] = "UNAUTHORIZED_USER_OPERATION";
+        /// Invalid requested data
+        KASErrorCode[KASErrorCode["INVALID_REQUEST_DATA"] = 702] = "INVALID_REQUEST_DATA";
+        // Network Error
+        KASErrorCode[KASErrorCode["NETWORK_ERROR"] = 800] = "NETWORK_ERROR";
+        // Unknown error
+        KASErrorCode[KASErrorCode["UNKNOWN_ERROR"] = 10001] = "UNKNOWN_ERROR";
+    })(KASErrorCode = KASClient.KASErrorCode || (KASClient.KASErrorCode = {}));
 })(KASClient || (KASClient = {}));
 var KASClient;
 (function (KASClient) {
@@ -2043,38 +2083,21 @@ var KASClient;
     /////////////////////////////////////////////////
     function showIncompatibleScreen() {
         // If progress bar is shown, hide it first
-        if (KASClient.Version.clientSupports(KASClient.Version.VERSION_1)) {
-            KASClient.App.hideProgressBar();
-        }
+        KASClient.App.hideProgressBar();
         var incompatibleModule = new KASClient.KASFormEmptyModule();
         incompatibleModule.title = KASClient.Internal.getKASClientString("KASFormErrorTitle");
         incompatibleModule.subtitle = KASClient.Internal.getKASClientString("KASFormErrorSubTitle");
         var dismissScreen = function () {
-            if (KASClient.Version.clientSupports(KASClient.Version.VERSION_1)) {
-                KASClient.App.dismissCurrentScreen();
-            }
-            else if (KASClient.getPlatform() == KASClient.Platform.iOS) {
-                // Submit a dummy response against a dummy id which will dismiss the screen
-                // without adding that response
-                KASClient.Form.sumbitFormResponse(JSON.parse("{}"), "DUMMY_ID", true, false, false);
-            }
+            KASClient.App.dismissCurrentScreen();
         };
-        if (KASClient.Version.clientSupports(KASClient.Version.VERSION_3)) {
-            incompatibleModule.actionTitle = KASClient.Internal.getKASClientString("KASFormErrorUpgradeAction");
-            incompatibleModule.action = function () {
-                KASClient.openStoreLink();
-            };
-            incompatibleModule.subActionTitle = KASClient.Internal.getKASClientString("KASFormErrorNotNowAction");
-            incompatibleModule.subAction = function () {
-                dismissScreen();
-            };
-        }
-        else {
-            incompatibleModule.actionTitle = KASClient.Internal.getKASClientString("KASFormErrorOkAction");
-            incompatibleModule.action = function () {
-                dismissScreen();
-            };
-        }
+        incompatibleModule.actionTitle = KASClient.Internal.getKASClientString("KASFormErrorUpgradeAction");
+        incompatibleModule.action = function () {
+            KASClient.openStoreLink();
+        };
+        incompatibleModule.subActionTitle = KASClient.Internal.getKASClientString("KASFormErrorNotNowAction");
+        incompatibleModule.subAction = function () {
+            dismissScreen();
+        };
         addCSS(document.body, { "background-color": "white" });
         clearElement(document.body);
         addElement(incompatibleModule.getView(), document.body);
@@ -2853,12 +2876,7 @@ var KASClient;
             if (args === void 0) { args = null; }
             if (successCallback === void 0) { successCallback = null; }
             if (errorCallback === void 0) { errorCallback = null; }
-            if (KASClient.Version.clientSupports(KASClient.Version.VERSION_3_1, true /* considerMinorVersion */)) {
-                callNativeCommandAsync(command, args, successCallback, errorCallback);
-            }
-            else {
-                callNativeCommandSync(command, args, successCallback, errorCallback);
-            }
+            callNativeCommandAsync(command, args, successCallback, errorCallback);
         }
         Android.callNativeCommand = callNativeCommand;
         function callNativeCommandAsync(command, args, successCallback, errorCallback) {
@@ -2895,7 +2913,6 @@ var KASClient;
                 case KASClient.RECORD_EVENT_COMMAND:
                 case KASClient.CREATE_MEETING_REQUEST:
                 case KASClient.EDIT_CARD_COMMAND:
-                case KASClient.UPDATE_REQUEST_COMMAND:
                 case KASClient.OPEN_IMMERSIVE_VIEW_FOR_ATTACHMENT:
                 case KASClient.OPEN_IMMERSIVE_VIEW_FOR_ATTACHMENT_LIST:
                 case KASClient.GET_UUID:
@@ -2903,9 +2920,13 @@ var KASClient;
                 case KASClient.GET_CLIENT_DETAILS:
                 case KASClient.SHOW_LOCATION_MAP:
                 case KASClient.OPEN_LINK_IN_BROWSER:
+                case KASClient.GET_LOCALIZED_DATE:
                     // For these commands, we don't need an Async API
                     callNativeCommandSync(command, args, successCallback, errorCallback);
                     break;
+                case KASClient.UPDATE_REQUEST_COMMAND:
+                    KaizalaPlatform.updateSurvey(args[0], successCallback, errorCallback);
+                    return;
                 case KASClient.GET_SURVEY_JSON_COMMAND:
                     KaizalaPlatform.getValueAsync(successCallback, errorCallback, "surveyJson");
                     return;
@@ -2953,12 +2974,6 @@ var KASClient;
                     break;
                 case KASClient.PERFORM_SPEECH_TO_TEXT:
                     KaizalaPlatform.performSpeechToText(successCallback, errorCallback);
-                    break;
-                case KASClient.SET_SECURED_VALUE:
-                    KaizalaPlatform.setSecuredValue(args[0] /* Key */, args[1] /* Value */);
-                    break;
-                case KASClient.GET_SECURED_VALUE:
-                    KaizalaPlatform.getSecuredValue(args[0] /* Key */, successCallback, errorCallback);
                     break;
                 case KASClient.GET_DEVICE_ID_COMMAND:
                     KaizalaPlatform.getDeviceId(successCallback, errorCallback);
@@ -3017,6 +3032,12 @@ var KASClient;
                 case KASClient.SHOW_PLACE_PICKER:
                     KaizalaPlatform.showPlacePickerAsync(successCallback, errorCallback);
                     return;
+                case KASClient.SHOW_BARCODE_SCANNER:
+                    KaizalaPlatform.showBarcodeScannerAsync(successCallback, errorCallback);
+                    return;
+                case KASClient.SHOW_QRCODE_SCANNER:
+                    KaizalaPlatform.showQRcodeScannerAsync(successCallback, errorCallback);
+                    return;
                 case KASClient.SHOW_DURATION_PICKER:
                     KaizalaPlatform.showDurationPickerAsync(args[0], successCallback, errorCallback);
                     return;
@@ -3025,6 +3046,12 @@ var KASClient;
                     return;
                 case KASClient.DOWNLOAD_ATTACHMENT_COMMAND:
                     KaizalaPlatform.downloadAttachmentAsync(JSON.stringify(args[0]), successCallback, errorCallback);
+                    return;
+                case KASClient.GET_STATIC_MAP_IMAGE:
+                    KaizalaPlatform.getStaticMapImageAsync(JSON.stringify(args[0]), successCallback, errorCallback);
+                    return;
+                case KASClient.GET_LOCATION_ADDRESS:
+                    KaizalaPlatform.getLocationAddressAsync(JSON.stringify(args[0]), successCallback, errorCallback);
                     return;
                 case KASClient.CANCEL_ATTACHMENT_DOWNLOAD_COMMAND:
                     KaizalaPlatform.cancelAttachmentDownloadAsync(JSON.stringify(args[0]), successCallback, errorCallback);
@@ -3038,20 +3065,8 @@ var KASClient;
                 case KASClient.CHECK_STORAGE_ACCESS_FOR_ATTACHMENTS:
                     KaizalaPlatform.checkStoragePermissionAsync(successCallback, errorCallback);
                     return;
-                case KASClient.GET_LOCAL_PROPERTIES:
-                    KaizalaPlatform.getLocalActionPropertiesAsync(successCallback, errorCallback);
-                    return;
-                case KASClient.UPDATE_LOCAL_PROPERTIES:
-                    KaizalaPlatform.updateLocalActionPropertiesAsync(args[0], successCallback, errorCallback);
-                    return;
                 case KASClient.GET_PACKAGE_CUSTOM_SETTINGS:
                     KaizalaPlatform.getPackageCustomSettings(successCallback, errorCallback);
-                    return;
-                case KASClient.GET_PACKAGE_CUSTOM_PROPERTIES:
-                    KaizalaPlatform.getPackageCustomProperties(successCallback, errorCallback);
-                    return;
-                case KASClient.UPDATE_PACKAGE_CUSTOM_PROPERTIES:
-                    KaizalaPlatform.updatePackageCustomProperties(args[0], successCallback, errorCallback);
                     return;
                 case KASClient.IS_ATTACHMENT_DOWNLOADING:
                     KaizalaPlatform.isAttachmentDownloadingAsync(JSON.stringify(args[0]), successCallback, errorCallback);
@@ -3083,6 +3098,9 @@ var KASClient;
                 case KASClient.PERFORM_HTTP_REQUEST:
                     KaizalaPlatform.performHTTPRequest(args[0], args[1], successCallback, errorCallback);
                     break;
+                case KASClient.GET_FORM_SUMMARY_FOR_GROUP:
+                    KaizalaPlatform.getFormSummaryForGroupAsync(args[0], args[1], args[2], successCallback, errorCallback);
+                    break;
                 case KASClient.GET_RESPONSES_TIME_RANGE_COMMAND:
                     KaizalaPlatform.getResponsesForTimeRangeAsync(args[0], args[1], args[2], successCallback, errorCallback);
                     break;
@@ -3098,6 +3116,9 @@ var KASClient;
             if (errorCallback === void 0) { errorCallback = null; }
             var result = null;
             switch (command) {
+                case KASClient.GET_LOCALIZED_DATE:
+                    result = [KaizalaPlatform.getDateString(args[0], args[1], args[2], args[3])];
+                    break;
                 case KASClient.GET_UUID:
                     result = [KaizalaPlatform.generateUUID()];
                     break;
@@ -3212,7 +3233,12 @@ var KASClient;
                     KaizalaPlatform.dismissActivity();
                     break;
                 case KASClient.SHOW_PROGRESS_BAR_COMMAND:
-                    KaizalaPlatform.showProgressBar();
+                    if (KASClient.Version.clientSupports(KASClient.Version.VERSION_28_1, true /* considerMinorVersion */)) {
+                        KaizalaPlatform.showProgressBar(args[0]);
+                    }
+                    else {
+                        KaizalaPlatform.showProgressBar();
+                    }
                     break;
                 case KASClient.HIDE_PROGRESS_BAR_COMMAND:
                     KaizalaPlatform.hideProgressBar();
@@ -3259,9 +3285,6 @@ var KASClient;
                 case KASClient.EDIT_CARD_COMMAND:
                     KaizalaPlatform.editCard();
                     return;
-                case KASClient.UPDATE_REQUEST_COMMAND:
-                    result = [KaizalaPlatform.updateSurvey(args[0], successCallback, errorCallback)];
-                    break;
                 case KASClient.OPEN_IMMERSIVE_VIEW_FOR_ATTACHMENT:
                     KaizalaPlatform.openImmersiveViewForAttachment(JSON.stringify(args[0]));
                     return;
@@ -3361,6 +3384,8 @@ var KASClient;
     KASClient.GET_CONVERSATION_PARTICIPANTS_COUNT = "getConversationParticipantsCount";
     KASClient.GET_CONVERSATION_PARTICIPANTS = "getConversationParticipants";
     KASClient.SHOW_PLACE_PICKER = "showPlacePicker";
+    KASClient.SHOW_BARCODE_SCANNER = "showBarcodeScanner";
+    KASClient.SHOW_QRCODE_SCANNER = "showQRcodeScanner";
     KASClient.SHOW_DURATION_PICKER = "showDurationPicker";
     KASClient.EDIT_CARD_COMMAND = "editCard";
     KASClient.UPDATE_REQUEST_COMMAND = "updateRequest";
@@ -3368,16 +3393,14 @@ var KASClient;
     KASClient.GET_FONT_SIZE_MULTIPIER = "getFontSizeMultiplier";
     KASClient.SELECT_ATTACHMENTS_COMMAND = "selectAttachments";
     KASClient.DOWNLOAD_ATTACHMENT_COMMAND = "downloadAttachment";
+    KASClient.GET_STATIC_MAP_IMAGE = "getStaticMapImage";
+    KASClient.GET_LOCATION_ADDRESS = "getLocationAddress";
     KASClient.IS_ATTACHMENT_DOWNLOADING = "isAttachmentDownloading";
     KASClient.CANCEL_ATTACHMENT_DOWNLOAD_COMMAND = "cancelAttachmentDownload";
     KASClient.OPEN_IMMERSIVE_VIEW_FOR_ATTACHMENT = "openImmersiveViewForAttachment";
     KASClient.GENERATE_THUMBNAIL_FOR_IMAGE_ATTACHMENT = "generateBase64ThumbnailForAttachment";
     KASClient.CHECK_STORAGE_ACCESS_FOR_ATTACHMENTS = "checkStorageAccessForAttachmentType";
-    KASClient.GET_LOCAL_PROPERTIES = "getLocalActionProperties";
-    KASClient.UPDATE_LOCAL_PROPERTIES = "updateLocalActionProperties";
     KASClient.GET_PACKAGE_CUSTOM_SETTINGS = "getPackageCustomSettings";
-    KASClient.GET_PACKAGE_CUSTOM_PROPERTIES = "getPackageCustomProperties";
-    KASClient.UPDATE_PACKAGE_CUSTOM_PROPERTIES = "updatePackageCustomProperties";
     KASClient.GET_DEVICE_ID_COMMAND = "getDeviceId";
     KASClient.GET_UUID = "generateUUID";
     KASClient.SEND_NOTIFICATION = "sendNotification";
@@ -3390,11 +3413,11 @@ var KASClient;
     KASClient.OPEN_LINK_IN_BROWSER = "openLinkInBrowser";
     KASClient.CREATE_REQUEST_COMMAND_V2 = "createRequestV2";
     KASClient.PERFORM_SPEECH_TO_TEXT = "performSpeechToText";
-    KASClient.SET_SECURED_VALUE = "setSecuredValue";
-    KASClient.GET_SECURED_VALUE = "getSecuredValue";
     KASClient.PERFORM_HTTP_REQUEST = "performHTTPRequest";
     KASClient.GENERATE_THUMBNAIL_FOR_PDF_ATTACHMENT = "generateThumbnailForPDFAttachment";
     KASClient.OPEN_IMMERSIVE_VIEW_FOR_ATTACHMENT_LIST = "openImmersiveViewForAttachmentList";
+    KASClient.GET_LOCALIZED_DATE = "getDateStringAndroid";
+    KASClient.GET_FORM_SUMMARY_FOR_GROUP = "getFormSummaryForGroup";
     // Note: If you are adding new commands here, please increment
     // the supported SDK version in clients as well as add details
     // of that version in VersionUtil.ts
@@ -3765,20 +3788,12 @@ var KASClient;
     }
     KASClient.performSpeechToText = performSpeechToText;
     ///////////////////////////////////////////////////////
-    function setSecuredValue(key, value) {
-        if (key === void 0) { key = ""; }
-        if (value === void 0) { value = ""; }
-        KASClient.callNativeCommand(KASClient.SET_SECURED_VALUE, [key, value]);
+    function getFormSummaryForGroup(resultGroup, isSummaryOnly, cursor, jsonCallback) {
+        if (jsonCallback === void 0) { jsonCallback = null; }
+        var value = getCorrelationIdForCallback(jsonCallback, "onGetJson");
+        KASClient.callNativeCommand(KASClient.GET_FORM_SUMMARY_FOR_GROUP, [resultGroup, isSummaryOnly, cursor], value["successCallback"], value["errorCallback"]);
     }
-    KASClient.setSecuredValue = setSecuredValue;
-    ///////////////////////////////////////////////////////
-    function getSecuredValue(key, stringCallback) {
-        if (key === void 0) { key = ""; }
-        if (stringCallback === void 0) { stringCallback = null; }
-        var value = getCorrelationIdForCallback(stringCallback, "onGetString");
-        KASClient.callNativeCommand(KASClient.GET_SECURED_VALUE, [key], value["successCallback"], value["errorCallback"]);
-    }
-    KASClient.getSecuredValue = getSecuredValue;
+    KASClient.getFormSummaryForGroup = getFormSummaryForGroup;
     ///////////////////////////////////////////////////////
     function getDeviceId(stringCallback) {
         if (stringCallback === void 0) { stringCallback = null; }
@@ -3831,6 +3846,20 @@ var KASClient;
     }
     KASClient.downloadAttachment = downloadAttachment;
     ///////////////////////////////////////////////////////
+    function getStaticMapImage(params, stringCallback) {
+        if (stringCallback === void 0) { stringCallback = null; }
+        var value = getCorrelationIdForCallback(stringCallback, "onGetString");
+        KASClient.callNativeCommand(KASClient.GET_STATIC_MAP_IMAGE, [params], value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.getStaticMapImage = getStaticMapImage;
+    ///////////////////////////////////////////////////////
+    function getLocationAddress(params, jsonCallback) {
+        if (jsonCallback === void 0) { jsonCallback = null; }
+        var value = getCorrelationIdForCallback(jsonCallback, "onGetJson");
+        KASClient.callNativeCommand(KASClient.GET_LOCATION_ADDRESS, [params], value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.getLocationAddress = getLocationAddress;
+    ///////////////////////////////////////////////////////
     function isAttachmentDownloading(attachment, boolCallback) {
         if (attachment === void 0) { attachment = null; }
         if (boolCallback === void 0) { boolCallback = null; }
@@ -3853,6 +3882,20 @@ var KASClient;
         KASClient.callNativeCommand(KASClient.SHOW_PLACE_PICKER, null, value["successCallback"], value["errorCallback"]);
     }
     KASClient.showPlacePicker = showPlacePicker;
+    ///////////////////////////////////////////////////////
+    function showBarcodeScanner(stringCallback) {
+        if (stringCallback === void 0) { stringCallback = null; }
+        var value = getCorrelationIdForCallback(stringCallback, "onGetString");
+        KASClient.callNativeCommand(KASClient.SHOW_BARCODE_SCANNER, null, value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.showBarcodeScanner = showBarcodeScanner;
+    ///////////////////////////////////////////////////////
+    function showQRcodeScanner(stringCallback) {
+        if (stringCallback === void 0) { stringCallback = null; }
+        var value = getCorrelationIdForCallback(stringCallback, "onGetString");
+        KASClient.callNativeCommand(KASClient.SHOW_QRCODE_SCANNER, null, value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.showQRcodeScanner = showQRcodeScanner;
     ///////////////////////////////////////////////////////
     function showDurationPicker(defaultDurationInMinutes, stringCallback) {
         if (defaultDurationInMinutes === void 0) { defaultDurationInMinutes = 0; }
@@ -4138,6 +4181,13 @@ var KASClient;
     }
     KASClient.generateUUID = generateUUID;
     ///////////////////////////////////////////////////////////
+    function getDateStringAndroid(args, stringCallback) {
+        if (args === void 0) { args = []; }
+        if (stringCallback === void 0) { stringCallback = null; }
+        var value = getCorrelationIdForCallback(stringCallback, "onGetString");
+        KASClient.callNativeCommand(KASClient.GET_LOCALIZED_DATE, args, value["successCallback"], value["errorCallback"]);
+    }
+    KASClient.getDateStringAndroid = getDateStringAndroid;
     function shouldSeeSurveySummary(boolCallback) {
         if (boolCallback === void 0) { boolCallback = null; }
         var value = getCorrelationIdForCallback(boolCallback, "onGetBool");
@@ -4220,36 +4270,6 @@ var KASClient;
         KASClient.callNativeCommand(KASClient.GET_CONVERSATION_PARTICIPANTS, null, value["successCallback"], value["errorCallback"]);
     }
     KASClient.getConversationParticipants = getConversationParticipants;
-    ///////////////////////////////////////////////////////////
-    function getLocalProperties(jsonCallback) {
-        if (jsonCallback === void 0) { jsonCallback = null; }
-        var value = getCorrelationIdForCallback(jsonCallback, "onGetJson");
-        KASClient.callNativeCommand(KASClient.GET_LOCAL_PROPERTIES, null, value["successCallback"], value["errorCallback"]);
-    }
-    KASClient.getLocalProperties = getLocalProperties;
-    ///////////////////////////////////////////////////////////
-    function updateLocalProperties(properties, boolCallback) {
-        if (properties === void 0) { properties = null; }
-        if (boolCallback === void 0) { boolCallback = null; }
-        var value = getCorrelationIdForCallback(boolCallback, "onGetBool");
-        KASClient.callNativeCommand(KASClient.UPDATE_LOCAL_PROPERTIES, [JSON.stringify(properties)], value["successCallback"], value["errorCallback"]);
-    }
-    KASClient.updateLocalProperties = updateLocalProperties;
-    ///////////////////////////////////////////////////////////
-    function getPackageCustomProperties(jsonCallback) {
-        if (jsonCallback === void 0) { jsonCallback = null; }
-        var value = getCorrelationIdForCallback(jsonCallback, "onGetJson");
-        KASClient.callNativeCommand(KASClient.GET_PACKAGE_CUSTOM_PROPERTIES, null, value["successCallback"], value["errorCallback"]);
-    }
-    KASClient.getPackageCustomProperties = getPackageCustomProperties;
-    ///////////////////////////////////////////////////////////
-    function updatePackageCustomProperties(properties, boolCallback) {
-        if (properties === void 0) { properties = null; }
-        if (boolCallback === void 0) { boolCallback = null; }
-        var value = getCorrelationIdForCallback(boolCallback, "onGetBool");
-        KASClient.callNativeCommand(KASClient.UPDATE_PACKAGE_CUSTOM_PROPERTIES, [JSON.stringify(properties)], value["successCallback"], value["errorCallback"]);
-    }
-    KASClient.updatePackageCustomProperties = updatePackageCustomProperties;
     ///////////////////////////////////////////////////////////
     function sendNotification(customNotificationMessage, boolCallback) {
         if (boolCallback === void 0) { boolCallback = null; }
@@ -5133,10 +5153,11 @@ var KASClient;
     }
     KASClient.getExpiryUntilString = getExpiryUntilString;
     function getDateString(date, showDayOfWeek, showTime, showYear) {
-        // Format "Mon Aug 15, 12:30 AM"
         if (showDayOfWeek === void 0) { showDayOfWeek = true; }
         if (showTime === void 0) { showTime = true; }
         if (showYear === void 0) { showYear = false; }
+        // Format "Mon Aug 15, 12:30 AM"
+        var dateString = "";
         // Mandatory
         var formatParams = { 'day': 'numeric', 'month': 'short' };
         var locale = navigator.language;
@@ -5161,7 +5182,18 @@ var KASClient;
             formatParams['minute'] = 'numeric';
             formatParams['hour12'] = !Is24HourFormat;
         }
-        return date.toLocaleString(locale, formatParams);
+        dateString = date.toLocaleString(locale, formatParams);
+        // For some Indian languages toLocaleString is not localizing dates properly on "Android". Using a native android call as an alternative.
+        if (KASClient.getPlatform() == KASClient.Platform.Android && KASClient.Version.clientSupports(KASClient.Version.VERSION_28_2, true)) {
+            var dateInMillis = date.getTime();
+            var callBack = function (returnedDateString, error) {
+                if (error == null && !isEmptyString(returnedDateString)) {
+                    dateString = returnedDateString;
+                }
+            };
+            KASClient.getDateStringAndroid([dateInMillis, showDayOfWeek, showTime, showYear], callBack);
+        }
+        return dateString;
     }
     KASClient.getDateString = getDateString;
     /* convert DateTime object to readable String format
@@ -5202,6 +5234,7 @@ var KASClient;
     function toStringTimeObject(time) {
         var hours = time.split(":")[0];
         var minutes = time.split(":")[1];
+        hours = parseInt(hours);
         minutes = parseInt(minutes);
         var zeroValue = 0;
         minutes = minutes < 10 ? zeroValue.toLocaleString() + minutes.toLocaleString() : minutes.toLocaleString();
@@ -5209,8 +5242,8 @@ var KASClient;
         if (!Is24HourFormat) {
             suffix = hours >= 12 ? KASClient.Internal.getKASClientString("PM") : KASClient.Internal.getKASClientString("AM");
             hours = hours % 12 || 12;
-            hours = hours < 10 ? zeroValue.toLocaleString() + hours.toLocaleString() : hours.toLocaleString();
         }
+        hours = hours < 10 ? zeroValue.toLocaleString() + hours.toLocaleString() : hours.toLocaleString();
         var displayTime = hours + ":" + minutes + " " + suffix;
         return displayTime;
     }
@@ -5267,7 +5300,11 @@ var KASClient;
             return bytes + " B";
         var exp = parseInt("" + (Math.log(bytes) / Math.log(unit)));
         var pre = "KMGTPE"[exp - 1];
-        var retVal = (bytes / Math.pow(unit, exp)).toFixed(1) + " " + pre + "B";
+        // shows till one and only one decimal point and localizes it
+        var retVal = (bytes / Math.pow(unit, exp)).toLocaleString(undefined, {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1
+        }) + " " + pre + "B";
         return retVal;
     }
     KASClient.formatSize = formatSize;
@@ -5452,6 +5489,12 @@ var KASClient;
         Version.VERSION_26 = "26";
         Version.VERSION_27 = "27";
         Version.VERSION_28 = "28";
+        Version.VERSION_28_1 = "28.1"; //support ProgressBar for Custom Action Summary with text in android
+        Version.VERSION_28_2 = "28.2"; //support get localized date for android from native 
+        Version.VERSION_29 = "29";
+        Version.VERSION_29_1 = "29.1"; // support Base64 image in Attachment type Property.
+        Version.VERSION_30 = "30";
+        Version.VERSION_31 = "31";
         var commandVersion = {};
         // Commands introduced in version-0 SDK
         commandVersion[KASClient.CLOSE_CARD_COMMAND] = Version.VERSION_0;
@@ -5526,10 +5569,14 @@ var KASClient;
         commandVersion[KASClient.CHECK_STORAGE_ACCESS_FOR_ATTACHMENTS] = Version.VERSION_12;
         commandVersion[KASClient.GET_PACKAGE_CUSTOM_SETTINGS] = Version.VERSION_12;
         // Commands introduced in version-13 SDK
-        commandVersion[KASClient.GET_LOCAL_PROPERTIES] = Version.VERSION_13;
-        commandVersion[KASClient.UPDATE_LOCAL_PROPERTIES] = Version.VERSION_13;
-        commandVersion[KASClient.GET_PACKAGE_CUSTOM_PROPERTIES] = Version.VERSION_13;
-        commandVersion[KASClient.UPDATE_PACKAGE_CUSTOM_PROPERTIES] = Version.VERSION_13;
+        /* Going forward, the below 2 commented out API will not
+         be supported to avoid any discrepancies with chat history feature */
+        // commandVersion[GET_LOCAL_PROPERTIES] = VERSION_13;
+        // commandVersion[UPDATE_LOCAL_PROPERTIES] = VERSION_13;
+        /* Going forward, the below 2 commented out API will not
+         be supported  - https://office.visualstudio.com/OC/_workitems/edit/2081189*/
+        //commandVersion[GET_PACKAGE_CUSTOM_PROPERTIES] = VERSION_13;
+        //commandVersion[UPDATE_PACKAGE_CUSTOM_PROPERTIES] = VERSION_13;
         commandVersion[KASClient.GET_DEVICE_ID_COMMAND] = Version.VERSION_13;
         // Commands introduced in version-14 SDK
         commandVersion[KASClient.GET_UUID] = Version.VERSION_14;
@@ -5558,8 +5605,10 @@ var KASClient;
         commandVersion[KASClient.OPEN_LINK_IN_BROWSER] = Version.VERSION_23;
         // Commands introduced in Version-24 SDK
         commandVersion[KASClient.PERFORM_SPEECH_TO_TEXT] = Version.VERSION_24;
-        commandVersion[KASClient.SET_SECURED_VALUE] = Version.VERSION_24;
-        commandVersion[KASClient.GET_SECURED_VALUE] = Version.VERSION_24;
+        /* Going forward, the following commented out API will not
+         be supported to avoid any discrepancies with chat history feature */
+        // commandVersion[KASClient.SET_SECURED_VALUE] = Version.VERSION_24;
+        // commandVersion[KASClient.GET_SECURED_VALUE] = Version.VERSION_24;
         commandVersion[KASClient.CREATE_REQUEST_COMMAND_V2] = Version.VERSION_24;
         commandVersion[KASClient.PERFORM_HTTP_REQUEST] = Version.VERSION_24;
         // Commands introduced in Version-25 SDK
@@ -5576,6 +5625,15 @@ var KASClient;
         commandVersion[KASClient.GET_CONVERSATION_PARTICIPANTS] = Version.VERSION_28;
         commandVersion[KASClient.GENERATE_THUMBNAIL_FOR_PDF_ATTACHMENT] = Version.VERSION_28;
         commandVersion[KASClient.OPEN_IMMERSIVE_VIEW_FOR_ATTACHMENT_LIST] = Version.VERSION_28;
+        commandVersion[KASClient.GET_LOCALIZED_DATE] = Version.VERSION_28;
+        //commands introduced in Version-29 SDK
+        commandVersion[KASClient.SHOW_BARCODE_SCANNER] = Version.VERSION_29;
+        commandVersion[KASClient.SHOW_QRCODE_SCANNER] = Version.VERSION_29;
+        //commands introduced in Version-30 SDK
+        commandVersion[KASClient.GET_STATIC_MAP_IMAGE] = Version.VERSION_30;
+        commandVersion[KASClient.GET_LOCATION_ADDRESS] = Version.VERSION_30;
+        //commands introduced in Version-31 SDK
+        commandVersion[KASClient.GET_FORM_SUMMARY_FOR_GROUP] = Version.VERSION_31;
         // The below method doesn't consider minor version
         function commandIsCompatible(command, callback) {
             if (!commandVersion.hasOwnProperty(command)) {
@@ -5620,95 +5678,13 @@ var KASClient;
                 callback(_clientSupportedSDKVersion);
             }
             else {
-                // Version-3+ representative API
-                var version3PlusChecker = function (commandReturned) {
-                    KASClient.getClientSupportedSDKVersion(function (version, error) {
-                        _clientSupportedSDKVersion = version;
-                        commandReturned();
-                    }, true /* bypassVersionChecking */);
-                };
-                // Version-2 representative API
-                var version2Checker = function (commandReturned) {
-                    KASClient.getPackageProperties(function (properties, error) {
-                        if (_clientSupportedSDKVersion == null) {
-                            _clientSupportedSDKVersion = Version.VERSION_2;
-                            commandReturned();
-                        }
-                        // Else it's a stale call, cause we've already got the version
-                    }, true /* bypassVersionChecking */);
-                };
-                // Version-1 representative API
-                var version1Checker = function (commandReturned) {
-                    KASClient.getCurrentUserId(function (userId, error) {
-                        if (_clientSupportedSDKVersion == null) {
-                            _clientSupportedSDKVersion = Version.VERSION_1;
-                            commandReturned();
-                        }
-                        // Else it's a stale call, cause we've already got the version
-                    }, true /* bypassVersionChecking */);
-                };
-                // If client already supports version-3+ SDK, then we can query
-                // for the supported version directly!
-                checkIfCommandExists(version3PlusChecker, function (exists) {
-                    if (exists) {
-                        callback(_clientSupportedSDKVersion);
-                    }
-                    else {
-                        // Else client is older than version-3,
-                        // Check for version-2 first, then version-1,
-                        // if none is compatible, then it's version-0
-                        checkIfCommandExists(version2Checker, function (exists) {
-                            if (exists) {
-                                callback(_clientSupportedSDKVersion);
-                            }
-                            else {
-                                checkIfCommandExists(version1Checker, function (exists) {
-                                    if (exists) {
-                                        callback(_clientSupportedSDKVersion);
-                                    }
-                                    else {
-                                        // At this point it's safe to say that the client is primitive
-                                        _clientSupportedSDKVersion = Version.VERSION_0;
-                                        callback(_clientSupportedSDKVersion);
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
+                KASClient.getClientSupportedSDKVersion(function (version, error) {
+                    _clientSupportedSDKVersion = version;
+                    callback(_clientSupportedSDKVersion);
+                }, true /* bypassVersionChecking */);
             }
         }
         Version.getClientSupportedVersion = getClientSupportedVersion;
-        function checkIfCommandExists(commandWrapper, callback) {
-            if (KASClient.getPlatform() == KASClient.Platform.iOS) {
-                // iOS runs in asynchronous model, so only a timeout
-                // can indicate the api doesn't exist in client side
-                var callbackCalled = false;
-                commandWrapper(function () {
-                    callbackCalled = true;
-                    callback(true);
-                });
-                setTimeout(function () {
-                    // Timeout occurred
-                    if (!callbackCalled) {
-                        callback(false);
-                    }
-                }, 100 /* ms */);
-            }
-            else {
-                // Android runs in synchronous model, so an exception
-                // will indicate the api doesn't exist in client side
-                try {
-                    commandWrapper(function () {
-                        callback(true);
-                    });
-                }
-                catch (e) {
-                    callback(false);
-                }
-            }
-        }
-        Version.checkIfCommandExists = checkIfCommandExists;
     })(Version = KASClient.Version || (KASClient.Version = {}));
 })(KASClient || (KASClient = {}));
 var KASClient;
@@ -5733,6 +5709,58 @@ var KASClient;
         return CustomNotificationMessage;
     }());
     KASClient.CustomNotificationMessage = CustomNotificationMessage;
+})(KASClient || (KASClient = {}));
+var KASClient;
+(function (KASClient) {
+    var KASActionInstanceResponse = /** @class */ (function () {
+        function KASActionInstanceResponse() {
+            /**
+             * Sample response
+             *
+             * {
+             *       "id": "5a1d8f15-79a8-4cd5-a497-a5caff979b74",
+             *       "n": "SRK",
+             *       "rid": "0a228aee-c450-4dc5-bca0-42a634474e2b@1",
+             *       "rs": {
+             *         "0": "Jbbl",
+             *         "1": "1540980866017",
+             *         "2": "{\"lt\":0,\"lg\":0,\"acc\":0,\"n\":\"\",\"ty\":0}"
+             *       }
+             * }
+             *
+             */
+            // Specifies the unique id of the response
+            this.id = "";
+            // Specifies the responder
+            this.responderId = "";
+            // Specifies the name of the responder
+            this.responderName = "";
+            // Map of questionid/columnid to serialized answers/value
+            // Dictionary<QuestionId: number, Answer: string>
+            this.questionToAnswerMap = {};
+        }
+        KASActionInstanceResponse.fromJSON = function (object) {
+            if (object == null) {
+                return null;
+            }
+            var response = new KASActionInstanceResponse();
+            if (object.hasOwnProperty("id")) {
+                response.id = object["id"];
+            }
+            if (object.hasOwnProperty("rid")) {
+                response.responderId = object["rid"];
+            }
+            if (object.hasOwnProperty("n")) {
+                response.responderName = object["n"];
+            }
+            if (object.hasOwnProperty("rs")) {
+                response.questionToAnswerMap = object["rs"];
+            }
+            return response;
+        };
+        return KASActionInstanceResponse;
+    }());
+    KASClient.KASActionInstanceResponse = KASActionInstanceResponse;
 })(KASClient || (KASClient = {}));
 var KASClient;
 (function (KASClient) {
@@ -7481,6 +7509,8 @@ var KASClient;
             this.allowSendReminder = KASClient.KASFormResultVisibility.Sender;
             // Denotes if multiple responses from a user are allowed or not, default is false
             this.isResponseAppended = false;
+            // whether server should do subgroup level aggregation on results for this action instance
+            this.isGroupLevelAggregationRequired = false;
             // Denotes if participants' location is attached with the response or not, default is false
             this.isLocationRequested = false;
             // Type of the form, default is 20, shouldn't be changed
@@ -7516,6 +7546,7 @@ var KASClient;
             object["ilr"] = this.isLocationRequested;
             object["type"] = this.type;
             object["rpt"] = this.reportType;
+            object["iglr"] = this.isGroupLevelAggregationRequired;
             var questions = [];
             for (var i = 0; i < this.questions.length; i++) {
                 questions.push(this.questions[i].toJSON());
@@ -7611,6 +7642,9 @@ var KASClient;
             }
             if (object.hasOwnProperty("ilr")) {
                 form.isLocationRequested = object["ilr"];
+            }
+            if (object.hasOwnProperty("iglr")) {
+                form.isGroupLevelAggregationRequired = object["iglr"];
             }
             if (object.hasOwnProperty("type")) {
                 form.type = object["type"];
@@ -8331,6 +8365,143 @@ var KASClient;
 })(KASClient || (KASClient = {}));
 var KASClient;
 (function (KASClient) {
+    var KASFormSubgroupSummary = /** @class */ (function () {
+        function KASFormSubgroupSummary() {
+            /**
+              * Sample subgroup summary
+              *
+              * {
+              *     "0c6207fc-39ce-4b74-b420-db2d52f2c388@1": {
+              *       "n": "G22",
+              *       "rdc": 1,
+              *       "tc": 6
+              *     }
+              * }
+              *
+              */
+            // Specifies the name of the group
+            this.groupName = "";
+            // Total number of users (direct+indirect) belonging to the group. 
+            // It is an estimate and cached/stale data and hence is not accurate.
+            this.targetCount = 0;
+            // Specifies the total number of responders
+            this.responderCount = 0;
+        }
+        KASFormSubgroupSummary.fromJSON = function (object) {
+            if (object == null) {
+                return null;
+            }
+            var summary = new KASFormSubgroupSummary();
+            if (object.hasOwnProperty("n")) {
+                summary.groupName = object["n"];
+            }
+            if (object.hasOwnProperty("tc")) {
+                summary.targetCount = object["tc"];
+            }
+            if (object.hasOwnProperty("rdc")) {
+                summary.responderCount = object["rdc"];
+            }
+            return summary;
+        };
+        return KASFormSubgroupSummary;
+    }());
+    KASClient.KASFormSubgroupSummary = KASFormSubgroupSummary;
+})(KASClient || (KASClient = {}));
+var KASClient;
+(function (KASClient) {
+    var KASFormSummaryForGroup = /** @class */ (function () {
+        function KASFormSummaryForGroup() {
+            /**
+              * Sample summary for group
+              *
+              * {
+              *   "c": "125955414",
+              *   "rdc": 3,
+              *   "rs": [
+              *     {
+              *       "id": "5a1d8f15-79b8-4cd5-a497-a5caff979b74",
+              *       "n": "ABC",
+              *       "rid": "0a228aee-c5c0-4dc5-bca0-42a634474e2b@1",
+              *       "rs": {
+              *         "0": "Jbbl",
+              *         "1": "1540980866017",
+              *         "2": "{\"lt\":0,\"lg\":0,\"acc\":0,\"n\":\"\",\"ty\":0}"
+              *       }
+              *     },
+              *     {
+              *       "id": "41e589cf-ad48-46b9-9290-786bf64cd599",
+              *       "n": "SRK",
+              *       "rid": "13dfa760-df77-4c88-a9f6-f34a76136439@1",
+              *       "rs": {
+              *         "0": "Gnuk",
+              *         "1": "1540981299094",
+              *         "2": "{\"lt\":0,\"lg\":0,\"acc\":0,\"n\":\"\",\"ty\":0}"
+              *       }
+              *     }
+              *   ],
+              *   "sgs": {
+              *     "0c6207fc-39ce-4b74-b420-db2d52f2cd08@1": {
+              *       "n": null,
+              *       "rdc": 1,
+              *       "tc": 6
+              *     }
+              *   },
+              *   "tc": 6
+              * }
+              *
+              */
+            // Responses of direct members of this group
+            this.directMemberResponses = [];
+            // Map with keys are sub-groupids and value as group level summary.
+            this.subgroupSummary = {};
+            // Total number of users (direct+indirect) belonging to the group. 
+            // It is an estimate and cached/stale data and hence is not accurate. 
+            this.targetCount = 0;
+            // Specifies the total number of responders
+            this.responderCount = 0;
+            // Specifies the cursor for pagination
+            this.cursor = "";
+        }
+        KASFormSummaryForGroup.fromJSON = function (object) {
+            if (object == null) {
+                return null;
+            }
+            var summary = new KASFormSummaryForGroup();
+            if (object.hasOwnProperty("rs")) {
+                var resps = object["rs"];
+                for (var i = 0; i < resps.length; i++) {
+                    var resp = KASClient.KASActionInstanceResponse.fromJSON(resps[i]);
+                    if (resp) {
+                        summary.directMemberResponses.push(resp);
+                    }
+                }
+            }
+            if (object.hasOwnProperty("sgs")) {
+                var subSummaryMap = object["sgs"];
+                for (var key in subSummaryMap) {
+                    var sgsSummary = KASClient.KASFormSubgroupSummary.fromJSON(subSummaryMap[key]);
+                    if (sgsSummary) {
+                        summary.subgroupSummary[key] = sgsSummary;
+                    }
+                }
+            }
+            if (object.hasOwnProperty("tc")) {
+                summary.targetCount = object["tc"];
+            }
+            if (object.hasOwnProperty("rdc")) {
+                summary.responderCount = object["rdc"];
+            }
+            if (object.hasOwnProperty("c")) {
+                summary.cursor = object["c"];
+            }
+            return summary;
+        };
+        return KASFormSummaryForGroup;
+    }());
+    KASClient.KASFormSummaryForGroup = KASFormSummaryForGroup;
+})(KASClient || (KASClient = {}));
+var KASClient;
+(function (KASClient) {
     var KASFormUserCapabilities = /** @class */ (function () {
         function KASFormUserCapabilities() {
             this.canSendReminder = false;
@@ -8549,6 +8720,63 @@ var KASClient;
         return KASLocation;
     }());
     KASClient.KASLocation = KASLocation;
+})(KASClient || (KASClient = {}));
+var KASClient;
+(function (KASClient) {
+    var KASLocationAddressParams = /** @class */ (function () {
+        function KASLocationAddressParams() {
+        }
+        KASLocationAddressParams.prototype.toJSON = function () {
+            var object = JSON.parse("{}");
+            if (this.latitude) {
+                object["latitude"] = this.latitude;
+            }
+            if (this.longitude) {
+                object["longitude"] = this.longitude;
+            }
+            if (this.language) {
+                object["language"] = this.language;
+            }
+            return object;
+        };
+        return KASLocationAddressParams;
+    }());
+    KASClient.KASLocationAddressParams = KASLocationAddressParams;
+})(KASClient || (KASClient = {}));
+var KASClient;
+(function (KASClient) {
+    var KASLocationStaticMapImageParams = /** @class */ (function () {
+        function KASLocationStaticMapImageParams() {
+            /*Theses parameters are as used in Google maps static image api*/
+            this.sizeX = 360;
+            this.sizeY = 170;
+            this.markerColor = "red";
+        }
+        KASLocationStaticMapImageParams.prototype.toJSON = function () {
+            var object = JSON.parse("{}");
+            if (this.latitude) {
+                object["latitude"] = this.latitude;
+            }
+            if (this.longitude) {
+                object["longitude"] = this.longitude;
+            }
+            object["markerColor"] = this.markerColor;
+            object["sizeX"] = this.sizeX;
+            object["sizeY"] = this.sizeY;
+            if (this.language) {
+                object["language"] = this.language;
+            }
+            if (this.zoom) {
+                object["zoom"] = this.zoom;
+            }
+            if (this.mapType) {
+                object["mapType"] = this.mapType;
+            }
+            return object;
+        };
+        return KASLocationStaticMapImageParams;
+    }());
+    KASClient.KASLocationStaticMapImageParams = KASLocationStaticMapImageParams;
 })(KASClient || (KASClient = {}));
 var KASClient;
 (function (KASClient) {
