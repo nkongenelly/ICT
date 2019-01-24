@@ -306,14 +306,34 @@
         var TOTAL_PAGE = 3;
         var LOCATION_TIMEOUT = 10000;
         // Question index
-        var WORKER_ID = 0;
-        var PREFERRED_NAME = 1;
-        var WORKER_BIO = 2;
-        var IMAGE = 3;
-        var NAME = 4;
-        var PHONE_NUMBER = 5;
-        var LOCATION = 6;
-        var TIME = 7;
+        var USER = 0;
+        var YOUR_NAME = 1;
+        var PAYROLL_NO = 2;
+        var FROM = 3;
+        var DEPARTMENT = 4;
+        var NO_OF_DAYS = 5;
+        var YEAR = 6;
+        var TYPE_OF_LEAVE = 7;
+        var REASONS = 8;
+        var FROM_DATE = 9;
+        var TO = 10;
+        var DURATION_TIME = 11;
+        var RESUMINGDATE = 12;
+        var HOME_ADDRESS = 13;
+        var TELEPHONE_CONTACT = 14;
+        var ALTERNATE_CONTACT = 15;
+        var LEAVE_DUE = 16;
+        var LEAVE_GRANTED_FROM = 17;
+        var LEAVE_GRANTED_TO = 18;
+        var RESUMING_DATE = 19;
+        var HR_REPRESENTATIVE = 20;
+        var LEAVE_DAYS_BALANCE = 21;
+        var APPROVED = 22;
+        var COMMENTS = 23;
+        var NAME = 24;
+        var PHONE_NUMBER = 25;
+        var LOCATION = 26;
+        var TIME = 27;
         function onPageLoad() {
             // Register for Android h/w back press event
             KASClient.App.registerHardwareBackPressCallback(function () {
@@ -436,12 +456,12 @@
             };
             KASClient.UI.addElement(navigationBar.getView(), header);
         }
-        function inflateWorkerIdDiv() {
-            var workerIdDiv = document.getElementById("workerIdDiv");
+        function inflateuserDiv() {
+            var workerIdDiv = document.getElementById("userDiv");
             KASClient.UI.clearElement(workerIdDiv);
             var workerIdTitle = KASClient.UI.getElement("div");
             workerIdTitle.className = "question-title";
-            workerIdTitle.innerText = _strings[_form.questions[WORKER_ID].title];
+            workerIdTitle.innerText = _strings[_form.questions[USER].title];
             var workerIdInput = KASClient.UI.getElement("input");
             workerIdInput.type = "text";
             workerIdInput.className = "comment-input";
@@ -458,12 +478,12 @@
             KASClient.UI.addElement(workerIdTitle, workerIdDiv);
             KASClient.UI.addElement(workerIdInput, workerIdDiv);
         }
-        function inflatePreferredName() {
-            var preferredName = document.getElementById("preferredNameDiv");
+        function inflateyourNameDiv() {
+            var preferredName = document.getElementById("yourNameDiv");
             KASClient.UI.clearElement(preferredName);
             var preferredNameTitle = KASClient.UI.getElement("div");
             preferredNameTitle.className = "question-title";
-            preferredNameTitle.innerText = _strings[_form.questions[PREFERRED_NAME].title];
+            preferredNameTitle.innerText = _strings[_form.questions[YOUR_NAME].title];
             var preferredNameInput = KASClient.UI.getElement("input");
             preferredNameInput.type = "text";
             preferredNameInput.className = "comment-input";
@@ -480,12 +500,12 @@
             KASClient.UI.addElement(preferredNameTitle, preferredName);
             KASClient.UI.addElement(preferredNameInput, preferredName);
         }
-        function inflateWorkerBio() {
-            var workerBio = document.getElementById("workerBioDiv");
+        function inflatepayrollNoDiv() {
+            var workerBio = document.getElementById("payrollNoDiv");
             KASClient.UI.clearElement(workerBio);
             var workerBioTitle = KASClient.UI.getElement("div");
             workerBioTitle.className = "question-title";
-            workerBioTitle.innerText = _strings[_form.questions[WORKER_BIO].title];
+            workerBioTitle.innerText = _strings[_form.questions[PAYROLL_NO].title];
             var workerBioInput = KASClient.UI.getElement("input");
             workerBioInput.type = "text";
             workerBioInput.className = "comment-input";
@@ -502,36 +522,494 @@
             KASClient.UI.addElement(workerBioTitle, workerBio);
             KASClient.UI.addElement(workerBioInput, workerBio);
         }
-        function inflateWorkerImageDiv() {
-            var imageQuestionDiv = document.getElementById("workerImageDiv");
-            KASClient.UI.clearElement(imageQuestionDiv);
-            var imageQuestionTitle = KASClient.UI.getElement("div");
-            imageQuestionTitle.className = "question-title";
-            imageQuestionTitle.innerText = _strings[_form.questions[IMAGE].title];
-            KASClient.UI.addElement(imageQuestionTitle, imageQuestionDiv);
-            var img = KASClient.UI.getElement("img", {
-                "width": "40",
-                "height": "40",
-                "padding-left": "15pt",
-                "padding-top": "0px"
-            });
-            img.setAttribute("src", "AttachmentIcon.png");
-            img.onclick = function () {
-                KASClient.App.showImagePickerAsync(function (selectedImagePath, error) {
-                    if (error != null) {
-                        return;
-                    }
-                    _workerImageQuestion = selectedImagePath;
-                    img.setAttribute("src", selectedImagePath);
+        function inflateFromDiv() {
+            var preferredName = document.getElementById("FromDiv");
+            KASClient.UI.clearElement(preferredName);
+            var preferredNameTitle = KASClient.UI.getElement("div");
+            preferredNameTitle.className = "question-title";
+            preferredNameTitle.innerText = _strings[_form.questions[FROM].title];
+            var preferredNameInput = KASClient.UI.getElement("input");
+            preferredNameInput.type = "text";
+            preferredNameInput.className = "comment-input";
+            if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+                KASClient.UI.addCSS(preferredNameInput, {
+                    "padding-left": "13pt"
                 });
-            };
-            KASClient.UI.addElement(img, imageQuestionDiv);
+            }
+            preferredNameInput.placeholder = _strings["strTapToEnter"];
+            preferredNameInput.addEventListener("input", function (event) {
+                _preferredNameQuestion = event.target.value;
+                invalidateFooter();
+            });
+            KASClient.UI.addElement(preferredNameTitle, preferredName);
+            KASClient.UI.addElement(preferredNameInput, preferredName);
         }
+        function inflateDepartmentDiv() {
+            var workerIdDiv = document.getElementById("DepartmentDiv");
+            KASClient.UI.clearElement(workerIdDiv);
+            var workerIdTitle = KASClient.UI.getElement("div");
+            workerIdTitle.className = "question-title";
+            workerIdTitle.innerText = _strings[_form.questions[DEPARTMENT].title];
+            var workerIdInput = KASClient.UI.getElement("input");
+            workerIdInput.type = "text";
+            workerIdInput.className = "comment-input";
+            if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+                KASClient.UI.addCSS(workerIdInput, {
+                    "padding-left": "13pt"
+                });
+            }
+            workerIdInput.placeholder = _strings["strTapToEnter"];
+            workerIdInput.addEventListener("input", function (event) {
+                _workerIdQuestion = event.target.value;
+                invalidateFooter();
+            });
+            KASClient.UI.addElement(workerIdTitle, workerIdDiv);
+            KASClient.UI.addElement(workerIdInput, workerIdDiv);
+        }
+        // function inflatenoOfDaysDiv() {
+        //     var preferredName = document.getElementById("noOfDaysDiv");
+        //     KASClient.UI.clearElement(preferredName);
+        //     var preferredNameTitle = KASClient.UI.getElement("div");
+        //     preferredNameTitle.className = "question-title";
+        //     preferredNameTitle.innerText = _strings[_form.questions[NO_OF_DAYS].title];
+        //     var preferredNameInput = KASClient.UI.getElement("input");
+        //     preferredNameInput.type = "text";
+        //     preferredNameInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(preferredNameInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     preferredNameInput.placeholder = _strings["strTapToEnter"];
+        //     preferredNameInput.addEventListener("input", function (event) {
+        //         _preferredNameQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(preferredNameTitle, preferredName);
+        //     KASClient.UI.addElement(preferredNameInput, preferredName);
+        // }
+        // function inflateyearDiv() {
+        //     var workerBio = document.getElementById("yearDiv");
+        //     KASClient.UI.clearElement(workerBio);
+        //     var workerBioTitle = KASClient.UI.getElement("div");
+        //     workerBioTitle.className = "question-title";
+        //     workerBioTitle.innerText = _strings[_form.questions[YEAR].title];
+        //     var workerBioInput = KASClient.UI.getElement("input");
+        //     workerBioInput.type = "text";
+        //     workerBioInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(workerBioInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     workerBioInput.placeholder = _strings["strTapToEnter"];
+        //     workerBioInput.addEventListener("input", function (event) {
+        //         _workerBioQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(workerBioTitle, workerBio);
+        //     KASClient.UI.addElement(workerBioInput, workerBio);
+        // }
+        // function inflatetypeOfLeaveDiv() {
+        //     var preferredName = document.getElementById("typeOfLeaveDiv");
+        //     KASClient.UI.clearElement(preferredName);
+        //     var preferredNameTitle = KASClient.UI.getElement("div");
+        //     preferredNameTitle.className = "question-title";
+        //     preferredNameTitle.innerText = _strings[_form.questions[TYPE_OF_LEAVE].title];
+        //     var preferredNameInput = KASClient.UI.getElement("input");
+        //     preferredNameInput.type = "text";
+        //     preferredNameInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(preferredNameInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     preferredNameInput.placeholder = _strings["strTapToEnter"];
+        //     preferredNameInput.addEventListener("input", function (event) {
+        //         _preferredNameQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(preferredNameTitle, preferredName);
+        //     KASClient.UI.addElement(preferredNameInput, preferredName);
+        // }
+        // function inflateReasonsDiv() {
+        //     var workerIdDiv = document.getElementById("ReasonsDiv");
+        //     KASClient.UI.clearElement(workerIdDiv);
+        //     var workerIdTitle = KASClient.UI.getElement("div");
+        //     workerIdTitle.className = "question-title";
+        //     workerIdTitle.innerText = _strings[_form.questions[REASONS].title];
+        //     var workerIdInput = KASClient.UI.getElement("input");
+        //     workerIdInput.type = "text";
+        //     workerIdInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(workerIdInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     workerIdInput.placeholder = _strings["strTapToEnter"];
+        //     workerIdInput.addEventListener("input", function (event) {
+        //         _workerIdQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(workerIdTitle, workerIdDiv);
+        //     KASClient.UI.addElement(workerIdInput, workerIdDiv);
+        // }
+        // function inflatefromDatesDiv() {
+        //     var preferredName = document.getElementById("fromDatesDiv");
+        //     KASClient.UI.clearElement(preferredName);
+        //     var preferredNameTitle = KASClient.UI.getElement("div");
+        //     preferredNameTitle.className = "question-title";
+        //     preferredNameTitle.innerText = _strings[_form.questions[FROM_DATE].title];
+        //     var preferredNameInput = KASClient.UI.getElement("input");
+        //     preferredNameInput.type = "text";
+        //     preferredNameInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(preferredNameInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     preferredNameInput.placeholder = _strings["strTapToEnter"];
+        //     preferredNameInput.addEventListener("input", function (event) {
+        //         _preferredNameQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(preferredNameTitle, preferredName);
+        //     KASClient.UI.addElement(preferredNameInput, preferredName);
+        // }
+        // function inflateToDiv() {
+        //     var workerBio = document.getElementById("ToDiv");
+        //     KASClient.UI.clearElement(workerBio);
+        //     var workerBioTitle = KASClient.UI.getElement("div");
+        //     workerBioTitle.className = "question-title";
+        //     workerBioTitle.innerText = _strings[_form.questions[TO].title];
+        //     var workerBioInput = KASClient.UI.getElement("input");
+        //     workerBioInput.type = "text";
+        //     workerBioInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(workerBioInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     workerBioInput.placeholder = _strings["strTapToEnter"];
+        //     workerBioInput.addEventListener("input", function (event) {
+        //         _workerBioQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(workerBioTitle, workerBio);
+        //     KASClient.UI.addElement(workerBioInput, workerBio);
+        // }
+        // function inflatedurationDaysDiv() {
+        //     var preferredName = document.getElementById("durationDaysDiv");
+        //     KASClient.UI.clearElement(preferredName);
+        //     var preferredNameTitle = KASClient.UI.getElement("div");
+        //     preferredNameTitle.className = "question-title";
+        //     preferredNameTitle.innerText = _strings[_form.questions[DURATION_TIME].title];
+        //     var preferredNameInput = KASClient.UI.getElement("input");
+        //     preferredNameInput.type = "text";
+        //     preferredNameInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(preferredNameInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     preferredNameInput.placeholder = _strings["strTapToEnter"];
+        //     preferredNameInput.addEventListener("input", function (event) {
+        //         _preferredNameQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(preferredNameTitle, preferredName);
+        //     KASClient.UI.addElement(preferredNameInput, preferredName);
+        // }
+        // function inflateResumingDateDiv() {
+        //     var workerIdDiv = document.getElementById("ResumingDateDiv");
+        //     KASClient.UI.clearElement(workerIdDiv);
+        //     var workerIdTitle = KASClient.UI.getElement("div");
+        //     workerIdTitle.className = "question-title";
+        //     workerIdTitle.innerText = _strings[_form.questions[RESUMINGDATE].title];
+        //     var workerIdInput = KASClient.UI.getElement("input");
+        //     workerIdInput.type = "text";
+        //     workerIdInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(workerIdInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     workerIdInput.placeholder = _strings["strTapToEnter"];
+        //     workerIdInput.addEventListener("input", function (event) {
+        //         _workerIdQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(workerIdTitle, workerIdDiv);
+        //     KASClient.UI.addElement(workerIdInput, workerIdDiv);
+        // }
+        // function inflatehomeAddressDiv() {
+        //     var preferredName = document.getElementById("homeAddressDiv");
+        //     KASClient.UI.clearElement(preferredName);
+        //     var preferredNameTitle = KASClient.UI.getElement("div");
+        //     preferredNameTitle.className = "question-title";
+        //     preferredNameTitle.innerText = _strings[_form.questions[HOME_ADDRESS].title];
+        //     var preferredNameInput = KASClient.UI.getElement("input");
+        //     preferredNameInput.type = "text";
+        //     preferredNameInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(preferredNameInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     preferredNameInput.placeholder = _strings["strTapToEnter"];
+        //     preferredNameInput.addEventListener("input", function (event) {
+        //         _preferredNameQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(preferredNameTitle, preferredName);
+        //     KASClient.UI.addElement(preferredNameInput, preferredName);
+        // }
+        // function inflatetelephoneContactDiv() {
+        //     var workerBio = document.getElementById("telephoneContactDiv");
+        //     KASClient.UI.clearElement(workerBio);
+        //     var workerBioTitle = KASClient.UI.getElement("div");
+        //     workerBioTitle.className = "question-title";
+        //     workerBioTitle.innerText = _strings[_form.questions[TELEPHONE_CONTACT].title];
+        //     var workerBioInput = KASClient.UI.getElement("input");
+        //     workerBioInput.type = "text";
+        //     workerBioInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(workerBioInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     workerBioInput.placeholder = _strings["strTapToEnter"];
+        //     workerBioInput.addEventListener("input", function (event) {
+        //         _workerBioQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(workerBioTitle, workerBio);
+        //     KASClient.UI.addElement(workerBioInput, workerBio);
+        // }
+        // function inflatealternateContactDiv() {
+        //     var preferredName = document.getElementById("alternateContactDiv");
+        //     KASClient.UI.clearElement(preferredName);
+        //     var preferredNameTitle = KASClient.UI.getElement("div");
+        //     preferredNameTitle.className = "question-title";
+        //     preferredNameTitle.innerText = _strings[_form.questions[ALTERNATE_CONTACT].title];
+        //     var preferredNameInput = KASClient.UI.getElement("input");
+        //     preferredNameInput.type = "text";
+        //     preferredNameInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(preferredNameInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     preferredNameInput.placeholder = _strings["strTapToEnter"];
+        //     preferredNameInput.addEventListener("input", function (event) {
+        //         _preferredNameQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(preferredNameTitle, preferredName);
+        //     KASClient.UI.addElement(preferredNameInput, preferredName);
+        // }
+        // function inflateleaveDueDiv() {
+        //     var workerIdDiv = document.getElementById("leaveDueDiv");
+        //     KASClient.UI.clearElement(workerIdDiv);
+        //     var workerIdTitle = KASClient.UI.getElement("div");
+        //     workerIdTitle.className = "question-title";
+        //     workerIdTitle.innerText = _strings[_form.questions[LEAVE_DUE].title];
+        //     var workerIdInput = KASClient.UI.getElement("input");
+        //     workerIdInput.type = "text";
+        //     workerIdInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(workerIdInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     workerIdInput.placeholder = _strings["strTapToEnter"];
+        //     workerIdInput.addEventListener("input", function (event) {
+        //         _workerIdQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(workerIdTitle, workerIdDiv);
+        //     KASClient.UI.addElement(workerIdInput, workerIdDiv);
+        // }
+        // function inflateleaveGrantedFromDiv() {
+        //     var preferredName = document.getElementById("leaveGrantedFromDiv");
+        //     KASClient.UI.clearElement(preferredName);
+        //     var preferredNameTitle = KASClient.UI.getElement("div");
+        //     preferredNameTitle.className = "question-title";
+        //     preferredNameTitle.innerText = _strings[_form.questions[LEAVE_GRANTED_FROM].title];
+        //     var preferredNameInput = KASClient.UI.getElement("input");
+        //     preferredNameInput.type = "text";
+        //     preferredNameInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(preferredNameInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     preferredNameInput.placeholder = _strings["strTapToEnter"];
+        //     preferredNameInput.addEventListener("input", function (event) {
+        //         _preferredNameQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(preferredNameTitle, preferredName);
+        //     KASClient.UI.addElement(preferredNameInput, preferredName);
+        // }
+        // function inflateleaveGrantedToDiv() {
+        //     var workerBio = document.getElementById("leaveGrantedToDiv");
+        //     KASClient.UI.clearElement(workerBio);
+        //     var workerBioTitle = KASClient.UI.getElement("div");
+        //     workerBioTitle.className = "question-title";
+        //     workerBioTitle.innerText = _strings[_form.questions[LEAVE_GRANTED_TO].title];
+        //     var workerBioInput = KASClient.UI.getElement("input");
+        //     workerBioInput.type = "text";
+        //     workerBioInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(workerBioInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     workerBioInput.placeholder = _strings["strTapToEnter"];
+        //     workerBioInput.addEventListener("input", function (event) {
+        //         _workerBioQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(workerBioTitle, workerBio);
+        //     KASClient.UI.addElement(workerBioInput, workerBio);
+        // }
+        // function inflateresumeDateDiv() {
+        //     var preferredName = document.getElementById("resumeDateDiv");
+        //     KASClient.UI.clearElement(preferredName);
+        //     var preferredNameTitle = KASClient.UI.getElement("div");
+        //     preferredNameTitle.className = "question-title";
+        //     preferredNameTitle.innerText = _strings[_form.questions[RESUMING_DATE].title];
+        //     var preferredNameInput = KASClient.UI.getElement("input");
+        //     preferredNameInput.type = "text";
+        //     preferredNameInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(preferredNameInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     preferredNameInput.placeholder = _strings["strTapToEnter"];
+        //     preferredNameInput.addEventListener("input", function (event) {
+        //         _preferredNameQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(preferredNameTitle, preferredName);
+        //     KASClient.UI.addElement(preferredNameInput, preferredName);
+        // }
+        // function inflatehrRepresentativeDiv() {
+        //     var workerIdDiv = document.getElementById("hrRepresentativeDiv");
+        //     KASClient.UI.clearElement(workerIdDiv);
+        //     var workerIdTitle = KASClient.UI.getElement("div");
+        //     workerIdTitle.className = "question-title";
+        //     workerIdTitle.innerText = _strings[_form.questions[HR_REPRESENTATIVE].title];
+        //     var workerIdInput = KASClient.UI.getElement("input");
+        //     workerIdInput.type = "text";
+        //     workerIdInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(workerIdInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     workerIdInput.placeholder = _strings["strTapToEnter"];
+        //     workerIdInput.addEventListener("input", function (event) {
+        //         _workerIdQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(workerIdTitle, workerIdDiv);
+        //     KASClient.UI.addElement(workerIdInput, workerIdDiv);
+        // }
+        // function inflateleaveDaysbalanceDiv() {
+        //     var preferredName = document.getElementById("leaveDaysbalanceDiv");
+        //     KASClient.UI.clearElement(preferredName);
+        //     var preferredNameTitle = KASClient.UI.getElement("div");
+        //     preferredNameTitle.className = "question-title";
+        //     preferredNameTitle.innerText = _strings[_form.questions[LEAVE_DAYS_BALANCE].title];
+        //     var preferredNameInput = KASClient.UI.getElement("input");
+        //     preferredNameInput.type = "text";
+        //     preferredNameInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(preferredNameInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     preferredNameInput.placeholder = _strings["strTapToEnter"];
+        //     preferredNameInput.addEventListener("input", function (event) {
+        //         _preferredNameQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(preferredNameTitle, preferredName);
+        //     KASClient.UI.addElement(preferredNameInput, preferredName);
+        // }
+        // function inflateapprovedDiv() {
+        //     var workerBio = document.getElementById("approvedDiv");
+        //     KASClient.UI.clearElement(workerBio);
+        //     var workerBioTitle = KASClient.UI.getElement("div");
+        //     workerBioTitle.className = "question-title";
+        //     workerBioTitle.innerText = _strings[_form.questions[APPROVED].title];
+        //     var workerBioInput = KASClient.UI.getElement("input");
+        //     workerBioInput.type = "text";
+        //     workerBioInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(workerBioInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     workerBioInput.placeholder = _strings["strTapToEnter"];
+        //     workerBioInput.addEventListener("input", function (event) {
+        //         _workerBioQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(workerBioTitle, workerBio);
+        //     KASClient.UI.addElement(workerBioInput, workerBio);
+        // }
+        // function inflatecommentsDiv() {
+        //     var preferredName = document.getElementById("commentsDiv");
+        //     KASClient.UI.clearElement(preferredName);
+        //     var preferredNameTitle = KASClient.UI.getElement("div");
+        //     preferredNameTitle.className = "question-title";
+        //     preferredNameTitle.innerText = _strings[_form.questions[COMMENTS].title];
+        //     var preferredNameInput = KASClient.UI.getElement("input");
+        //     preferredNameInput.type = "text";
+        //     preferredNameInput.className = "comment-input";
+        //     if (KASClient.getPlatform() == KASClient.Platform.iOS) {
+        //         KASClient.UI.addCSS(preferredNameInput, {
+        //             "padding-left": "13pt"
+        //         });
+        //     }
+        //     preferredNameInput.placeholder = _strings["strTapToEnter"];
+        //     preferredNameInput.addEventListener("input", function (event) {
+        //         _preferredNameQuestion = event.target.value;
+        //         invalidateFooter();
+        //     });
+        //     KASClient.UI.addElement(preferredNameTitle, preferredName);
+        //     KASClient.UI.addElement(preferredNameInput, preferredName);
+        // }
+
         function inflateQuestions() {
-            inflateWorkerIdDiv();
-            inflatePreferredName();
-            inflateWorkerBio();
-            inflateWorkerImageDiv();
+            inflateuserDiv();
+            inflateyourNameDiv();
+            inflatepayrollNoDiv();
+            inflateFromDiv();
+            inflateDepartmentDiv();
+            // inflatenoOfDaysDiv();
+            // inflateyearDiv();
+            // inflatetypeOfLeaveDiv();
+            // inflateReasonsDiv();
+            // inflatefromDatesDiv();
+            // inflateToDiv();
+            // inflatedurationDaysDiv();
+            // inflateResumingDateDiv();
+            // inflatehomeAddressDiv();
+            // inflatetelephoneContactDiv();
+            // inflatealternateContactDiv();
+            // inflateleaveDueDiv();
+            // inflateleaveGrantedFromDiv();
+            // inflateleaveGrantedToDiv();
+            // inflateresumeDateDiv();
+            // inflatehrRepresentativeDiv();
+            // inflateleaveDaysbalanceDiv();
+            // inflateapprovedDiv();
+            // inflatecommentsDiv();
         }
         function inflateDetailsView() {
             // 2nd Page
@@ -797,7 +1275,7 @@
             KASClient.UI.addElement(nextButton, footer);
         }
         function inflateSummaryView() {
-            
+            alert(_currentPage);
             var summaryView = document.getElementById("page3");
             KASClient.UI.clearElement(summaryView);
             var divAttributes = {
@@ -818,7 +1296,7 @@
                 "padding-bottom": "0pt"
             });
             workerIdDetailsHeader.className = "comment-header";
-            workerIdDetailsHeader.innerText = _strings[_form.questions[WORKER_ID].title];
+            workerIdDetailsHeader.innerText = _strings[_form.questions[USER].title];
             KASClient.UI.addElement(workerIdDetailsHeader, workerIdDetailsDiv);
             
             var workerIdDetailsView = KASClient.UI.getElement("div", {
@@ -843,7 +1321,7 @@
                 "padding-bottom": "0pt"
             });
             preferredNameDetailsHeader.className = "comment-header";
-            preferredNameDetailsHeader.innerText = _strings[_form.questions[PREFERRED_NAME].title];
+            preferredNameDetailsHeader.innerText = _strings[_form.questions[YOUR_NAME].title];
             KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
             var preferredNameDetailsView = KASClient.UI.getElement("div", {
                 "padding": "14px",
@@ -866,7 +1344,7 @@
                 "padding-bottom": "0pt"
             });
             workerBioDetailsHeader.className = "comment-header";
-            workerBioDetailsHeader.innerText = _strings[_form.questions[WORKER_BIO].title];
+            workerBioDetailsHeader.innerText = _strings[_form.questions[PAYROLL_NO].title];
             KASClient.UI.addElement(workerBioDetailsHeader, workerBioDetailsDiv);
             var workerBioDetailsView = KASClient.UI.getElement("div", {
                 "padding": "14px",
@@ -889,7 +1367,7 @@
                 "padding-bottom": "10px"
             });
             workerImageDetailsHeader.className = "comment-header";
-            workerImageDetailsHeader.innerText = _strings[_form.questions[IMAGE].title];
+            workerImageDetailsHeader.innerText = _strings[_form.questions[FROM].title];
             KASClient.UI.addElement(workerImageDetailsHeader, workerImageDetailsDiv);
             var imgQuestion = KASClient.UI.getElement("img", {
                 "height": "200px",
@@ -897,6 +1375,468 @@
             });
             imgQuestion.src = _workerImageQuestion;
             KASClient.UI.addElement(imgQuestion, workerImageDetailsDiv);
+             //Preferred Name
+             var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+                "padding": "14px",
+                "padding-bottom": "0pt"
+            });
+            preferredNameDetailsHeader.className = "comment-header";
+            preferredNameDetailsHeader.innerText = _strings[_form.questions[DEPARTMENT].title];
+            KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            var preferredNameDetailsView = KASClient.UI.getElement("div", {
+                "padding": "14px",
+                "padding-top": "5pt"
+            });
+            var preferredName = KASClient.UI.getElement("div", {
+                "color": "#32485f",
+                "font-size": "12pt",
+                "overflow-wrap": "break-word",
+                "word-wrap": "break-word",
+                "word-break": "break-word"
+            });
+            preferredName.innerHTML = _preferredNameQuestion;
+            KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+             //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[NO_OF_DAYS].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[YEAR].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[TYPE_OF_LEAVE].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[REASONS].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[FROM_DATE].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[TO].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[DURATION_TIME].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[RESUMINGDATE].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[HOME_ADDRESS].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[TELEPHONE_CONTACT].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[ALTERNATE_CONTACT].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[LEAVE_DUE].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[LEAVE_GRANTED_FROM].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[LEAVE_GRANTED_TO].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[RESUMING_DATE].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[HR_REPRESENTATIVE].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[LEAVE_DAYS_BALANCE].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[APPROVED].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+            //  //Preferred Name
+            //  var preferredNameDetailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var preferredNameDetailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // preferredNameDetailsHeader.className = "comment-header";
+            // preferredNameDetailsHeader.innerText = _strings[_form.questions[COMMENTS].title];
+            // KASClient.UI.addElement(preferredNameDetailsHeader, preferredNameDetailsDiv);
+            // var preferredNameDetailsView = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-top": "5pt"
+            // });
+            // var preferredName = KASClient.UI.getElement("div", {
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
+            // preferredName.innerHTML = _preferredNameQuestion;
+            // KASClient.UI.addElement(preferredName, preferredNameDetailsView);
+            // KASClient.UI.addElement(preferredNameDetailsView, preferredNameDetailsDiv);
+
+
             // Personal Details Summary
             var detailsDiv = KASClient.UI.getElement("div", divAttributes);
             var detailsHeader = KASClient.UI.getElement("div", {
@@ -1066,14 +2006,58 @@
     </div>
     <div class="body-container">
         <div id="page1">
-            <div class="section" id="workerIdDiv">
-            </div>
-            <div class="section" id="preferredNameDiv">
-            </div>
-            <div class="section" id="workerBioDiv">
-            </div>
-            <div class="section" id="workerImageDiv" style="border-bottom: none">
-            </div>
+            <div id="user"></div>
+            <!-- <div id="applicant"></div> -->
+                <div class="section" id="yourNameDiv">
+                </div>
+                <div class="section" id="payrollNoDiv">
+                </div>
+                <div class="section" id="FromDiv">
+                </div>
+                <div class="section" id="DepartmentDiv">
+                </div>
+                <!-- <div class="section" id="noOfDaysDiv">
+                </div>
+                <div class="section" id="yearDiv">
+                </div>
+                <div class="section" id="typeOfLeaveDiv">
+                </div>
+                <div class="section" id="ReasonsDiv">
+                </div>
+                <div class="section" id="fromDatesDiv">
+                </div>
+                <div class="section" id="ToDiv">
+                </div>
+                <div class="section" id="durationDaysDiv">
+                </div>
+                <div class="section" id="ResumingDateDiv">
+                </div>
+                <div class="section" id="homeAddressDiv">
+                </div>
+                <div class="section" id="telephoneContactDiv">
+                </div>
+                <div class="section" id="alternateContactDiv">
+                </div> -->
+               
+            <!-- </div> -->
+            <!-- <div id="manager"> -->
+                <!-- <div class="section" id="leaveDueDiv">
+                </div>
+                <div class="section" id="leaveGrantedFromDiv">
+                </div>
+                <div class="section" id="leaveGrantedToDiv">
+                </div>
+                <div class="section" id="resumeDateDiv">
+                </div>
+                <div class="section" id="hrRepresentativeDiv">
+                </div>
+                <div class="section" id="leaveDaysbalanceDiv">
+                </div>
+                <div class="section" id="approvedDiv">
+                </div>
+                <div class="section" id="commentsDiv">
+                </div> -->
+            <!-- </div> -->
         </div>
         <div id="page2">
             <div class="section" id="detailsViewDiv" style="padding-top : 8px">

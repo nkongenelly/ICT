@@ -13,17 +13,18 @@
     <div class="body-container">
         <div id="page1">
                 <div class="question-title" id="userDiv">
-                    <div>User:</div>
+                    <!-- <div>User:</div>
                     <div>
                         <select class = "option-div">
                                 <option class="options" value="volvo">Applicant</option>
                                 <option class="options" value="saab">HR</option>
                                 <option class="options" value="mercedes">Manager</option>
                               </select>
-                    </div>
+                    </div> -->
                 </div>
             <div id="continues">
-                <input class="continue" type="submit" name="submit" value="Continue" onclick="showForm()">
+                <!-- showForm -->
+                <button class="continue" onclick="showForm()">Continue</button>
             </div> 
             <div id="page"></div>
             <div id="manage"></div> 
@@ -91,14 +92,14 @@
                         return;
                     }
                     _form = form;
-                    // inflateUserDiv();
+                    inflateUserDiv();
                     // inflateUser();
                     
-                document.getElementById("userDiv").stylr.display = "block";
-                document.getElementById("manage").style.display = "none";
-                document.getElementById("continues").style.display = "block";
-                document.getElementById("page").style.display = "none";
-                    loadPage(_form["questions"]);
+                // document.getElementById("userDiv").stylr.display = "block";
+                // document.getElementById("manage").style.display = "none";
+                // document.getElementById("continues").style.display = "block";
+                // document.getElementById("page").style.display = "none";
+                    // loadPage(_form["questions"]);
                     inflateHTML();
                     KASClient.App.getCurrentUserIdAsync(function (userId, error) {
                         if (error != null) {
@@ -273,58 +274,58 @@
         //     document.getElementById("page").style.display = "none";
         // }
 
-        // function inflateUserDiv() {
-        //     // alert("1");
-        //     var question = _form.questions[USER];
-        //     var questionDiv = document.getElementById("userDiv");
-        //     KASClient.UI.clearElement(questionDiv);
-        //     var questionTitle = KASClient.UI.getElement("div");
-        //     questionTitle.className = "question-title";
-        //     questionTitle.innerText = _strings[question.title];
-        //     KASClient.UI.addElement(questionTitle, questionDiv);
-        //     var optionDiv = KASClient.UI.getElement("select");
-        //     optionDiv.className = "option-div";
-        //     optionDiv.id = "optionDiv";
-        //     // alert("2");
-        //     for (var i = 0; i < question.options.length; i++) {
-        //             // alert("3");
-        //         var option = question.options[i];
-        //         var value = _strings[option.title];
-        //         var options = KASClient.UI.getElement("option");
-        //         options.className = "options";
-        //         options.innerText = _strings[option.text];
-        //         options.value = value;
-        //         // alert("4");
-        //         options.onclick = function() {
-        //             // alert("5");
-        //             _customerTypeQuestion = this.value;
-        //             // alert("6");
-        //             alert(_customerTypeQuestion);
-        //             document.getElementById("CustomerTypeOption" + _customerTypeQuestion).checked = true;
-        //             // alert("7");
-        //             invalidateFooter();
-        //             // alert("8");
-        //         };
-        //         var title = KASClient.UI.getElement("label", {
-        //             "width": "85%",
-        //             "padding-left": "6pt"
-        //         });
-        //         title.innerText = _strings[option.text];
-        //         // alert("8");
-        //         var radio = KASClient.UI.getElement("input");
-        //         radio.type = "radio";
-        //         radio.name = "question" + question.id;
-        //         radio.id = "CustomerTypeOption" + option.id;
-        //         // alert("9");
-        //         KASClient.UI.addElement(title, options);
-        //         KASClient.UI.addElement(radio, options);
-        //         KASClient.UI.addElement(options, optionDiv);
-        //         // alert("10");
-        //     }
-        //     // alert("11");
-        //     KASClient.UI.addElement(optionDiv, questionDiv);
-        //     // alert("12");
-        //     }
+        function inflateUserDiv() {
+            // alert("1");
+            var question = _form.questions[USER];
+            var questionDiv = document.getElementById("userDiv");
+            KASClient.UI.clearElement(questionDiv);
+            var questionTitle = KASClient.UI.getElement("div");
+            questionTitle.className = "question-title";
+            questionTitle.innerText = _strings[question.title];
+            KASClient.UI.addElement(questionTitle, questionDiv);
+            var optionDiv = KASClient.UI.getElement("select");
+            optionDiv.className = "option-div";
+            optionDiv.id = "optionDiv";
+            // alert("2");
+            for (var i = 0; i < question.options.length; i++) {
+                    // alert("3");
+                var option = question.options[i];
+                var value = _strings[option.title];
+                var options = KASClient.UI.getElement("option");
+                options.className = "options";
+                options.innerText = _strings[option.text];
+                options.value = value;
+                // alert("4");
+                options.onclick = function() {
+                    // alert("5");
+                    _customerTypeQuestion = this.value;
+                    // alert("6");
+                    alert(_customerTypeQuestion);
+                    document.getElementById("CustomerTypeOption" + _customerTypeQuestion).checked = true;
+                    // alert("7");
+                    invalidateFooter();
+                    // alert("8");
+                };
+                var title = KASClient.UI.getElement("label", {
+                    "width": "85%",
+                    "padding-left": "6pt"
+                });
+                title.innerText = _strings[option.text];
+                // alert("8");
+                var radio = KASClient.UI.getElement("input");
+                radio.type = "radio";
+                radio.name = "question" + question.id;
+                radio.id = "CustomerTypeOption" + option.id;
+                // alert("9");
+                KASClient.UI.addElement(title, options);
+                KASClient.UI.addElement(radio, options);
+                KASClient.UI.addElement(options, optionDiv);
+                // alert("10");
+            }
+            // alert("11");
+            KASClient.UI.addElement(optionDiv, questionDiv);
+            // alert("12");
+            }
 
             function showForm(){
               //Show preloader
@@ -910,6 +911,7 @@ _currentLocation["lt"] + "," + _currentLocation["lg"] + "&key=AIzaSyAMfrWKiELcjg
         }
 
         function inflateSummaryView() {
+            alert(_currentPage);
             var summaryView = document.getElementById("page3");
             KASClient.UI.clearElement(summaryView);
 
@@ -939,7 +941,11 @@ _currentLocation["lt"] + "," + _currentLocation["lg"] + "&key=AIzaSyAMfrWKiELcjg
                 let fieldInputType = "";
                 let compressedTitle = fieldTitle.replace(/\s+/g, '');
                 
-                if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                // if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                if((fieldTitle != "Payroll No.") && (fieldTitle != "From") && (fieldTitle != "Department") && (fieldTitle != "No. of Days") && (fieldTitle != "Year") && (fieldTitle != "Type of leave") && (fieldTitle != "Reasons") && (fieldTitle != "From (date)") && (fieldTitle != "To") && (fieldTitle != "Duration (Days/ Hr/ s)") && (fieldTitle != "Resuming Date") && (fieldTitle != "Home Address (while on leave)") && (fieldTitle != "Telephone contact") & (fieldTitle != "Alternate contact (while on leave)") && 
+                    (fieldTitle != "Payroll No.") && (fieldTitle != "Leave Due") && (fieldTitle != "Leave granted from") && (fieldTitle != "Leave granted to") && (fieldTitle != "Resume Date") && (fieldTitle != "HR representative") && (fieldTitle != "Leave days balance") && (fieldTitle != "Approved") && (fieldTitle != "Comments(if any)") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time") &&    
+                    (fieldTitle != "User") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                   
                 {
                     var fieldDiv = KASClient.UI.getElement("div", divAttributes);
 
@@ -998,42 +1004,42 @@ _currentLocation["lt"] + "," + _currentLocation["lg"] + "&key=AIzaSyAMfrWKiELcjg
             }
             
             // Personal Details Summary
-            var detailsDiv = KASClient.UI.getElement("div", divAttributes);
+            // var detailsDiv = KASClient.UI.getElement("div", divAttributes);
 
-            var detailsHeader = KASClient.UI.getElement("div", {
-                "padding": "14px",
-                "padding-bottom": "0pt"
-            });
-            detailsHeader.className = "comment-header";
-            detailsHeader.innerText = _strings["strMiniAppYourDetails"];
-            KASClient.UI.addElement(detailsHeader, detailsDiv);
+            // var detailsHeader = KASClient.UI.getElement("div", {
+            //     "padding": "14px",
+            //     "padding-bottom": "0pt"
+            // });
+            // detailsHeader.className = "comment-header";
+            // detailsHeader.innerText = _strings["strMiniAppYourDetails"];
+            // KASClient.UI.addElement(detailsHeader, detailsDiv);
 
-            var details = KASClient.UI.getElement("table", {
-                "border": "none",
-                "padding": "14px",
-                "padding-top": "5pt",
-                "color": "#32485f",
-                "font-size": "12pt",
-                "overflow-wrap": "break-word",
-                "word-wrap": "break-word",
-                "word-break": "break-word"
-            });
+            // var details = KASClient.UI.getElement("table", {
+            //     "border": "none",
+            //     "padding": "14px",
+            //     "padding-top": "5pt",
+            //     "color": "#32485f",
+            //     "font-size": "12pt",
+            //     "overflow-wrap": "break-word",
+            //     "word-wrap": "break-word",
+            //     "word-break": "break-word"
+            // });
 
-            var row1 = details.insertRow(0);
-            var cell11 = row1.insertCell(0);
-            var cell12 = row1.insertCell(1);
-            cell11.className = "first-column";
-            cell11.innerHTML = _strings["Name"];
-            cell12.innerHTML = ": " + _name;
+            // var row1 = details.insertRow(0);
+            // var cell11 = row1.insertCell(0);
+            // var cell12 = row1.insertCell(1);
+            // cell11.className = "first-column";
+            // cell11.innerHTML = _strings["Name"];
+            // cell12.innerHTML = ": " + _name;
 
-            var row2 = details.insertRow(1);
-            var cell21 = row2.insertCell(0);
-            var cell22 = row2.insertCell(1);
-            cell21.className = "first-column";
-            cell21.innerHTML = _strings["Phone"];
-            cell22.innerHTML = ": " + _phoneNumber;
+            // var row2 = details.insertRow(1);
+            // var cell21 = row2.insertCell(0);
+            // var cell22 = row2.insertCell(1);
+            // cell21.className = "first-column";
+            // cell21.innerHTML = _strings["Phone"];
+            // cell22.innerHTML = ": " + _phoneNumber;
             
-            KASClient.UI.addElement(details, detailsDiv);
+            // KASClient.UI.addElement(details, detailsDiv);
 
             // Location Summary
             var locationDiv = KASClient.UI.getElement("div", divAttributes);
@@ -1095,7 +1101,7 @@ _currentLocation["lt"] + "," + _currentLocation["lg"] + "&key=AIzaSyAMfrWKiELcjg
             KASClient.UI.addElement(location, locationDiv);
 
             KASClient.UI.addElement(fieldDiv, summaryView);
-            KASClient.UI.addElement(detailsDiv, summaryView);
+            // KASClient.UI.addElement(detailsDiv, summaryView);
             KASClient.UI.addElement(locationDiv, summaryView);
         }
 

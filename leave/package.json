@@ -1,35 +1,35 @@
 {
-	"id": "com.tambuzi.profile.nelly", 
-	"schemaVersion": 1, 
-	"version": "1",
-	"minorVersion": 2,
-	"providerName": "Leave Form",
-	"displayName": "Profile Submit",
-	"description": "Update your name, bio, profile image and worker ID", 
-  "icon": "picking.png",
-  "appModel": "AppModel.json",
-  "dials": {
-    "isLocalised": false,
-    "isPinned": false
-  },
-  "actionScope": "Group",
-  "views": {
-    "ChatCanvasCardView": {
-      "showReceipts": false,
-      "showLikes": false,
-      "showComments": false,
-      "labelResponseSending": "Updating your profile",
-      "labelResponseFailed": "Failed to update your profile",
-      "labelResponded": "Profile updated",
-      "isResponseEditable": false
+    "id": "com.ict.leave.apply",
+    "schemaVersion": 1,
+    "version": "1",
+    "minorVersion": 12,
+    "providerName": "ICTAfrica",
+    "displayName": "Leave Application & Approval 1",
+    "description": "Leave Application & Approval",
+    "icon": "leave1.png",
+    "appModel": "AppModel.json",
+    "dials": {
+        "isLocalised": false,
+        "isPinned": false
     },
-    "CreationView": {
-      "sourceLocation": "Response.html",
-      "showNativeToolbar": false
-    },
-    "ResponseResultsView": {
-      "sourceLocation": "ResponseSummary.html",
-      "showNativeToolbar": false
+    "actionScope": "Group",
+    "views": {
+        "CreationView": {
+            "sourceLocation": "Response.html",
+            "showNativeToolbar": false
+        },
+        "ChatCanvasCardView": {
+            "showReceipts": false,
+            "showLikes": false,
+            "showComments": false,
+            "labelResponseSending": "Submitting your details",
+            "labelResponded": "Leave Application & Approval",
+            "labelResponseFailed": "Leave Application & Approval submission failed",
+            "isResponseEditable": false
+        },
+        "ResponseResultsView": {
+            "sourceLocation": "ResponseSummary.html",
+            "showNativeToolbar": false
+        }
     }
-  }
 }
