@@ -16,9 +16,9 @@
                     <!-- <div>User:</div>
                     <div>
                         <select class = "option-div">
-                                <option class="options" value="volvo">Applicant</option>
-                                <option class="options" value="saab">HR</option>
-                                <option class="options" value="mercedes">Manager</option>
+                                <option class="options" value="applicant">Applicant</option>
+                                <option class="options" value="hr">HR</option>
+                                <option class="options" value="manager">Manager</option>
                               </select>
                     </div> -->
                 </div>
@@ -80,28 +80,7 @@
             });
 
             KASClient.App.getLocalizedStringsAsync(function (strings, error) {
-                if (error != null) {
-                    showError("Error:GetFormAsync:" + error);
-                    return;
-                }
-                _strings = strings;
-                // alert(_strings);
-                KASClient.Form.getFormAsync(function (form, error) {
-                    if (error != null) {
-                        showError("Error:GetFormAsync:" + error);
-                        return;
-                    }
-                    _form = form;
-                    inflateUserDiv();
-                    // inflateUser();
-                    
-                // document.getElementById("userDiv").stylr.display = "block";
-                // document.getElementById("manage").style.display = "none";
-                // document.getElementById("continues").style.display = "block";
-                // document.getElementById("page").style.display = "none";
-                    // loadPage(_form["questions"]);
-                    inflateHTML();
-                    KASClient.App.getCurrentUserIdAsync(function (userId, error) {
+                KASClient.App.getCurrentUserIdAsync(function (userId, error) {
                         if (error != null) {
                             handleError(error);
                             return;
@@ -117,6 +96,20 @@
                             inflateDetailsView();
                         });
                     });
+                if (error != null) {
+                    showError("Error:GetFormAsync:" + error);
+                    return;
+                }
+                _strings = strings;
+                // alert(_strings);
+                KASClient.Form.getFormAsync(function (form, error) {
+                    if (error != null) {
+                        showError("Error:GetFormAsync:" + error);
+                        return;
+                    }
+                    _form = form;
+                    inflateUserDiv();
+                    inflateHTML();
                 });
             });
         }
@@ -157,13 +150,11 @@
             if (!_currentLocation.hasOwnProperty("n")) {
                 _currentLocation["n"] = "";
             }
-
             var questionToAnswerMap = JSON.parse("{}");
             
             let questions = _form["questions"];
             let totalQuestions = questions.length;
             var count = 0;
-            
             for(var x = 0; x < totalQuestions; x++){
                 let fieldDescription = questions[x];
                 let fieldId = fieldDescription["id"];
@@ -171,8 +162,11 @@
                 let fieldType = fieldDescription["type"];
                 let fieldInputType = "";
                 let compressedTitle = fieldTitle.replace(/\s+/g, '');
-                
                 if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                // if((fieldTitle != "Payroll No.") && (fieldTitle != "From") && (fieldTitle != "Department") && (fieldTitle != "No. of Days") && (fieldTitle != "Year") && (fieldTitle != "Type of leave") && (fieldTitle != "Reasons") && (fieldTitle != "From (date)") && (fieldTitle != "To") && (fieldTitle != "Duration (Days/ Hr/ s)") && (fieldTitle != "Resuming Date") && (fieldTitle != "Home Address (while on leave)") && (fieldTitle != "Telephone contact") & (fieldTitle != "Alternate contact (while on leave)") && 
+                //     (fieldTitle != "Payroll No.") && (fieldTitle != "Leave Due") && (fieldTitle != "Leave granted from") && (fieldTitle != "Leave granted to") && (fieldTitle != "Resume Date") && (fieldTitle != "HR representative") && (fieldTitle != "Leave days balance") && (fieldTitle != "Approved") && (fieldTitle != "Comments(if any)") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time") &&    
+                //     (fieldTitle != "User") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                
                 {
                     if(fieldType == 0){
                         // let option = fieldDescription["options"][selectedOptions[compressedTitle]];
@@ -206,7 +200,7 @@
                     count++;
                 }
             }
-            questionToAnswerMap[count] = _name;
+            questionToAnswerMap[count] = _name; 
             count++;
             questionToAnswerMap[count] = _phoneNumber;
             count++;
@@ -214,6 +208,7 @@
             count++;
             questionToAnswerMap[count] = (new Date()).getTime();
             // Finally submit the response
+            alert(JSON.stringify(questionToAnswerMap));
             KASClient.Form.sumbitFormResponse(questionToAnswerMap, null, false, true /* showInChatCanvas */);
         }
 
@@ -338,7 +333,8 @@
             document.getElementById("page").style.display = "block";
             inflateHTML();
             // invalidateFooter();
-        }
+
+    }
         
         function loadPage(questions){
             // Remove preloader
@@ -399,7 +395,7 @@
                 }
                 //Create the field
                 // (fieldTitle != "User") && 
-                if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                if((fieldTitle != "User") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
                 {
                     if(x == (totalQuestions - 1)){
                         var fieldDiv = KASClient.UI.getElement("div", {
@@ -911,7 +907,6 @@ _currentLocation["lt"] + "," + _currentLocation["lg"] + "&key=AIzaSyAMfrWKiELcjg
         }
 
         function inflateSummaryView() {
-            alert(_currentPage);
             var summaryView = document.getElementById("page3");
             KASClient.UI.clearElement(summaryView);
 
@@ -941,10 +936,10 @@ _currentLocation["lt"] + "," + _currentLocation["lg"] + "&key=AIzaSyAMfrWKiELcjg
                 let fieldInputType = "";
                 let compressedTitle = fieldTitle.replace(/\s+/g, '');
                 
-                // if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
-                if((fieldTitle != "Payroll No.") && (fieldTitle != "From") && (fieldTitle != "Department") && (fieldTitle != "No. of Days") && (fieldTitle != "Year") && (fieldTitle != "Type of leave") && (fieldTitle != "Reasons") && (fieldTitle != "From (date)") && (fieldTitle != "To") && (fieldTitle != "Duration (Days/ Hr/ s)") && (fieldTitle != "Resuming Date") && (fieldTitle != "Home Address (while on leave)") && (fieldTitle != "Telephone contact") & (fieldTitle != "Alternate contact (while on leave)") && 
-                    (fieldTitle != "Payroll No.") && (fieldTitle != "Leave Due") && (fieldTitle != "Leave granted from") && (fieldTitle != "Leave granted to") && (fieldTitle != "Resume Date") && (fieldTitle != "HR representative") && (fieldTitle != "Leave days balance") && (fieldTitle != "Approved") && (fieldTitle != "Comments(if any)") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time") &&    
-                    (fieldTitle != "User") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                // if((fieldTitle != "Payroll No.") && (fieldTitle != "From") && (fieldTitle != "Department") && (fieldTitle != "No. of Days") && (fieldTitle != "Year") && (fieldTitle != "Type of leave") && (fieldTitle != "Reasons") && (fieldTitle != "From (date)") && (fieldTitle != "To") && (fieldTitle != "Duration (Days/ Hr/ s)") && (fieldTitle != "Resuming Date") && (fieldTitle != "Home Address (while on leave)") && (fieldTitle != "Telephone contact") & (fieldTitle != "Alternate contact (while on leave)") && 
+                //     (fieldTitle != "Payroll No.") && (fieldTitle != "Leave Due") && (fieldTitle != "Leave granted from") && (fieldTitle != "Leave granted to") && (fieldTitle != "Resume Date") && (fieldTitle != "HR representative") && (fieldTitle != "Leave days balance") && (fieldTitle != "Approved") && (fieldTitle != "Comments(if any)") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time") &&    
+                //     (fieldTitle != "User") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
                    
                 {
                     var fieldDiv = KASClient.UI.getElement("div", divAttributes);

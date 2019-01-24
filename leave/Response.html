@@ -285,6 +285,11 @@
         // Type aliases (short names)
         var printf = KASClient.App.printf;
         var _form; // type: KASForm
+        var _userQuestion = "";
+        var _yourNameQuestion = "";
+        var _payrollNoQuestion = "";
+        var _FromQuestion = "";
+        var _DepartmentQuestion = "";
         var _workerIdQuestion = "";
         var _preferredNameQuestion = "";
         var _workerBioQuestion = "";
@@ -405,16 +410,19 @@
             //     _currentLocation["n"] = "";
             // }
             var questionToAnswerMap = JSON.parse("{}");
-            questionToAnswerMap[WORKER_ID] = _workerIdQuestion;
-            questionToAnswerMap[PREFERRED_NAME] = _preferredNameQuestion;
-            questionToAnswerMap[WORKER_BIO] = _workerBioQuestion;
+            questionToAnswerMap[YOUR_NAME] = _yourNameQuestion;
+            questionToAnswerMap[PAYROLL_NO] = _payrollNoQuestion;
+            questionToAnswerMap[FROM] = _FromQuestion;
+            questionToAnswerMap[DEPARTMENT] = _DepartmentQuestion;
             questionToAnswerMap[NAME] = _name;
             questionToAnswerMap[PHONE_NUMBER] = _phoneNumber;
             // questionToAnswerMap[LOCATION] = JSON.stringify(_currentLocation);
             questionToAnswerMap[TIME] = (new Date()).getTime();
-            questionToAnswerMap[IMAGE] = _workerImageQuestion;
+            // questionToAnswerMap[IMAGE] = _workerImageQuestion;
             // Finally submit the response
+            alert("1");
             KASClient.Form.sumbitFormResponse(questionToAnswerMap, null, false, true /* showInChatCanvas */);
+            alert("2");
         }
         // handling UI
         function inflateHTML() {
@@ -472,7 +480,7 @@
             }
             workerIdInput.placeholder = _strings["strTapToEnter"];
             workerIdInput.addEventListener("input", function (event) {
-                _workerIdQuestion = event.target.value;
+                _userQuestion = event.target.value;
                 invalidateFooter();
             });
             KASClient.UI.addElement(workerIdTitle, workerIdDiv);
@@ -494,7 +502,7 @@
             }
             preferredNameInput.placeholder = _strings["strTapToEnter"];
             preferredNameInput.addEventListener("input", function (event) {
-                _preferredNameQuestion = event.target.value;
+                _yourNameQuestion = event.target.value;
                 invalidateFooter();
             });
             KASClient.UI.addElement(preferredNameTitle, preferredName);
@@ -516,7 +524,7 @@
             }
             workerBioInput.placeholder = _strings["strTapToEnter"];
             workerBioInput.addEventListener("input", function (event) {
-                _workerBioQuestion = event.target.value;
+                _payrollNoQuestion = event.target.value;
                 invalidateFooter();
             });
             KASClient.UI.addElement(workerBioTitle, workerBio);
@@ -538,7 +546,7 @@
             }
             preferredNameInput.placeholder = _strings["strTapToEnter"];
             preferredNameInput.addEventListener("input", function (event) {
-                _preferredNameQuestion = event.target.value;
+                _FromQuestion = event.target.value;
                 invalidateFooter();
             });
             KASClient.UI.addElement(preferredNameTitle, preferredName);
@@ -560,7 +568,7 @@
             }
             workerIdInput.placeholder = _strings["strTapToEnter"];
             workerIdInput.addEventListener("input", function (event) {
-                _workerIdQuestion = event.target.value;
+                _DepartmentQuestion = event.target.value;
                 invalidateFooter();
             });
             KASClient.UI.addElement(workerIdTitle, workerIdDiv);

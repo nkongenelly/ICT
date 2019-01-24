@@ -2,7 +2,7 @@
     "id": "com.ict.leave.apply",
     "schemaVersion": 1,
     "version": "1",
-    "minorVersion": 12,
+    "minorVersion": 13,
     "providerName": "ICTAfrica",
     "displayName": "Leave Application & Approval 1",
     "description": "Leave Application & Approval",
