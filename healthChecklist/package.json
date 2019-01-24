@@ -2,7 +2,7 @@
   "id": "com.nelly.serious.incident.alert",
   "schemaVersion": 1,
   "version": "1",
-  "minorVersion": 3,
+  "minorVersion": 7,
   "providerName": "ICTAfrica",
   "displayName": "Plant Housekeeping Inspection Checklist 1",
   "description": "Plant Housekeeping Inspection Checklist 1",
@@ -12,7 +12,7 @@
       "isLocalised": false,
       "isPinned": false
   },
-  "actionScope": "Group",
+
   "views": {
       "CreationView": {
           "sourceLocation": "SurveyResponse.html",
@@ -28,7 +28,7 @@
           "isResponseEditable": false
       },
       "ResponseResultsView": {
-          "sourceLocation": "SurveySummary.html",
+          "sourceLocation": "SurveyResponse.html",
           "showNativeToolbar": false
       }
     }
