@@ -94,6 +94,14 @@
                     <a href="https://github.com/laravel/laravel">GitHub</a>
                 </div>
             </div>
+            <div>
+                <form action="/chatbot/postfields" method="POST" class="form-horizontal">
+                    {{ csrf_field() }}
+                   
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            <div>
+            
         </div>
     </body>
 </html>

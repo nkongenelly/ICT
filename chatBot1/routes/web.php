@@ -14,3 +14,4 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::post('/chatbot/postfields','Sheet1Controller@index');
