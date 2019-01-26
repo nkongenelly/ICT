@@ -14,35 +14,37 @@ class Sheet1Controller extends Controller
     public function index()
     {
         //post sample table fields to webhook
-        $getChat = file_get_contents('php://input');
-        $chat = json_decode($getChat, true);
-        if(is_array($chat) && (count($chat)>0)){
+        // $getChat = file_get_contents('php://input');
+        // $chat = json_decode($getChat, true);
+        // if(is_array($chat) && (count($chat)>0)){
+        //  var_dump("1");
+        //  var_dump($chat);
+         $first_name = "John";
+         $last_name = "Doe";
+         $email = "johndoe@sample.com";
+         $gender = "male";
+         $messenger_user_id = "234";
+         $from = "2019-27-01";
+         $to = "2019-02-05";
+         $adults = "2";
+         $message = "booking";
+         $children = "0";
+         $feedback = "none";
+         $text = "none";
+         $report_issue = "null";
          
-         $first_name = "mobileNumber";
-         $last_name = "name";
-         $email = "message";
-         $gender = "mobileNumber";
-         $messenger_user_id = "name";
-         $from = "message";
-         $to = "mobileNumber";
-         $adults = "name";
-         $message = "message";
-         $children = "mobileNumber";
-         $feedback = "name";
-         $text = "message";
-         $report_issue = "message";
-         
-        if(stripos($message, 'bomb') !==false){
-             $send = $name . ", such words are not permitted here";
-             $url = "https://hook.integromat.com/3fgex9qnvuqp96s9kkf4uoc10s5hhbvl";
-             $text = array("message" => $send);
-             $message = json_encode($text);
+        // if(stripos($message, 'bomb') !==false){
+            //  $send = $name . ", such words are not permitted here";
+            //  $url = "https://webhook.site/00883ef2-9be9-43ff-8846-58753980b715";
+            $url = "https://hook.integromat.com/3fgex9qnvuqp96s9kkf4uoc10s5hhbvl";
+            //  $text = array("message" => $send);
+            //  $message = json_encode($text);
         
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS,  "first_name=first_name&last_name=last_name&
-        email=email&gender=gender&messenger_user_id=messenger_user_id&from=from&to=to&
-        adults=adults&message=message&children=children&feedback=feedback&text=text");
+        curl_setopt($ch, CURLOPT_POSTFIELDS,  "first_name=$first_name&last_name=$last_name&
+        email=$email&gender=$gender&messenger_user_id=$messenger_user_id&from=$from&to=$to&
+        adults=$adults&message=$message&children=$children&feedback=$feedback&text=$text");
         curl_setopt($ch, CURLOPT_HEADER, true);     
         curl_setopt($ch, CURLOPT_HTTPHEADER,
                 array('Content-Type:application/json',
@@ -51,9 +53,12 @@ class Sheet1Controller extends Controller
                 );
      $result = curl_exec($ch);
      curl_close($ch);
-     } 
+    //  var_dump($ch);
+    //  } 
+    //  var_dump("2");
+     
      }
-    }
+    // }
 
     /**
      * Show the form for creating a new resource.
