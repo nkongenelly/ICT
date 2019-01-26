@@ -2,7 +2,7 @@
   "id": "com.nelly.serious.incident.alert",
   "schemaVersion": 1,
   "version": "1",
-  "minorVersion": 7,
+  "minorVersion": 14,
   "providerName": "ICTAfrica",
   "displayName": "Plant Housekeeping Inspection Checklist 1",
   "description": "Plant Housekeeping Inspection Checklist 1",
@@ -23,8 +23,8 @@
           "showLikes": false,
           "showComments": false,
           "labelResponseSending": "Your details is being submitted",
-          "labelResponded": "Incident provided",
-          "labelResponseFailed": "Incident submission failed",
+          "labelResponded": "Inspection Checklist submitted",
+          "labelResponseFailed": "Inspection Checklist submission failed",
           "isResponseEditable": false
       },
       "ResponseResultsView": {

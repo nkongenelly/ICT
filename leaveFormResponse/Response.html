@@ -162,9 +162,11 @@
                 let fieldType = fieldDescription["type"];
                 let fieldInputType = "";
                 let compressedTitle = fieldTitle.replace(/\s+/g, '');
-                if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                // (fieldTitle != "User") && 
+                if((fieldTitle != "Leave Due") && (fieldTitle != "Leave granted from") && (fieldTitle != "Leave granted to") && (fieldTitle != "Resume Date") && (fieldTitle != "HR representative") && (fieldTitle != "Leave days balance") && (fieldTitle != "Approved") && (fieldTitle != "Comments(if any)") && 
+            (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
                 // if((fieldTitle != "Payroll No.") && (fieldTitle != "From") && (fieldTitle != "Department") && (fieldTitle != "No. of Days") && (fieldTitle != "Year") && (fieldTitle != "Type of leave") && (fieldTitle != "Reasons") && (fieldTitle != "From (date)") && (fieldTitle != "To") && (fieldTitle != "Duration (Days/ Hr/ s)") && (fieldTitle != "Resuming Date") && (fieldTitle != "Home Address (while on leave)") && (fieldTitle != "Telephone contact") & (fieldTitle != "Alternate contact (while on leave)") && 
-                //     (fieldTitle != "Payroll No.") && (fieldTitle != "Leave Due") && (fieldTitle != "Leave granted from") && (fieldTitle != "Leave granted to") && (fieldTitle != "Resume Date") && (fieldTitle != "HR representative") && (fieldTitle != "Leave days balance") && (fieldTitle != "Approved") && (fieldTitle != "Comments(if any)") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time") &&    
+                //   (fieldTitle != "Payroll No.") && (fieldTitle != "Leave Due") && (fieldTitle != "Leave granted from") && (fieldTitle != "Leave granted to") && (fieldTitle != "Resume Date") && (fieldTitle != "HR representative") && (fieldTitle != "Leave days balance") && (fieldTitle != "Approved") && (fieldTitle != "Comments(if any)") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time") &&    
                 //     (fieldTitle != "User") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
                 
                 {
@@ -200,7 +202,25 @@
                     count++;
                 }
             }
-            questionToAnswerMap[count] = _name; 
+            questionToAnswerMap[count] = "-"; 
+            count++;
+            questionToAnswerMap[count] = "-";
+            count++;
+            questionToAnswerMap[count] = "-"; 
+            count++;
+            questionToAnswerMap[count] = "-";
+            count++;
+            questionToAnswerMap[count] = "-"; 
+            count++;
+            questionToAnswerMap[count] = "-";
+            count++;
+            questionToAnswerMap[count] = "-"; 
+            count++;
+            questionToAnswerMap[count] = "-";
+            count++;
+            questionToAnswerMap[count] = "-"; 
+            count++;
+            questionToAnswerMap[count] = _name;
             count++;
             questionToAnswerMap[count] = _phoneNumber;
             count++;
@@ -210,6 +230,7 @@
             // Finally submit the response
             alert(JSON.stringify(questionToAnswerMap));
             KASClient.Form.sumbitFormResponse(questionToAnswerMap, null, false, true /* showInChatCanvas */);
+            alert("done");
         }
 
         // handling UI
@@ -229,8 +250,8 @@
 
             if (_currentPage == 2 && _isLocationNotFetched) {
                 _isLocationNotFetched = false;
-                refreshLocation();
-                inflateLocationView();
+                // refreshLocation();
+                // inflateLocationView();
             }
             if (_currentPage == TOTAL_PAGE) {
                 inflateSummaryView();
@@ -291,21 +312,26 @@
                 options.innerText = _strings[option.text];
                 options.value = value;
                 // alert("4");
+                // options.onclick = function() {
+                //                 this.checked = true;
+                //                 selectedOptions[compressedTitle] = this.value;
+                //                 invalidateFooter();
+                //             };
                 options.onclick = function() {
-                    // alert("5");
+                    alert("5");
                     _customerTypeQuestion = this.value;
-                    // alert("6");
+                    alert("6");
                     alert(_customerTypeQuestion);
                     document.getElementById("CustomerTypeOption" + _customerTypeQuestion).checked = true;
-                    // alert("7");
+                    alert("7");
                     invalidateFooter();
-                    // alert("8");
+                    alert("8");
                 };
                 var title = KASClient.UI.getElement("label", {
                     "width": "85%",
                     "padding-left": "6pt"
                 });
-                title.innerText = _strings[option.text];
+                // title.innerText = _strings[option.text];
                 // alert("8");
                 var radio = KASClient.UI.getElement("input");
                 radio.type = "radio";
@@ -395,7 +421,8 @@
                 }
                 //Create the field
                 // (fieldTitle != "User") && 
-                if((fieldTitle != "User") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                if((fieldTitle != "Leave Due") && (fieldTitle != "Leave granted from") && (fieldTitle != "Leave granted to") && (fieldTitle != "Resume Date") && (fieldTitle != "HR representative") && (fieldTitle != "Leave days balance") && (fieldTitle != "Approved") && (fieldTitle != "Comments(if any)") && 
+                (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
                 {
                     if(x == (totalQuestions - 1)){
                         var fieldDiv = KASClient.UI.getElement("div", {
@@ -936,7 +963,8 @@ _currentLocation["lt"] + "," + _currentLocation["lg"] + "&key=AIzaSyAMfrWKiELcjg
                 let fieldInputType = "";
                 let compressedTitle = fieldTitle.replace(/\s+/g, '');
                 
-                if((fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
+                if((fieldTitle != "Leave Due") && (fieldTitle != "Leave granted from") && (fieldTitle != "Leave granted to") && (fieldTitle != "Resume Date") && (fieldTitle != "HR representative") && (fieldTitle != "Leave days balance") && (fieldTitle != "Approved") && (fieldTitle != "Comments(if any)") && 
+                (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))
                 // if((fieldTitle != "Payroll No.") && (fieldTitle != "From") && (fieldTitle != "Department") && (fieldTitle != "No. of Days") && (fieldTitle != "Year") && (fieldTitle != "Type of leave") && (fieldTitle != "Reasons") && (fieldTitle != "From (date)") && (fieldTitle != "To") && (fieldTitle != "Duration (Days/ Hr/ s)") && (fieldTitle != "Resuming Date") && (fieldTitle != "Home Address (while on leave)") && (fieldTitle != "Telephone contact") & (fieldTitle != "Alternate contact (while on leave)") && 
                 //     (fieldTitle != "Payroll No.") && (fieldTitle != "Leave Due") && (fieldTitle != "Leave granted from") && (fieldTitle != "Leave granted to") && (fieldTitle != "Resume Date") && (fieldTitle != "HR representative") && (fieldTitle != "Leave days balance") && (fieldTitle != "Approved") && (fieldTitle != "Comments(if any)") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time") &&    
                 //     (fieldTitle != "User") && (fieldTitle != "Name") && (fieldTitle != "Phone") && (fieldTitle != "Location") && (fieldTitle != "Response Time"))

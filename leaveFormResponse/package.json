@@ -1,8 +1,8 @@
 {
     "id": "com.ict.interns.report",
     "schemaVersion": 1,
-    "version": "19",
-    "minorVersion": 65,
+    "version": "22",
+    "minorVersion":  15,
     "providerName": "ICTAfrica",
     "displayName": "Leave Application & Approval",
     "description": "Leave Application & Approval",
