@@ -14,12 +14,7 @@ class Sheet1Controller extends Controller
      */
     public function index()
     {
-        //post sample table fields to webhook
-        // $getChat = file_get_contents('php://input');
-        // $chat = json_decode($getChat, true);
-        // if(is_array($chat) && (count($chat)>0)){
-        //  var_dump("1");
-        //  var_dump($chat);
+        //set sample data to send
          $first_name = "John";
          $last_name = "Doe";
          $email = "johndoe@sample.com";
@@ -33,13 +28,8 @@ class Sheet1Controller extends Controller
          $feedback = "none";
          $text = "none";
          $report_issue = "null";
-         
-        // if(stripos($message, 'bomb') !==false){
-            //  $send = $name . ", such words are not permitted here";
-            //  $url = "https://webhook.site/00883ef2-9be9-43ff-8846-58753980b715";
+         //set the url of the webhook to test the curl fuction
             $url = "https://hook.integromat.com/3fgex9qnvuqp96s9kkf4uoc10s5hhbvl";
-            //  $text = array("message" => $send);
-            //  $message = json_encode($text);
         
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -49,15 +39,9 @@ class Sheet1Controller extends Controller
         curl_setopt($ch, CURLOPT_HEADER, true);     
         curl_setopt($ch, CURLOPT_HTTPHEADER,
                 array('Content-Type:application/json',
-                    //    'Content-Length: ' . strlen($message)
                        )
                 );
      $result = curl_exec($ch);
-     curl_close($ch);
-    //  var_dump($ch);
-    //  } 
-    //  var_dump("2");
-     
      }
 
     // }
@@ -70,6 +54,33 @@ class Sheet1Controller extends Controller
     public function create()
     {
         //
+           $getChat = file_get_contents('php://input');
+           $chat = json_decode($getChat, true);
+           if(is_array($chat) && (count($chat)>0)){
+            
+            $mobileNumber = $chat[0]["mobileNumber"];
+            $name = $chat[0]["name"];
+            $message = $chat[0]["message"];
+           
+           if(stripos($message, 'bomb') !==false){
+                $send = $name . ", such words are not permitted here";
+                $url = "https://prod-10.westeurope.logic.azure.com:443/workflows/8f843088ed4a4f1c811b2031ce984ce7/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=DDgoID5HVZtQ0r_yBcmU3fy7iiyjw5468xd9OgP6OOs";
+                $text = array("message" => $send);
+                $message = json_encode($text);
+           
+           $ch = curl_init($url);
+           curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+           curl_setopt($ch, CURLOPT_POSTFIELDS, $message);
+           curl_setopt($ch, CURLOPT_HEADER, true);     
+           curl_setopt($ch, CURLOPT_HTTPHEADER,
+                   array('Content-Type:application/json',
+                          'Content-Length: ' . strlen($message))
+                   );
+        $result = curl_exec($ch);
+        curl_close($ch);
+        } 
+        }
+    
     }
 
     /**
