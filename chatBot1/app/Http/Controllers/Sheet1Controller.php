@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Sheet1;
 
 class Sheet1Controller extends Controller
 {
@@ -58,6 +59,7 @@ class Sheet1Controller extends Controller
     //  var_dump("2");
      
      }
+
     // }
 
     /**
@@ -79,6 +81,27 @@ class Sheet1Controller extends Controller
     public function store(Request $request)
     {
         //
+        
+        // dd($request);
+        // dd(Sheet1::all());
+       Sheet1::create(request(['firstName','lastName','email','gender','from','to','adults','children','feedback','text','reportIssue']));
+        // $save  = Sheet1::create(request([
+        //     'first name' => $first_name,
+        //      'last name' => $last_name,
+        //      'email' => $email,
+        //      'gender' => $gender,
+        //      'messenger_user_id' => $messenger_user_id,
+        //      'From' => $from,
+        //      'To' => $to,
+        //      'Adults' => $adults,
+        //      'message' => $message,
+        //      'Children' => $children,
+        //      'Feedback' => $feedback,
+        //      'Text' => $text,
+        //      'Report Issue' => $report_issue
+        //      ]));
+        $save = Sheet1::all();
+        // dd($save);
     }
 
     /**

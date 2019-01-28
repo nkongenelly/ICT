@@ -100,6 +100,26 @@
                    
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
+
+            <div>
+            <div>
+                <form action="/chatbot/createfields" method="POST" class="form-horizontal">
+                    {{ csrf_field() }}
+                   <input name="firstName" type="text">First Name
+                   <input name="lastName" type="text">Last Name
+                   <input name="email" type="text">Email
+                   <input name="gender" type="text">Gendet
+                   <input name="messengerUserId" type="text">Messrenger User id
+                   <input name="from" type="text">From
+                   <input name="to" type="text">To
+                   <input name="adults" type="text">Adults
+                   <input name="children" type="text">Children
+                   <input name="feedback" type="text">Feedback
+                   <input name="text" type="text">Text
+                   <input name="reportIssue" type="text">Report Issue
+                    <button type="submit" class="btn btn-primary">Save to DB</button>
+                </form>
+                
             <div>
             
         </div>

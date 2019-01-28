@@ -15,3 +15,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::post('/chatbot/postfields','Sheet1Controller@index');
+Route::post('/chatbot/createfields','Sheet1Controller@store');
