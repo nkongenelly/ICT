@@ -82,6 +82,9 @@ return [
 
     'locale' => 'en',
 
+    //sET heROKU LOGS TO BE VIEW IN HEROKU DASHBOARD
+    'log'=>'errorlog',
+
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale

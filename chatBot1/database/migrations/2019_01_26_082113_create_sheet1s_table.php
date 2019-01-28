@@ -15,17 +15,18 @@ class CreateSheet1sTable extends Migration
     {
         Schema::create('sheet1s', function (Blueprint $table) {
             $table->increments('messengerUserId');
-            $table->text('firstName')->nullable();
-            $table->text('lastName')->nullable();
-            $table->text('email')->nullable();
-            $table->text('gender')->nullable();          
-            $table->date('from')->nullable();
-            $table->date('to')->nullable();
-            $table->integer('adults')->nullable();
-            $table->integer('children')->nullable();
-            $table->text('feedback')->nullable();
-            $table->text('text')->nullable();
-            $table->text('reportIssue')->nullable();
+            $table->text('firstName');
+            $table->text('lastName');
+            $table->text('email');
+            $table->text('gender');
+            
+            $table->date('from');
+            $table->date('to');
+            $table->integer('adults');
+            $table->integer('children');
+            $table->text('feedback');
+            $table->text('text');
+            $table->text('reportIssue');
             $table->timestamps();
         });
     }
