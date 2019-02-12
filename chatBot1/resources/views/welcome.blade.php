@@ -120,6 +120,16 @@
                     <button type="submit" class="btn btn-primary">Save to DB</button>
                 </form>
                 
+
+                <form action="/timeline/postfields" method="POST" class="form-horizontal">
+                    {{ csrf_field() }}
+                    <button type="submit" class="btn btn-primary">Timeline</button>
+                </form>
+                <form action="/timeline/editSignin" method="POST" class="form-horizontal">
+                    {{ csrf_field() }}
+                    <button type="submit" class="btn btn-primary">Update Timeline</button>
+                </form>
+                
             <div>
             
         </div>

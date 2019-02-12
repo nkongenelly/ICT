@@ -13,8 +13,8 @@ class CreateSheet1sTable extends Migration
      */
     public function up()
     {
-        Schema::create('sheet1s', function (Blueprint $table) {
-            $table->increments('messengerUserId');
+        Schema::connection('mysql')->create('sheet1s', function (Blueprint $table) {
+            $table->integer('messengerUserId');
             $table->text('firstName');
             $table->text('lastName');
             $table->text('email');
@@ -29,6 +29,8 @@ class CreateSheet1sTable extends Migration
             $table->text('reportIssue');
             $table->timestamps();
         });
+
+    
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Sheet1;
+use Illuminate\Support\Facades\DB;
 
 class Sheet1Controller extends Controller
 {
@@ -51,36 +52,40 @@ class Sheet1Controller extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
-           $getChat = file_get_contents('php://input');
-           dd($getChat);
-           $chat = json_decode($getChat, true);
-        //    if(is_array($chat) && (count($chat)>0)){
+        $getChat = file_get_contents('php://input');
+        $chat = json_decode($getChat, true);
+               $messengerUserId = "236";
+        $firstName= "John";
+        $lastName= "Doe";
+        $email= "johndoe@sample.com";
+        $gender= "";
+        $from= "2019-01-31";
+        $to= "2019-02-05";
+        $adults= "2";
+        $children= "0";
+        $feedback = "N/A";
+        $text= "N/A";
+        $SiteOut= "N/A";
+        //    var_dump($name);
+        
+         DB::table('sheet1s')->insert([ 
             
-        //     $mobileNumber = $chat[0]["mobileNumber"];
-        //     $name = $chat[0]["name"];
-        //     $message = $chat[0]["message"];
-           
-        //    if(stripos($message, 'bomb') !==false){
-        //         $send = $name . ", such words are not permitted here";
-        //         $url = "https://prod-10.westeurope.logic.azure.com:443/workflows/8f843088ed4a4f1c811b2031ce984ce7/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=DDgoID5HVZtQ0r_yBcmU3fy7iiyjw5468xd9OgP6OOs";
-        //         $text = array("message" => $send);
-        //         $message = json_encode($text);
-           
-        //    $ch = curl_init($url);
-        //    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        //    curl_setopt($ch, CURLOPT_POSTFIELDS, $message);
-        //    curl_setopt($ch, CURLOPT_HEADER, true);     
-        //    curl_setopt($ch, CURLOPT_HTTPHEADER,
-        //            array('Content-Type:application/json',
-        //                   'Content-Length: ' . strlen($message))
-        //            );
-        // $result = curl_exec($ch);
-        // curl_close($ch);
-        // } 
-        // }
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'email' => $email,
+            'gender' => $gender,
+            'messengerUserId' => $messengerUserId,
+            'from' => $from,
+            'to' => $to,
+            'adults' => $adults,
+            'children' => $children,
+            'feedback' => $feedback,
+            'text' => $text,
+            'SiteOut' => $SiteOut
+            ]);
+        //}
     
     }
 
@@ -96,23 +101,38 @@ class Sheet1Controller extends Controller
         
         // dd($request);
         // dd(Sheet1::all());
-       Sheet1::create(request(['firstName','lastName','email','gender','from','to','adults','children','feedback','text','reportIssue']));
-        // $save  = Sheet1::create(request([
-        //     'first name' => $first_name,
-        //      'last name' => $last_name,
-        //      'email' => $email,
-        //      'gender' => $gender,
-        //      'messenger_user_id' => $messenger_user_id,
-        //      'From' => $from,
-        //      'To' => $to,
-        //      'Adults' => $adults,
-        //      'message' => $message,
-        //      'Children' => $children,
-        //      'Feedback' => $feedback,
-        //      'Text' => $text,
-        //      'Report Issue' => $report_issue
-        //      ]));
-        $save = Sheet1::all();
+    //    Sheet1::create(request(['firstName','lastName','email','gender','from','to','adults','children','feedback','text','reportIssue']));
+    $messengerUserId = "234543";   
+    $firstName= "John";
+        $lastName= "Doe";
+        $email= "johndoe@sample.com";
+        $gender= "male";
+        $from= "2019-01-31";
+        $to= "2019-02-05";
+        $adults= "2";
+        $children= "0";
+        $feedback = "N/A";
+        $text= "N/A";
+        $name = "N/A";
+        $reportIssue= "N/A";
+        //    var_dump($name);
+        
+         DB::connection('mysql')->table('sheet1s')->insert([ 
+    
+            'messengerUserId' => $messengerUserId,
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'email' => $email,
+            'gender' => $gender,
+            'from' => $from,
+            'to' => $to,
+            'adults' => $adults,
+            'children' => $children,
+            'feedback' => $feedback,
+            'text' => $text,
+            'reportIssue' => $reportIssue
+            ]);
+        // $save = Sheet1::all();
         // dd($save);
     }
 
@@ -122,6 +142,47 @@ class Sheet1Controller extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+     public function storeTimeline(Request $request){
+        $Name= "John";
+        $Date= "Doe";
+        $TimeIn= "johndoe@sample.com";
+        $TimeOut= "male";
+        $Site= "2019-01-31";
+        $LocationIn= "2019-02-05";
+        $LocationOut= "2";
+        $MatchIn= "0";
+        $Match = "N/A";
+        $RowId= "N/A";
+        $SiteOut= "N/A";
+        //    var_dump($name);
+        $check = DB::connection('mysql2')->table('timelines')->where('MatchIn', '=', $MatchIn)->count();
+        if ($check == 0) {
+            DB::connection('mysql2')->table('timelines')->insert([ 
+                'Name' => $Name,
+                'Date' => $Date,
+                'TimeIn' => $TimeIn,
+                'TimeOut' => $TimeOut,
+                'Site' => $Site,
+                'LocationIn' => $LocationIn,
+                'LocationOut' => $LocationOut,
+                'MatchIn' => $MatchIn,
+                'MatchOut' => $Match,
+                'RowId' => $RowId,
+                'SiteOut' => $SiteOut
+                ]);
+            // dd('does not exist');
+            // dd($check);
+         }
+         else{
+            //  dd('exists');
+            //  dd($check);
+         }
+        
+
+         
+
+     }
     public function show($id)
     {
         //
@@ -136,6 +197,20 @@ class Sheet1Controller extends Controller
     public function edit($id)
     {
         //
+    }
+    public function editSignin(){
+        $matched = "N/A"; 
+        $MatchIn =0;
+        DB::connection('mysql2')->table('timelines')->where('MatchOut',$matched)
+                                ->update([
+                                        'LocationOut' => '2345',
+                                        'SiteOut' => 'SiteOut'
+                                ]);
+           //update MatchIn
+           DB::connection('mysql2')->table('timelines')->where('MatchIn',$MatchIn)
+           ->update([
+               'MatchIn' => 1
+           ]);
     }
 
     /**
