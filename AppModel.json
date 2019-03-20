@@ -1,0 +1,66 @@
+{
+  "title": "Register Event",
+  "visibility": "All",
+  "expiry": 0,
+  "isAnonymous": false,
+  "isResponseAppended": true,
+  "isLocationRequested": false,
+  "questions": [{
+      "title": "Event Name",
+      "type": "Text",
+      "isOptional": true
+    },
+    {
+      "title": "Event Location",
+      "type": "Text",
+      "isOptional": true
+    },
+    {
+      "title": "Event Cost",
+      "type": "Numeric",
+      "isOptional": true
+    },
+    {
+      "title": "Event Type",
+      "type": "SingleSelect",
+      "options": [{
+          "title": "Wedding"
+        },
+        {
+          "title": "Birthday"
+        },
+        {
+          "title": "Hackathon"
+        },
+        {
+          "title": "Training"
+        },
+        {
+          "title": "Team Building"
+        }
+      ]
+    },
+    {
+      "title": "Event Image",
+      "type": "Image",
+      "isOptional": true
+    },
+    
+    {
+      "title": "Name",
+      "type": "Text"
+    },
+    {
+      "title": "Phone",
+      "type": "Text"
+    },
+    {
+      "title": "Location",
+      "type": "Location"
+    },
+    {
+      "title": "Response Time",
+      "type": "DateTime"
+    }
+  ]
+}
