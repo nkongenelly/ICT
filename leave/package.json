@@ -1,0 +1,35 @@
+{
+    "id": "com.ict.leave.apply",
+    "schemaVersion": 1,
+    "version": "1",
+    "minorVersion": 14,
+    "providerName": "ICTAfrica",
+    "displayName": "Leave Application & Approval 1",
+    "description": "Leave Application & Approval",
+    "icon": "leave1.png",
+    "appModel": "AppModel.json",
+    "dials": {
+        "isLocalised": false,
+        "isPinned": false
+    },
+    "actionScope": "Group",
+    "views": {
+        "CreationView": {
+            "sourceLocation": "Response.html",
+            "showNativeToolbar": false
+        },
+        "ChatCanvasCardView": {
+            "showReceipts": false,
+            "showLikes": false,
+            "showComments": false,
+            "labelResponseSending": "Submitting your details",
+            "labelResponded": "Leave Application & Approval",
+            "labelResponseFailed": "Leave Application & Approval submission failed",
+            "isResponseEditable": false
+        },
+        "ResponseResultsView": {
+            "sourceLocation": "ResponseSummary.html",
+            "showNativeToolbar": false
+        }
+    }
+}

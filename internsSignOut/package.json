@@ -1,0 +1,38 @@
+{
+    "id": "com.ict.interns.signout",
+    "schemaVersion": 1,
+    "version": "6",
+    "minorVersion": 9,
+    "providerName": "IctAfrica",
+    "displayName": "ICT Sign Out",
+    "description": "Daily Sign In Form",
+    "icon": "signout1.jpg",
+    "appModel": "AppModel.json",
+    "dials": {
+        "isLocalised": false,
+        "isPinned": false
+    },
+    "actionScope": "Group",
+    "views": {
+        "CreationView": {
+            "sourceLocation": "Response.html",
+            "showNativeToolbar": false
+        },
+        "ChatCanvasCardView": {
+            "showReceipts": false,
+            "showLikes": false,
+            "showComments": false,
+            "showFootere": true,
+            "labelRespondToForm": "Add Response",
+            "sourceLocation": "chartCard.json",
+            "labelResponseSending": "Submitting your details",
+            "labelResponded": "Daily signing out successfully completed",
+            "labelResponseFailed": "Daily signing out submission failed",
+            "isResponseEditable": false
+        },
+        "ResponseResultsView": {
+            "sourceLocation": "ResponseSummary.html",
+            "showNativeToolbar": false
+        }
+    }
+}
