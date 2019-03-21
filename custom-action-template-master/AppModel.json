@@ -1,0 +1,78 @@
+{
+    "title": "Registration",
+    "visibility": "All",
+    "expiry": 0,
+    "isAnonymous": false,
+    "isResponseAppended": true,
+    "isLocationRequested": false,
+    "questions": [
+        {
+            "title": "ID Image",
+            "type": "Image"
+        },
+        {
+			"title": "Event Name",
+			"type": "Text",
+			"isOptional": true
+		},
+		{
+			"title": "Event Location",
+			"type": "Text",
+			"isOptional": true
+		},
+		{
+			"title": "Event Cost",
+			"type": "Numeric",
+			"isOptional": true
+		},
+		{
+			"title": "Event Type",
+			"type": "SingleSelect",
+			"options": [{
+					"title": "Wedding"
+				},
+				{
+					"title": "Birthday"
+				},
+				{
+					"title": "Funeral"
+				},
+				{
+					"title": "Training"
+				}
+			]
+		},
+		{
+			"valif": null,
+			"visif": "{}",
+			"title": "Event Image",
+			"type": "AttachmentList",
+			"displayType": "None",
+			"config": {
+				"addPageBreak": false,
+				"isCameraOnlyImageSource": false,
+				"attachmentListType": 1
+			},
+			"isInvisible": false,
+			"options": null,
+			"isExcludedFromReporting": false,
+			"isOptional": false
+		},
+        {
+            "title": "Name",
+            "type": "Text"
+        },
+        {
+            "title": "Phone",
+            "type": "Text"
+        },
+        {
+          "title": "Location",
+          "type": "Location"
+        },
+        {
+          "title": "Response Time",
+          "type": "DateTime"
+        }
+    ]
+}
