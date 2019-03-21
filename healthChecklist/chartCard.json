@@ -28,6 +28,18 @@
                 "textAlignment": "left",
                 "maxNumberOfLines": 4,
                 "marginBottom": 0
+            },
+            {
+                "type": "image",
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "fontSize": 10,
+                "fontStyle": "bold",
+                "textColor": "#32495f",
+                "string": "${Form.properties[image].value}",
+                "textAlignment": "left",
+                "maxNumberOfLines": 4,
+                "marginBottom": 0
             }
         ]
     }

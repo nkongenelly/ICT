@@ -20,5 +20,8 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         //
+        '/chatbot/fields',
+        '/timeline/postfields',
+        '/timeline/editSignin',
     ];
 }

@@ -2,7 +2,7 @@
     "id": "com.ict.interns.signout",
     "schemaVersion": 1,
     "version": "6",
-    "minorVersion": 5,
+    "minorVersion": 9,
     "providerName": "IctAfrica",
     "displayName": "ICT Sign Out",
     "description": "Daily Sign In Form",
