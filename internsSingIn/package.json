@@ -1,9 +1,9 @@
 {
-    "id": "com.ict.interns.signin",
+    "id": "com.nelly.interns.signin",
     "schemaVersion": 1,
-    "version": "12",
-    "minorVersion": 6,
-    "providerName": "IctAfrica",
+    "version": "1",
+    "minorVersion": 1,
+    "providerName": "IctAfricaSample",
     "displayName": "ICT Sign In",
     "description": "Daily Sign In Form",
     "icon": "signin1.png",
